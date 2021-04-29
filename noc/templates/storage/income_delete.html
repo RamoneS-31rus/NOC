@@ -1,0 +1,16 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+<div>
+    <hr>
+    <h2>Действительно удалить?</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <hr>
+        <button type="submit">Да</button>
+        <a href="{% url 'income_list' %}" role="button">Нет</a>
+    </form>
+</div>
+
+{% endblock %}

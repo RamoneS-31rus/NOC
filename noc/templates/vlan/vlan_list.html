@@ -1,0 +1,80 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+<hr>
+
+<form method="GET">
+    {{ filter.form }}
+    <button class="button_cancel_form" type="submit">Найти</button>
+</form>
+
+<hr>
+
+{%  if filter.qs %}
+    <table class="table_default">
+        <tr>
+            <th style="width: 35px">
+                Vlan
+            </th>
+            <th style="width: 200px">
+                Заказчик
+            </th>
+            <th style="width: 100px">
+                Номер заказа
+            </th>
+            <th style="width: 350px">
+               Назначение
+            </th>
+            <th style="width: 200px">
+                Точка А
+            </th>
+            <th style="width: 200px">
+                Точка Б
+            </th>
+            <th style="width: 70px">
+                Скорость (Mbps)
+            </th>
+            <th>
+                Примечание
+            </th>
+        </tr>
+    {% for vlan in filter.qs %}
+        <tr>
+            <td>
+                <a href="{% url 'vlan_detail' vlan.id %}">{{ vlan.vlan_name }}</a>
+            </td>
+            <td>
+                {{ vlan.vlan_client }}
+            </td>
+            <td>
+                {{ vlan.vlan_order }}
+            </td>
+            <td>
+                {{ vlan.vlan_used_for }}
+            </td>
+            <td>
+                {{ vlan.vlan_point_a }}
+            </td>
+            <td>
+                {{ vlan.vlan_point_b }}
+            </td>
+            <td>
+                {{ vlan.vlan_speed }}
+            </td>
+            <td>
+                {{ vlan.vlan_note }}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{%  else %}
+    <h1>пусто</h1>
+{% endif %}
+
+{% include "pagination.html" with page=filter.qs %}
+
+{% endblock content %}
+
+
+

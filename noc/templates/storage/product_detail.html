@@ -1,0 +1,34 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+<h1>{{ product.name }}</h1>
+<table>
+       <tr>
+            <th>
+                Количество
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Описание
+            </th>
+        </tr>
+        <tr>
+            <td>
+                {{ product.quality }}
+            </td>
+            <td>
+                {{ product.price }}
+            </td>
+            <td>
+                {{ product.description }}
+            </td>
+        </tr>
+    </table>
+<div>
+    <a href="{% url 'product_update' product.slug %}">Редактировать</a>
+</div>
+
+{% endblock content %}

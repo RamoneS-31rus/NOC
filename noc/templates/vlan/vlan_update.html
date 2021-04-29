@@ -1,0 +1,62 @@
+{% extends 'default.html' %}
+{% block content %}
+
+<h1 style="text-align: center;">vlan {{ vlan.vlan_name }}</h1>
+<form method="POST">
+    {% csrf_token %}
+    <table class="table_detail">
+    <tr>
+        <th style="width: 200px">
+            Заказчик
+        </th>
+        <th style="width: 100px">
+            Номер заказа
+        </th>
+        <th style="width: 350px">
+           Назначение
+        </th>
+        <th style="width: 200px">
+            Точка А
+        </th>
+        <th style="width: 200px">
+            Точка Б
+        </th>
+        <th style="width: 70px">
+            Скорость (Mbps)
+        </th>
+        <th>
+            Примечание
+        </th>
+    </tr>
+    <tr>
+        <td>
+            {{ form.vlan_client }}
+        </td>
+        <td>
+            {{ form.vlan_order }}
+        </td>
+        <td>
+            {{ form.vlan_used_for }}
+        </td>
+        <td>
+            {{ form.vlan_point_a }}
+        </td>
+        <td>
+            {{ form.vlan_point_b }}
+        </td>
+        <td>
+            {{ form.vlan_speed }}
+        </td>
+        <td>
+            {{ form.vlan_note }}
+        </td>
+    </tr>
+    </table>
+    <br>
+    <div style="text-align: center">
+        <button class="button_add_form" type="submit">Сохранить</button>
+        <a class="button_cancel_form" href="{% url 'vlan_detail' vlan.id %}" role="button">Отмена</a>
+    </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+<hr>
+<div>
+    <form method="POST" action="{% url 'profile_update' user.id %}">
+        {% csrf_token %}
+        <input type="text" name="first_name" placeholder="Имя">
+        <input type="text" name="last_name" placeholder="Фамилия">
+        <input type="text" name="email" placeholder="Почта">
+        <hr>
+        <button type="submit" class="button_add_form">Сохранить</button>
+        <a class="button_cancel_form" href="{% url 'profile' %}" role="button">Отмена</a>
+    </form>
+</div>
+
+{% endblock %}

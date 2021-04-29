@@ -1,0 +1,40 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+<br>
+{%  if products %}
+    <table>
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                Количество
+            </th>
+            <th>
+                Цена
+            </th>
+        </tr>
+    {% for product in products %}
+        <tr>
+            <td>
+                <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+            </td>
+            <td>
+                {{ product.quality }}
+            </td>
+            <td>
+                {{ product.price }}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{%  else %}
+    <h1>пусто</h1>
+{% endif %}
+<div>
+    <a href="{% url 'product_add' %}">Добавить</a>
+</div>
+
+{% endblock content %}

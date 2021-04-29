@@ -1,0 +1,60 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+{%  if income_list %}
+<table>
+    <tr>
+        <th>
+            Дата
+        </th>
+        <th>
+            Название
+        </th>
+        <th>
+            Количество
+        </th>
+        <th>
+            Примечание
+        </th>
+        <th>
+            Добавил
+        </th>
+        <th>
+        </th>
+    </tr>
+{% for product in income_list %}
+    <tr>
+        <td>
+            {{ product.income_date_create | date:'d.m.Y H:i' }}
+        </td>
+        <td>
+            {{ product.income_name }}
+        </td>
+        <td>
+            {{ product.income_quality }}
+        </td>
+        <td>
+            {{ product.income_note }}
+        </td>
+        <td>
+            {{ product.income_user }}
+        </td>
+        <td>
+            <a href="{% url 'income_update' product.slug %}">Редактировать</a>
+        </td>
+        <td>
+            <a href="{% url 'income_delete' product.slug %}">Удалить</a>
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{%  else %}
+    <h1>пусто</h1>
+{% endif %}
+<div>
+    <a href="{% url 'income_add' %}">Добавить</a>
+</div>
+
+{% endblock content %}
+

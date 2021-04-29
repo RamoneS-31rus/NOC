@@ -1,0 +1,26 @@
+{% if page_obj.has_previous %}
+    <li>
+        <a href="?page=1{% if querystring %}&amp;{{ querystring }}{% endif %}">
+            <i class="icon-page-first"></i>
+            <span class="btn-text">First</span>
+        </a>
+    </li>
+    <li>
+        <a href="?page={{ page_obj.previous_page_number }}{% if querystring %}&amp;{{ querystring }}{% querystring %}">
+            <i class="icon-page-back"></i>
+            <span class="btn-text">Prev</span>
+        </a>
+    </li>
+{% else %}
+    <li class="disabled">
+        <span class="icon-page-first">
+            <span class="btn-text">First</span>
+        </span>
+    </li>
+    <li class="disabled">
+        <span class="icon-page-back">
+            <span class="btn-text">Prev</span>
+        </span>
+    </li>
+    {# etc etc #}
+{% endif %}

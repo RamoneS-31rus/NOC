@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+
+  <meta charset="utf-8">
+  <title>ООО "БТК"</title>
+  <link href="{% static 'css/default.css'%}" rel="stylesheet">
+
+</head>
+
+
+
+  <!-- Navigation -->
+<div class="navbar">
+  <div class="dropdown">
+    <button class="dropbtn">Сеть
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="{% url 'vlan_list' %}">Vlans</a>
+      <a href="{% url 'switch_list' %}">Коммутаторы</a>
+      <a href="#">IP-адреса</a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">Склад
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="{% url 'product_list' %}">Наличие</a>
+      <a href="{% url 'income_list' %}">Приход</a>
+      <a href="#">Расход</a>
+    </div>
+  </div>
+  <div class="dropdown-pro">
+    <button class="dropbtn-pro">{{ user.username }}
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content-pro">
+      <a href="{% url 'profile' %}">Профиль</a>
+      <a href="http://127.0.0.1:8000/admin">admin</a>
+      <a href="{% url 'logout' %}">Выйти</a>
+    </div>
+  </div>
+</div>
+
+<body>
+  <!-- Page Content -->
+{% block content %}
+{% endblock content %}
+</body>
+
+</html>

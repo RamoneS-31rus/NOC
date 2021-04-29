@@ -1,0 +1,63 @@
+{% extends 'default.html' %}
+{% block content %}
+
+<br>
+<form method="POST">
+    {% csrf_token %}
+    <table class="table_detail">
+    <tr>
+        <th style="width: 200px">
+            Адрес
+        </th>
+        <th style="width: 110px">
+            IP
+        </th>
+        <th style="width: 130px">
+            MAC
+        </th>
+        <th style="width: 200px">
+            Модель
+        </th>
+        <th style="width: 200px">
+            Прошивка
+        </th>
+        <th style="width: 200px">
+            Серийный номер
+        </th>
+        <th>
+            Примечание
+        </th>
+    </tr>
+    <tr>
+        <td>
+            {{ form.switch_address }}
+        </td>
+        <td>
+            {{ form.switch_ip }}
+        </td>
+        <td>
+            {{ form.switch_mac }}
+        </td>
+        <td>
+            {{ form.switch_model }}
+        </td>
+        <td>
+            {{ form.switch_firmware }}
+        </td>
+        <td>
+            {{ form.switch_serial }}
+        </td>
+        <td>
+            {{ form.switch_note }}
+        </td>
+    </tr>
+    </table>
+    {{ form.switch_status}} Оборудование на складе
+    <br>
+    <div style="text-align: center">
+        <button class="button_add_form" type="submit">Добавить</button>
+        <a class="button_cancel_form" href="{% url 'switch_detail' switch.id %}" role="button">Отмена</a>
+    </div>
+</form>
+
+{% endblock %}

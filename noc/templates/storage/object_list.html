@@ -1,0 +1,36 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+<br>
+{%  if objects %}
+    <table>
+        <tr>
+            <th>
+                Адрес
+            </th>
+            <th>
+                Назначение
+            </th>
+            <th>
+              <a href="{% url 'object_add' %}">Добавить</a>
+            </th>
+        </tr>
+    {% for object in objects %}
+        <tr>
+            <td>
+                {{ object.address }}
+            </td>
+            <td>
+                {{ object.purpose }}
+            </td>
+            <td>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{%  else %}
+    <h1>пусто</h1>
+{% endif %}
+
+{% endblock content %}

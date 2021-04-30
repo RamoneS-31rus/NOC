@@ -2,6 +2,7 @@ from django.urls import path
 from.views import (
     ProductList, ProductDetail, ProductCreate, ProductUpdate,
     IncomeList, IncomeCreate, IncomeUpdate, IncomeDelete,
+    ObjectList, ObjectCreate, ObjectUpdate,
 )
 
 
@@ -13,7 +14,11 @@ urlpatterns = [
     path('income/', IncomeList.as_view(), name='income_list'),
     path('income/add', IncomeCreate.as_view(), name='income_add'),
     path('income/<slug:slug>/update/', IncomeUpdate.as_view(), name='income_update'),
-    path('income/<slug:slug>/delete/', IncomeDelete.as_view(template_name='storage/income_delete.html'), name='income_delete'),
+    path('income/<slug:slug>/delete/', IncomeDelete.as_view(), name='income_delete'),
+    path('income/', IncomeList.as_view(), name='income_list'),
+    path('objects/', ObjectList.as_view(), name='object_list'),
+    path('object/add', ObjectCreate.as_view(), name='object_add'),
+    path('object/<slug:slug>/update/', ObjectUpdate.as_view(), name='object_update'),
     #path('expense/', ExpenseList.as_view(), name='expense_list'),
     #path('expense/<slug:slug>/update/', ExpenseUpdate.as_view(), name='expense_update'),
 ]

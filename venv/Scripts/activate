@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Roman\PycharmProjects\New_BTC\venv"
+VIRTUAL_ENV="C:\Users\Roman\PycharmProjects\BTC\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

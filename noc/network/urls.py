@@ -3,10 +3,10 @@ from.views import VlanList, VlanDetail, VlanUpdate, SwitchList, SwitchDetail, Sw
 
 
 urlpatterns = [
-    path('vlans/', VlanList.as_view(), name='vlan_list'),
+    path('vlans', VlanList.as_view(), name='vlan_list'),
     path('vlan/<int:pk>', VlanDetail.as_view(), name='vlan_detail'),
     path('vlan/<int:pk>/edit/', VlanUpdate.as_view(), name='vlan_update'),
-    path('search/', VlanList.as_view(template_name='search.html'), name='search'),
+    path('search', VlanList.as_view(template_name='search.html'), name='search'),
     path('switches/', SwitchList.as_view(), name='switch_list'),
     path('switch/<int:pk>', SwitchDetail.as_view(), name='switch_detail'),
     path('switch/<int:pk>/edit/', SwitchUpdate.as_view(), name='switch_update'),

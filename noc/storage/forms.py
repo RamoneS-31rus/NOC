@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Product, Income
+from .models import Product, Income, Object
 
 
 class ProductForm(ModelForm):
@@ -15,6 +15,12 @@ class IncomeForm(ModelForm):
         model = Income
         fields = ['income_category', 'income_type', 'income_name', 'income_quality', 'income_note']
 
+
+class ObjectForm(ModelForm):
+
+    class Meta:
+        model = Object
+        fields = ['object_address', 'object_purpose']
 
 # class ExpenseForm(ModelForm):
 #

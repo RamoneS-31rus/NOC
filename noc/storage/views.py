@@ -1,31 +1,31 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Product, Income
-from .forms import ProductForm, IncomeForm
+from .models import Product, Income, Object
+from .forms import ProductForm, IncomeForm, ObjectForm
 
 
 class ProductList(ListView):
     model = Product
     context_object_name = 'products'
-    templates = 'storage/product_list.html'
+    template_name = 'storage/product_list.html'
 
 
 class ProductDetail(DetailView):
     model = Product
     context_object_name = 'product'
-    templates = 'storage/product_detail.html'
+    template_name = 'storage/product_detail.html'
 
 
 class ProductCreate(CreateView):
     model = Product
-    templates = 'storage/product_form.html'
+    template_name = 'storage/product_form.html'
     form_class = ProductForm
     success_url = '/storage/catalog/'
 
 
 class ProductUpdate(UpdateView):
     model = Product
-    templates = 'storage/product_form.html'
+    template_name = 'storage/product_form.html'
     form_class = ProductForm
     success_url = '/storage/catalog/'
 
@@ -33,12 +33,12 @@ class ProductUpdate(UpdateView):
 class IncomeList(ListView):
     model = Income
     context_object_name = 'income_list'
-    templates = 'storage/income_list.html'
+    template_name = 'storage/income_list.html'
 
 
 class IncomeCreate(CreateView):
     model = Income
-    templates = 'storage/income_form.html'
+    template_name = 'storage/income_form.html'
     form_class = IncomeForm
     success_url = '/storage/income'
 
@@ -58,14 +58,34 @@ class IncomeCreate(CreateView):
 
 class IncomeUpdate(UpdateView):
     model = Income
-    templates = 'storage/income_form.html'
+    template_name = 'storage/income_form.html'
     form_class = IncomeForm
     success_url = '/storage/income/'
 
 
 class IncomeDelete(DeleteView):
     model = Income
-    #templates = 'storage/income_delete.html'
+    template_name = 'storage/income_delete.html'
+    success_url = '/storage/income/'
+
+
+class ObjectList(ListView):
+    model = Object
+    template_name = 'storage/object_list.html'
+    context_object_name = 'object_list'
+
+
+class ObjectCreate(CreateView):
+    model = Object
+    template_name = 'storage/object_form.html'
+    form_class = ObjectForm
+    success_url = '/storage/income'
+
+
+class ObjectUpdate(UpdateView):
+    model = Object
+    template_name = 'storage/object_form.html'
+    form_class = ObjectForm
     success_url = '/storage/income/'
 
 

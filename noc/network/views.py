@@ -10,7 +10,7 @@ from django_filters.views import FilterView
 
 class VlanList(LoginRequiredMixin, ListView):
     model = Vlan  # queryset = Vlan.objects.all()
-    template_name = 'vlan/vlan_list.html'
+    template_name = 'network/vlan_list.html'
     context_object_name = 'vlans'
     paginate_by = 100
 
@@ -43,7 +43,7 @@ class VlanList(LoginRequiredMixin, ListView):
 
 class VlanDetail(LoginRequiredMixin, DetailView):
     model = Vlan
-    template_name = 'vlan/vlan_detail.html'
+    template_name = 'network/vlan_detail.html'
     context_object_name = 'vlan'
 
     def get_context_data(self, **kwargs):
@@ -59,13 +59,13 @@ class VlanDetail(LoginRequiredMixin, DetailView):
 class VlanUpdate(LoginRequiredMixin, UpdateView):
     model = Vlan
     form_class = VlanForm
-    template_name = 'vlan/vlan_update.html'
+    template_name = 'network/vlan_update.html'
     #permission_required = 'vlan.change_vlan'
 
 
 class SwitchList(LoginRequiredMixin, ListView):
     model = Switch
-    template_name = 'switch/switch_list.html'
+    template_name = 'network/switch_list.html'
     context_object_name = 'switches'
     paginate_by = 100
     #form_class = VlanForm
@@ -79,7 +79,7 @@ class SwitchList(LoginRequiredMixin, ListView):
 
 class SwitchDetail(LoginRequiredMixin, DetailView):
     model = Switch
-    template_name = 'switch/switch_detail.html'
+    template_name = 'network/switch_detail.html'
     context_object_name = 'switch'
 
     def get_context_data(self, **kwargs):
@@ -95,7 +95,7 @@ class SwitchDetail(LoginRequiredMixin, DetailView):
 class SwitchUpdate(LoginRequiredMixin, UpdateView):
     model = Switch
     form_class = SwitchForm
-    template_name = 'switch/switch_update.html'
+    template_name = 'network/switch_update.html'
     #permission_required = 'switch.change_switch'
 
     # def post(self, request, *args, **kwargs):
@@ -114,7 +114,7 @@ class SwitchUpdate(LoginRequiredMixin, UpdateView):
 
 class SwitchCreate(LoginRequiredMixin, CreateView):
     model = Switch
-    template_name = 'switch/switch_create.html'
+    template_name = 'network/switch_create.html'
     form_class = SwitchForm
     #permission_required = 'switch.add_switch'
 

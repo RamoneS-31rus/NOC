@@ -3,34 +3,42 @@
 {% block content %}
 
 <br>
-{%  if objects %}
-    <table>
-        <tr>
-            <th>
-                Адрес
-            </th>
-            <th>
-                Назначение
-            </th>
-            <th>
-              <a href="{% url 'object_add' %}">Добавить</a>
-            </th>
-        </tr>
-    {% for object in objects %}
-        <tr>
-            <td>
-                {{ object.address }}
-            </td>
-            <td>
-                {{ object.purpose }}
-            </td>
-            <td>
-            </td>
-        </tr>
-    {% endfor %}
-    </table>
+<a href="{% url 'object_add' %}">Добавить</a>
+{%  if object_list %}
+<table>
+    <tr>
+        <th>
+            Дата
+        </th>
+        <th>
+            Адрес
+        </th>
+        <th>
+            Назначение
+        </th>
+    </tr>
+{% for object in object_list %}
+    <tr>
+        <td>
+            {{ object.date_create | date:'d.m.Y H:i' }}
+        </td>
+        <td>
+            <a href="{% url 'object_detail' object.slug %}">{{ object.address }}</a>
+        </td>
+        <td>
+            {{ object.purpose }}
+        </td>
+        <td>
+            <a href="{% url 'object_update' object.slug %}">Редактировать</a>
+        </td>
+        <td>
+            <a href="{% url 'object_delete' object.slug %}">Удалить</a>
+        </td>
+    </tr>
+{% endfor %}
+</table>
 {%  else %}
-    <h1>пусто</h1>
+<h1>пусто</h1>
 {% endif %}
 
 {% endblock content %}

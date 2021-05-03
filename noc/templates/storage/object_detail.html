@@ -1,0 +1,61 @@
+{% extends 'default.html' %}
+
+{% block content %}
+<h3 style="text-align: center">{{ object.address }}</h3>
+{%  if expense_list %}
+<table>
+    <tr>
+        <th>
+            Название
+        </th>
+        <th>
+            Количество
+        </th>
+        <th>
+            Примечание
+        </th>
+        <th>
+            Добавил
+        </th>
+        <th>
+        </th>
+    </tr>
+{% for expense in expense_list %}
+    <tr>
+        <td>
+            {{ expense.expense_name }}
+        </td>
+        <td>
+            {{ expense.expense_quality }}
+        </td>
+        <td>
+            {{ expense.expense_note }}
+        </td>
+        <td>
+            {{ expense.expense_user }}
+        </td>
+        <td>
+            <a href="{% url 'expense_update' expense.pk %}">Edit</a>
+            <a href="{% url 'expense_delete' expense.pk %}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{%  else %}
+<h1></h1>
+{% endif %}
+<br>
+{% if user.is_authenticated %}
+        <div>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form }}
+                <div>
+                    <button type="submit">Добавить</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+
+{% endblock content %}

@@ -66,6 +66,7 @@ class Income(models.Model):
 
 
 class Object(models.Model):
+    date_create = models.DateTimeField(auto_now_add=True)
     address = models.CharField(max_length=20, blank=True, verbose_name='Адрес')
     purpose = models.CharField(max_length=20, blank=True, verbose_name='Назначение')
     slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')
@@ -74,6 +75,9 @@ class Object(models.Model):
         if not self.slug:
             self.slug = slugify(self.address).lower()
         super(Object, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('object_detail', kwargs={'slug': self.slug})
 
     def __str__(self):
         return f'{self.address}'
@@ -85,12 +89,8 @@ class Expense(models.Model):
     expense_type = models.ForeignKey(Type, on_delete=models.CASCADE, verbose_name='Тип')
     expense_name = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Название')
     expense_quality = models.IntegerField(default=0, verbose_name='Количество')
-    expense_address = models.ForeignKey(Object, on_delete=models.CASCADE, verbose_name='Адрес')
+    expense_address = models.ForeignKey(Object, on_delete=models.CASCADE)
     expense_note = models.CharField(max_length=50, blank=True, verbose_name='Примечание')
-    expense_date_create = models.DateTimeField(auto_now_add=True)
-    expense_date_update = models.DateTimeField(auto_now=True)
-    expense_status = models.BooleanField(default=False)
-    slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')
 
     def __str__(self):
         return f'{self.expense_name}'

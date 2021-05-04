@@ -60,7 +60,7 @@ class Income(models.Model):
             if not Income.objects.all():
                 index = 0
             else:
-                index = Income.objects.all()[0].id
+                index = Income.objects.first().id
             self.slug = slugify(self.income_name.name).lower() + '-' + str(index + 1)
         super(Income, self).save(*args, **kwargs)
 

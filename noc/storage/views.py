@@ -149,5 +149,8 @@ class ExpenseUpdate(RedirectToPreviousMixin, UpdateView):
     form_class = ExpenseForm
 
 
-class ExpenseDelete(RedirectToPreviousMixin, DeleteView):
+class ExpenseDelete(DeleteView):
     model = Expense
+
+    def get_success_url(self):
+        return self.request.HttpRequest.path

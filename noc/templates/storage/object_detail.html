@@ -40,7 +40,7 @@
         </td>
         <td>
             <a href="{% url 'expense_update' expense.pk %}">Edit</a>
-            <form method="POST" action="{% url 'expense_delete'  expense.pk %}">
+            <form method="POST" action="{% url 'expense_delete'  expense.pk %}?next={{request.path}}">
                 {% csrf_token %}
                 <input type="submit" value="Удалить">
             </form>

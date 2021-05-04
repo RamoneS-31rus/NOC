@@ -1,7 +1,11 @@
 {% extends 'default.html' %}
 
 {% block content %}
+
+<div>
+    <a href="{% url 'object_list' %}">Назад</a>
 <h3 style="text-align: center">{{ object.address }}</h3>
+</div>
 {%  if expense_list %}
 <table>
     <tr>
@@ -36,7 +40,10 @@
         </td>
         <td>
             <a href="{% url 'expense_update' expense.pk %}">Edit</a>
-            <a href="{% url 'expense_delete' expense.pk %}">Delete</a>
+            <form method="POST" action="{% url 'expense_delete'  expense.pk %}">
+                {% csrf_token %}
+                <input type="submit" value="Удалить">
+            </form>
         </td>
     </tr>
     {% endfor %}
@@ -46,16 +53,16 @@
 {% endif %}
 <br>
 {% if user.is_authenticated %}
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
         <div>
-            <form method="POST">
-                {% csrf_token %}
-                {{ form }}
-                <div>
-                    <button type="submit">Добавить</button>
-                </div>
-            </form>
+            <br>
+            <button type="submit">Добавить</button>
         </div>
-        {% endif %}
-
+    </form>
+</div>
+{% endif %}
 
 {% endblock content %}

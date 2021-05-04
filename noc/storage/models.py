@@ -52,24 +52,31 @@ class Income(models.Model):
     income_date_update = models.DateTimeField(auto_now=True)
     slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')
 
+    class Meta:
+        ordering = ['-id']
+
     def save(self, *args, **kwargs):
         if not self.slug:
-            if not Income.objects.last():
+            if not Income.objects.all():
                 index = 0
             else:
-                index = Income.objects.last().id
+                index = Income.objects.all()[0].id
             self.slug = slugify(self.income_name.name).lower() + '-' + str(index + 1)
         super(Income, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.slug}'
+        return f'{self.income_name}'
 
 
 class Object(models.Model):
     date_create = models.DateTimeField(auto_now_add=True)
     address = models.CharField(max_length=20, blank=True, verbose_name='Адрес')
     purpose = models.CharField(max_length=20, blank=True, verbose_name='Назначение')
+    note = models.CharField(max_length=50, blank=True, verbose_name='Примечание')
     slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')
+
+    class Meta:
+        ordering = ['-id']
 
     def save(self, *args, **kwargs):
         if not self.slug:

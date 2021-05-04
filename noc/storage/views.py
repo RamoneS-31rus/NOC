@@ -82,6 +82,7 @@ class ObjectDetail(FormMixin, DetailView):
     template_name = 'storage/object_detail.html'
     context_object_name = 'object'
     form_class = ExpenseForm
+    expense_status = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -107,19 +108,6 @@ class ObjectDetail(FormMixin, DetailView):
         return super().form_valid(form)
 
 
-# def delete_expense(request, *args, **kwargs):
-#     obj = get_object()
-#     success_url = redirect('appname:task_list', pk=obj.task.pk)
-#     Expense.objects.filter(pk=obj.pk).delete_expense()
-#     return success_url
-
-# def delete_expense(request):
-#     obj = get_object_or_404(Comment, pk=comment_pk)
-#     success_url = redirect('appname:task_list', pk=obj.task.pk)
-#     Expense.objects.filter(pk=obj.pk).delete_expense()
-#     return success_url
-
-
 class ObjectCreate(CreateView):
     model = Object
     template_name = 'storage/object_form.html'
@@ -135,8 +123,18 @@ class ObjectUpdate(UpdateView):
 
 class ObjectDelete(DeleteView):
     model = Object
-    template_name = 'storage/income_delete.html'
+    template_name = 'storage/object_delete.html'
     success_url = '/storage/objects/'
+
+
+class RedirectToPreviousMixin:  # миксин для редиректа на предыдущию страницу
+
+    def get(self, request, *args, **kwargs):
+        request.session['previous_page'] = request.META.get('HTTP_REFERER', '/')
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.request.session['previous_page']
 
 
 class ExpenseCreate(CreateView):
@@ -145,13 +143,11 @@ class ExpenseCreate(CreateView):
     form_class = ExpenseForm
 
 
-class ExpenseUpdate(UpdateView):
+class ExpenseUpdate(RedirectToPreviousMixin, UpdateView):
     model = Expense
     template_name = 'storage/expense_form.html'
     form_class = ExpenseForm
 
 
-class ExpenseDelete(DeleteView):
+class ExpenseDelete(RedirectToPreviousMixin, DeleteView):
     model = Expense
-    template_name = 'storage/income_delete.html'
-    success_url = '/storage/objects/'

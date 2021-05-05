@@ -10,16 +10,22 @@ def income_quality_update(sender, instance, **kwargs):
         product.quality = product.quality + instance.income_quality
         product.save()
     else:  # если есть, то сработало на редактирование имеющегося
-        product = Product.objects.get(name=instance.income_name)
-        old_quality = Income.objects.get(pk=instance.id).income_quality  # значение до изменения
+        current_product = Product.objects.get(name=instance.income_name)  # измененное название
+        old_product = Product.objects.get(name=Income.objects.get(pk=instance.id).income_name)  # старое название
         current_quality = instance.income_quality  # измененное значение
-        if current_quality > old_quality:  # корректируем количество в зависимости от нового значения
-            new_quality = current_quality - old_quality
-            product.quality = product.quality + new_quality
-        else:
-            new_quality = old_quality - current_quality
-            product.quality = product.quality - new_quality
-        product.save()
+        old_quality = Income.objects.get(pk=instance.id).income_quality  # значение до изменения
+        if current_product == old_product and current_quality != old_quality:
+            if current_quality > old_quality:  # корректируем количество в зависимости от нового значения
+                new_quality = current_quality - old_quality
+                current_product.quality = current_product.quality + new_quality
+            else:
+                new_quality = old_quality - current_quality
+                current_product.quality = current_product.quality - new_quality
+        elif current_product != old_product:
+            current_product.quality = current_product.quality + current_quality
+            old_product.quality = old_product.quality - old_quality
+            old_product.save()
+        current_product.save()
 
 
 @receiver(pre_delete, sender=Income)

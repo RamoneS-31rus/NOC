@@ -80,7 +80,11 @@ class Object(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.address).lower()
+            if not Object.objects.all():
+                index = 0
+            else:
+                index = Object.objects.first().id
+            self.slug = slugify(self.address).lower() + '-' + str(index + 1)
         super(Object, self).save(*args, **kwargs)
 
     def get_absolute_url(self):

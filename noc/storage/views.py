@@ -153,4 +153,4 @@ class ExpenseDelete(DeleteView):
     model = Expense
 
     def get_success_url(self):
-        return self.request.HttpRequest.path
+        return self.request.path

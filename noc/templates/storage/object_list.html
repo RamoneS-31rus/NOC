@@ -3,7 +3,11 @@
 {% block content %}
 
 <br>
-<a href="{% url 'object_add' %}">Добавить</a>
+<div>
+    <a href="{% url 'object_add' %}">Добавить</a>
+</div>
+<br>
+
 {%  if object_list %}
 <table>
     <tr>

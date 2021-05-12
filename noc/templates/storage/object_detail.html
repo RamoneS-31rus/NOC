@@ -3,9 +3,10 @@
 {% block content %}
 
 <div>
-    <a href="{% url 'object_list' %}">Назад</a>
-<h3 style="text-align: center">{{ object.address }}</h3>
+    <a style="text-align: left; float: left" href="{% url 'object_list' %}">Назад</a>
+    <h3 style="text-align: center">{{ object.address }}</h3>
 </div>
+
 {%  if expense_list %}
 <table>
     <tr>
@@ -40,7 +41,7 @@
         </td>
         <td>
             <a href="{% url 'expense_update' expense.pk %}">Edit</a>
-            <form method="POST" action="{% url 'expense_delete'  expense.pk %}?next={{request.path}}">
+            <form method="POST" action="{% url 'expense_delete'  expense.pk %}">
                 {% csrf_token %}
                 <input type="submit" value="Удалить">
             </form>

@@ -2,6 +2,12 @@
 
 {% block content %}
 
+<br>
+<div>
+    <a href="{% url 'income_add' %}">Добавить</a>
+</div>
+<br>
+
 {%  if income_list %}
 <table>
     <tr>
@@ -52,9 +58,6 @@
 {%  else %}
     <h1>пусто</h1>
 {% endif %}
-<div>
-    <a href="{% url 'income_add' %}">Добавить</a>
-</div>
 
 {% endblock content %}
 

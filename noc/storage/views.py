@@ -82,7 +82,6 @@ class ObjectDetail(FormMixin, DetailView):
     template_name = 'storage/object_detail.html'
     context_object_name = 'object'
     form_class = ExpenseForm
-    expense_status = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -152,5 +151,6 @@ class ExpenseUpdate(RedirectToPreviousMixin, UpdateView):
 class ExpenseDelete(DeleteView):
     model = Expense
 
-    def get_success_url(self):
-        return self.request.path
+    def get_success_url(self):  # редирект на предыдущию страницу, через связный объект
+        slug = Object.objects.get(pk=self.get_object().expense_address.pk).slug
+        return reverse('object_detail', kwargs={'slug': slug})

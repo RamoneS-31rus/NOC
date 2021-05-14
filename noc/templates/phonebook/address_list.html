@@ -1,0 +1,36 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+<br>
+<div>
+    <a href="#">Добавить</a>
+</div>
+<br>
+
+{%  if address_list %}
+<table>
+    <tr>
+        <th>
+            Адрес
+        </th>
+    </tr>
+{% for address in address_list %}
+    <tr>
+        <td>
+            <a href="{% url 'address_detail' address.slug %}">{{ address.name }}</a>
+        </td>
+        <td>
+            <a href="#">Редактировать</a>
+        </td>
+        <td>
+            <a href="#">Удалить</a>
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{%  else %}
+<h1>пусто</h1>
+{% endif %}
+
+{% endblock content %}

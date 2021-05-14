@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_filters',
     'network.apps.NetworkConfig',
     'storage.apps.StorageConfig',
+    'phonebook.apps.PhonebookConfig',
 ]
 
 SITE_ID = 1

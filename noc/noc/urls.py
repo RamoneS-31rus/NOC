@@ -24,6 +24,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('', include('sign.urls')),
     path('storage/', include('storage.urls')),
+    path('contacts/', include('phonebook.urls')),
 ]
 
 if settings.DEBUG:

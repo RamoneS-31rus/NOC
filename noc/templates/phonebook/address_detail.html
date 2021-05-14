@@ -1,0 +1,43 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+<div>
+    <a style="text-align: left; float: left" href="{% url 'address_list' %}">Назад</a>
+    <h3 style="text-align: center">{{ contact.address }}</h3>
+</div>
+
+{%  if contact_list %}
+<table>
+    <tr>
+        <th>
+            Имя
+        </th>
+        <th>
+            Телефон
+        </th>
+        <th>
+            Примечание
+        </th>
+        <th>
+        </th>
+    </tr>
+{% for contact in contact_list %}
+    <tr>
+        <td>
+            {{ contact.name }}
+        </td>
+        <td>
+            {{ contact.phone }}
+        </td>
+        <td>
+            {{ contact.note }}
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{%  else %}
+<h1></h1>
+{% endif %}
+
+{% endblock content %}

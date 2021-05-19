@@ -4,7 +4,7 @@
 
 <br>
 <div>
-    <a href="#">Добавить</a>
+    <a href="{% url 'address_add' %}">Добавить</a>
 </div>
 <br>
 
@@ -21,10 +21,10 @@
             <a href="{% url 'address_detail' address.slug %}">{{ address.name }}</a>
         </td>
         <td>
-            <a href="#">Редактировать</a>
+            <a href="{% url 'address_update' address.slug %}">Редактировать</a>
         </td>
         <td>
-            <a href="#">Удалить</a>
+            <a href="{% url 'address_delete' address.slug %}">Удалить</a>
         </td>
     </tr>
 {% endfor %}

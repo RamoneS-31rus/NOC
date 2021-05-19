@@ -4,8 +4,15 @@
 
 <div>
     <a style="text-align: left; float: left" href="{% url 'address_list' %}">Назад</a>
-    <h3 style="text-align: center">{{ contact.address }}</h3>
+    {%  block address_detail %}
+    <h3 style="text-align: center">{{ address.name }}</h3>
+    {% endblock %}
 </div>
+<br>
+<div>
+    <a href="{% url 'contact_add' address.slug %}">Добавить</a>
+</div>
+<br>
 
 {%  if contact_list %}
 <table>
@@ -32,6 +39,12 @@
         </td>
         <td>
             {{ contact.note }}
+        </td>
+        <td>
+            <a href="{% url 'contact_update' address.slug contact.pk %}">Редактировать</a>
+        </td>
+        <td>
+            <a href="{% url 'contact_delete' address.slug contact.pk %}">Удалить</a>
         </td>
     </tr>
 {% endfor %}

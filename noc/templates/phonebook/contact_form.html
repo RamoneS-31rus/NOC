@@ -1,0 +1,18 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+<hr>
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <hr>
+        <div>
+            <button type="submit">Добавить</button>
+            <a href="{{ request.META.HTTP_REFERER }}" role="button">Отмена</a>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

@@ -73,13 +73,13 @@ class IncomeDelete(DeleteView):
 
 class ObjectList(ListView):
     model = Object
-    template_name = 'storage/address_list.html'
+    template_name = 'storage/object_list.html'
     context_object_name = 'object_list'
 
 
 class ObjectDetail(FormMixin, DetailView):
     model = Object
-    template_name = 'storage/address_detail.html'
+    template_name = 'storage/object_detail.html'
     context_object_name = 'object'
     form_class = ExpenseForm
 

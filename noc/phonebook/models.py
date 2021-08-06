@@ -19,6 +19,7 @@ class Address(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+
 class Contact(models.Model):
     address = models.ForeignKey(Address, on_delete=models.CASCADE, verbose_name='Адрес')
     name = models.CharField(max_length=50, blank=True, verbose_name='Имя')

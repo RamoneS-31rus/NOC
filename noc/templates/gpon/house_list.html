@@ -1,0 +1,93 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+<hr>
+
+<div>
+    <form method="GET">
+        {{ filter.form }}
+        <button class="button_cancel_form" type="submit">Найти</button>
+        <a href="{% url 'house_create' %}" role="button">Добавить дом</a>
+    </form>
+</div>
+
+<hr>
+
+{%  if filter.qs %}
+    <table class="table_default">
+        <tr>
+            <th style="width: 200px">
+                Адрес
+            </th>
+            <th style="width: 70px">
+                Статус ВОЛС
+            </th>
+            <th style="width: 70px">
+                Статус заявки
+            </th>
+            <th style="width: 200px">
+               Примечание
+            </th>
+            <th style="width: 10px">
+            </th>
+        </tr>
+    {% for house in filter.qs %}
+        <tr>
+            <td>
+                {{ house.address }}
+            </td>
+            <td>
+                {{ house.status }}
+            </td>
+            <td>
+                {% if house.request.all %}
+                    {% for i in house.request.all %}
+                        {% if i.status is False and not i.date_con %}
+                            Новая
+                        {% elif i.status is False and i.date_con %}
+                            Выполняется
+                        {% elif i.status is True %}
+                            Завершена
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <a href="{% url 'request_create' house.pk %}">Добавить заявку</a>
+                {% endif %}
+            </td>
+            <td>
+                {{ house.note }}
+            </td>
+            <td>
+                <a href="{% url 'house_update' house.pk %}" title="Изменить"><img src="/static/images/icon_edit.png" width="23"
+                height="23"></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{%  else %}
+    <h1>пусто</h1>
+{% endif %}
+
+{% if is_paginated %}
+
+    {% if page_obj.has_previous %}
+        <a href="?page=1">Первая</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+    {% endif %}
+{% endif %}
+
+{% endblock content %}

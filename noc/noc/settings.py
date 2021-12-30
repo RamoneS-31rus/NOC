@@ -37,10 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'django_filters',
+
     'network.apps.NetworkConfig',
     'storage.apps.StorageConfig',
     'phonebook.apps.PhonebookConfig',
+    'gpon.apps.GponConfig',
+    'addressbook',
 ]
 
 SITE_ID = 1

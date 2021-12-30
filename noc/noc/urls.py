@@ -20,11 +20,12 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('network/', include('network.urls')),
-    path('account/', include('account.urls')),
     path('', include('sign.urls')),
+    path('account/', include('account.urls')),
+    path('network/', include('network.urls')),
     path('storage/', include('storage.urls')),
     path('contacts/', include('phonebook.urls')),
+    path('gpon/', include('gpon.urls')),
 ]
 
 if settings.DEBUG:

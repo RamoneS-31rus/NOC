@@ -1,0 +1,44 @@
+{% extends 'default.html' %}
+{% block content %}
+
+<br>
+<form method="POST">
+    {% csrf_token %}
+    <table class="table_detail">
+    <tr>
+        <th style="width: 100px">
+            Зона
+        </th>
+        <th style="width: 200px">
+            Адрес
+        </th>
+        <th style="width: 45px">
+            Статус
+        </th>
+        <th style="width: 130px">
+            Примечание
+        </th>
+    </tr>
+    <tr>
+        <td>
+            {{ form.area }}
+        </td>
+        <td>
+            {{ form.address }}
+        </td>
+        <td>
+            {{ form.status }}
+        </td>
+        <td>
+            {{ form.note }}
+        </td>
+    </tr>
+    </table>
+    <br>
+    <div style="text-align: center">
+        <button class="button_add_form" type="submit">Сохранить</button>
+        <a class="button_cancel_form" href="javascript:window.history.back()" role="button">Отменить</a>
+    </div>
+</form>
+
+{% endblock %}

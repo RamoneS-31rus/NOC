@@ -1,0 +1,20 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+    <p>Всего домов: {{ total_houses.count }}</p>
+    Нет кабеля: {{ cable_houses.count }}
+    Нужна сварка: {{ welding_houses.count }}
+    Готов к подключению: {{ ready_houses.count }}
+    <div>
+        <p>Всего заявок: {{ requests.count }}</p>
+        Новые: {{ is_new.count }}
+        Выполняются: {{ in_progress.count }}
+        Завершенные: {{ is_completed.count }}
+    </div>
+    <p>Продано роутеров: {{ sold_routers.count }}</p>
+    <p>TL-WR845N</p>
+    <p>TL-WR844N</p>
+
+
+{% endblock content %}

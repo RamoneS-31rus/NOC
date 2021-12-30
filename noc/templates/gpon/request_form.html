@@ -1,0 +1,84 @@
+{%extends 'default.html' %}
+
+{% block content %}
+<br><br>
+<style>
+   li {
+    list-style-type: none; /* Убираем маркеры */
+   }
+   ul {
+    padding-left: 0; /* Сдвигаем список влево */
+   }
+</style>
+<form method="POST">
+    {% csrf_token %}
+    <table class="table_default">
+    <tr>
+        <th style="width: 100px">
+            ФИО
+        </th>
+        <th style="width: 100px">
+            Телефон
+        </th>
+        <th style="width: 100px">
+            Дата подключения
+        </th>
+        <th style="width: 120px">
+            Тариф
+        </th>
+        <th style="width: 100px">
+            Модель ONT
+        </th>
+        <th style="width: 120px">
+            Модель Wi-Fi роутера
+        </th>
+        <th style="width: 120px">
+            Монтажники
+        </th>
+        <th style="width: 120px">
+            Менеджер
+        </th>
+        <th style="width: 130px">
+           Примечание
+        </th>
+    </tr>
+    <tr>
+        <td>
+            {{ form.name }}
+        </td>
+        <td>
+            {{ form.phone }}
+        </td>
+        <td>
+            {{ form.date_con }}
+        </td>
+        <td>
+            {{ form.tariff }}
+        </td>
+        <td>
+            {{ form.ont }}
+        </td>
+        <td>
+            {{ form.router }}
+        </td>
+        <td>
+            {% for i in form.installer %}
+                    {{ i }} <br>
+                {% endfor %}
+        </td>
+        <td>
+            {{ form.manager }}
+        </td>
+        <td>
+            {{ form.note }}
+        </td>
+    </tr>
+    </table>
+    <br>
+    <div style="text-align: center">
+        <button class="button_add_form" type="submit">Сохранить</button>
+        <a class="button_cancel_form" href="javascript:window.history.back()" role="button">Отменить</a>
+    </div>
+</form>
+
+{% endblock content %}

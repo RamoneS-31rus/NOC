@@ -1,0 +1,106 @@
+{%extends 'default.html' %}
+
+{% block content %}
+<hr>
+<div>
+    <a href="{% url 'requests_new' %}">Новые</a>
+    <a href="{% url 'requests_in_progress' %}">Выполняются</a>
+    <a href="{% url 'requests_completed' %}">Завершенные</a>
+</div>
+<hr>
+{%  if is_completed %}
+    <table class="table_default">
+        <tr>
+            <th style="width: 170px">
+                Адрес
+            </th>
+            <th style="width: 170px">
+                ФИО
+            </th>
+            <th style="width: 90px">
+                Телефон
+            </th>
+            <th style="width: 60px">
+                Дата заявки
+            </th>
+            <th style="width: 90px">
+                Дата подключения
+            </th>
+            <th style="width: 50px">
+                Тариф (Мбит/с)
+            </th>
+            <th style="width: 100px">
+                Модель ONT
+            </th>
+            <th style="width: 120px">
+                Модель Wi-Fi роутера
+            </th>
+            <th style="width: 110px">
+                Монтажники
+            </th>
+            <th style="width: 110px">
+                Менеджер
+            </th>
+            <th style="width: 130px">
+               Примечание
+            </th>
+            <th style="width: 110px">
+            </th>
+        </tr>
+    {% for house in is_completed %}
+        <tr>
+            <td>
+                {{ house.address }}
+            </td>
+            <td>
+                {{ house.name }}
+            </td>
+            <td>
+                {{ house.phone }}
+            </td>
+            <td>
+                {{ house.date_req|date:'d.m.Y' }}
+            </td>
+            <td>
+                {{ house.date_con|date:'d.m.Y H:i' }}
+            </td>
+            <td>
+                {{ house.tariff.speed }}
+            </td>
+            <td>
+                {{ house.ont }}
+            </td>
+            <td>
+                {% if house.router is None %}
+                    -----
+                {% else %}
+                    {{ house.router }}
+                {% endif %}
+            </td>
+            <td>
+                {% for i in house.installer.all %}
+                    {{ i.last_name }} {{ i.first_name }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {{ house.manager }}
+            </td>
+            <td>
+                {{ house.note }}
+            </td>
+            <td>
+                <form action="{% url 'request_resume' house.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" style="background-color:transparent; border-color:transparent;" title="Возобновить">
+                        <img src="/static/images/icon_resume.png" width="23" height="23">
+                    </button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{%  else %}
+    <h1>пусто</h1>
+{% endif %}
+
+{% endblock content %}

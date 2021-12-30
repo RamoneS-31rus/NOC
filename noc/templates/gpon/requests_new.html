@@ -1,0 +1,103 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+<hr>
+<div>
+    {% verbatim %}
+<!--    <a href="{% url 'request_create' %}">Добавить заявку</a>-->
+    {% endverbatim %}
+    <a href="{% url 'requests_new' %}">Новые</a>
+    <a href="{% url 'requests_in_progress' %}">Выполняются</a>
+    <a href="{% url 'requests_completed' %}">Завершенные</a>
+</div>
+<hr>
+
+{%  if is_new %}
+    <table class="table_default">
+        <tr>
+            <th style="width: 100px">
+                Адрес
+            </th>
+            <th style="width: 100px">
+                ФИО
+            </th>
+            <th style="width: 100px">
+                Телефон
+            </th>
+            <th style="width: 70px">
+                Дата заявки
+            </th>
+            <th style="width: 100px">
+                Дата подключения
+            </th>
+            <th style="width: 90px">
+                Тариф (Мбит/с)
+            </th>
+            <th style="width: 100px">
+                Модель ONT
+            </th>
+            <th style="width: 90px">
+                Стоимость подключения
+            </th>
+            <th style="width: 120px">
+                Модель Wi-Fi роутера
+            </th>
+            <th style="width: 150px">
+               Примечание
+            </th>
+            <th style="width: 70px">
+            </th>
+        </tr>
+    {% for house in is_new %}
+        <tr>
+            <td>
+                {{ house.address }}
+            </td>
+            <td>
+                {{ house.name }}
+            </td>
+            <td>
+                {{ house.phone }}
+            </td>
+            <td>
+                {{ house.date_req|date:'d.m.Y' }}
+            </td>
+            <td>
+                {{ house.date_con|date:'d.m.Y H:i' }}
+            </td>
+            <td>
+                {{ house.tariff.speed }}
+            </td>
+            <td>
+                {% if house.ont is None %}
+                    -----
+                {% else %}
+                    {{ house.ont }}
+                {% endif %}
+            </td>
+            <td>
+                {{ house.price_con }}
+            </td>
+            <td>
+                {% if house.router is None %}
+                    -----
+                {% else %}
+                    {{ house.router }}
+                {% endif %}
+            </td>
+            <td>
+                {{ house.note }}
+            </td>
+            <td>
+                <a href="{% url 'request_update' house.pk %}" title="Изменить"><img src="/static/images/icon_edit.png" width="23"
+                height="23"></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{%  else %}
+    <h1>пусто</h1>
+{% endif %}
+
+{% endblock content %}

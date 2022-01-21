@@ -1,23 +1,17 @@
-{%extends 'default.html' %}
+{%extends 'request.html' %}
 
 {% block content %}
-<hr>
-<div>
-    <a href="{% url 'requests_new' %}">Новые</a>
-    <a href="{% url 'requests_in_progress' %}">Выполняются</a>
-    <a href="{% url 'requests_completed' %}">Завершенные</a>
-</div>
-<hr>
+
 {%  if is_completed %}
-    <table class="table_default">
+    <table class="table_gpon">
         <tr>
-            <th style="width: 170px">
+            <th style="width: 220px">
                 Адрес
             </th>
-            <th style="width: 170px">
+            <th style="width: 220px">
                 ФИО
             </th>
-            <th style="width: 90px">
+            <th style="width: 130px">
                 Телефон
             </th>
             <th style="width: 60px">
@@ -26,33 +20,36 @@
             <th style="width: 90px">
                 Дата подключения
             </th>
-            <th style="width: 50px">
+            <th style="width: 90px">
                 Тариф (Мбит/с)
             </th>
-            <th style="width: 100px">
+            <th>
                 Модель ONT
             </th>
             <th style="width: 120px">
                 Модель Wi-Fi роутера
             </th>
-            <th style="width: 110px">
+            <th style="width: 90px">
+                Стоимость подключения
+            </th>
+            <th style="width: 170px">
                 Монтажники
             </th>
-            <th style="width: 110px">
+            <th style="width: 170px">
                 Менеджер
             </th>
-            <th style="width: 130px">
+            <th style="width: 200px">
                Примечание
             </th>
-            <th style="width: 110px">
+            <th style="width: 20px">
             </th>
         </tr>
     {% for house in is_completed %}
         <tr>
-            <td>
+            <td style="text-align: left">
                 {{ house.address }}
             </td>
-            <td>
+            <td style="text-align: left">
                 {{ house.name }}
             </td>
             <td>
@@ -78,17 +75,24 @@
                 {% endif %}
             </td>
             <td>
+                {{ house.price_con }}
+            </td>
+            <td style="text-align: left">
                 {% for i in house.installer.all %}
                     {{ i.last_name }} {{ i.first_name }}<br>
                 {% endfor %}
             </td>
-            <td>
-                {{ house.manager }}
+            <td style="text-align: left">
+                {% if house.manager is None %}
+                    -----
+                {% else %}
+                    {{ house.manager.last_name }} {{ house.manager.first_name }}
+                {% endif %}
             </td>
-            <td>
+            <td style="text-align: left">
                 {{ house.note }}
             </td>
-            <td>
+            <td style="text-align: center">
                 <form action="{% url 'request_resume' house.pk %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" style="background-color:transparent; border-color:transparent;" title="Возобновить">

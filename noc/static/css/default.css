@@ -103,6 +103,10 @@
     display: block;
 }
 
+button {
+	cursor: pointer;
+}
+
 .table_default {
     border-collapse: collapse; /* Убирает двойные линии между ячейками */
     width: 100%; /* Ширина таблицы */
@@ -213,3 +217,105 @@
   transition: 0.2s;
 }
 .button_cancel_form:hover { background: #006da3}
+
+.table_gpon {
+    border-collapse: collapse; /* Убирает двойные линии между ячейками */
+    /*width: 100%; /* Ширина таблицы */
+    border-spacing: 1px; /* Расстояние между ячейками */
+    table-layout: fixed;
+    margin: auto;
+}
+.table_gpon th, td {
+
+    border: 1px solid black; /* Граница вокруг ячеек */
+    padding: 1px 3px; /* Поля вокруг текста */
+    word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+}
+.table_gpon th {
+    background: #497c9d;
+    color: #fff;
+}
+.table_gpon tr:hover {
+    background: #ddd;
+}
+.table_gpon td {
+	text-align: center;
+}
+.table_gpon td a{
+    text-align: center; /* Текст по центру */
+    text-decoration: none; /* Отменяем подчеркивание у ссылки */
+    left: 0; right: 0; /* По ширине ячейки */
+    top: 0; bottom: 0; /* По высоте ячейки */
+    color: #497c9d; /* Цвет ссылок */
+    padding: 5px; /* Поля вокруг текста */
+}
+.actions_1 {
+	text-align: center;
+  padding: 0;
+  margin: 0;
+}
+.actions_1 li {
+	display:inline-block;
+	margin: 0 70px; /* расстояние между пунктами по ширине */
+
+}
+ .actions_1 li img, .actions_1 li a{
+		vertical-align: middle; /* центровка по вертикали */
+}
+.actions_2 {
+		list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.actions_2 li {
+	display:inline-block;
+	text-align: center;
+}
+.actions_2 li img, .actions_2 li a, .actions_2 li button{
+		display: block;
+  	margin: 0 auto;
+  	padding: 0;
+}
+/*.status li {
+	display:inline-block;
+	width:10%;
+}*/
+
+
+/*.table_gpon td a{*/
+    /*position: absolute; /* Абсолютное позиционирование */
+  /*  text-align: center; /* Текст по центру */
+   /* text-decoration: none; /* Отменяем подчеркивание у ссылки */
+  /*  left: 0; right: 0; /* По ширине ячейки */
+  /*  top: 0; bottom: 0; /* По высоте ячейки */
+    /*background: #fff; /* Цвет фона */
+    /*color: #497c9d; /* Цвет ссылок */
+  /*  padding: 5px; /* Поля вокруг текста */
+/*}*/
+a.button15 {
+  display: inline-block;
+  font-family: arial,sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: rgb(68,68,68);
+  text-decoration: none;
+  user-select: none;
+  padding: .2em 1.2em;
+  outline: none;
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 2px;
+  background: rgb(245,245,245) linear-gradient(#f4f4f4, #f1f1f1);
+  transition: all .218s ease 0s;
+}
+a.button15:hover {
+  color: rgb(24,24,24);
+  border: 1px solid rgb(198,198,198);
+  background: #f7f7f7 linear-gradient(#f7f7f7, #f1f1f1);
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+a.button15:active {
+  color: rgb(51,51,51);
+  border: 1px solid rgb(204,204,204);
+  background: rgb(238,238,238) linear-gradient(rgb(238,238,238), rgb(224,224,224));
+  box-shadow: 0 1px 2px rgba(0,0,0,.1) inset;
+}

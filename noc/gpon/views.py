@@ -1,8 +1,9 @@
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
 from .models import House, Request
-from .forms import HouseForm, RequestForm
+from .forms import HouseForm, RequestFormCreate, RequestFormUpdate
 from .filters import HouseFilter
 
 
@@ -63,8 +64,8 @@ class RequestList(ListView):
 
 class RequestCreate(CreateView):
     model = Request
-    template_name = 'gpon/request_form.html'
-    form_class = RequestForm
+    template_name = 'gpon/request_form_create.html'
+    form_class = RequestFormCreate
     success_url = '/gpon/requests/new/'
 
     def post(self, request, *args, **kwargs):
@@ -84,8 +85,8 @@ class RequestCreate(CreateView):
 
 class RequestUpdate(UpdateView):
     model = Request
-    template_name = 'gpon/request_form.html'
-    form_class = RequestForm
+    template_name = 'gpon/request_form_update.html'
+    form_class = RequestFormUpdate
     success_url = '/gpon/requests/in-progress/'
 
 
@@ -103,6 +104,7 @@ class RequestStatus(UpdateView):
         elif choice == 'resume':
             obj.status = False
             obj.save()
+            return redirect('requests_in_progress')
         else:
             return redirect(request.META.get('HTTP_REFERER'))
         return redirect(request.META.get('HTTP_REFERER'))

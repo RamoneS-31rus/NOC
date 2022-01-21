@@ -3,27 +3,31 @@
 {% block content %}
 
 <hr>
-
-<div>
-    <form method="GET">
-        {{ filter.form }}
-        <button class="button_cancel_form" type="submit">Найти</button>
-        <a href="{% url 'house_create' %}" role="button">Добавить дом</a>
-    </form>
-</div>
-
+<ul class="actions_1">
+    <li>
+        <form method="GET">
+            {{ filter.form }}
+            <button class="button_cancel_form" type="submit">Найти</button>
+        </form>
+    </li>
+    <li>
+        <a href="{% url 'house_create' %}" title="Добавить дом">
+            <img src="/static/images/icon_add.png" width="25" height="25">
+        </a>
+    </li>
+</ul>
 <hr>
 
 {%  if filter.qs %}
-    <table class="table_default">
+    <table class="table_gpon">
         <tr>
-            <th style="width: 200px">
+            <th style="width: 220px">
                 Адрес
             </th>
-            <th style="width: 70px">
+            <th>
                 Статус ВОЛС
             </th>
-            <th style="width: 70px">
+            <th>
                 Статус заявки
             </th>
             <th style="width: 200px">
@@ -59,8 +63,9 @@
                 {{ house.note }}
             </td>
             <td>
-                <a href="{% url 'house_update' house.pk %}" title="Изменить"><img src="/static/images/icon_edit.png" width="23"
-                height="23"></a>
+                <a href="{% url 'house_update' house.pk %}" title="Изменить">
+                    <img src="/static/images/icon_edit.png" width="23" height="23">
+                </a>
             </td>
         </tr>
     {% endfor %}

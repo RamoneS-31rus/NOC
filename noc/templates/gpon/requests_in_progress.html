@@ -1,23 +1,17 @@
-{%extends 'default.html' %}
+{%extends 'request.html' %}
 
 {% block content %}
-<hr>
-<div>
-    <a href="{% url 'requests_new' %}">Новые</a>
-    <a href="{% url 'requests_in_progress' %}">Выполняются</a>
-    <a href="{% url 'requests_completed' %}">Завершенные</a>
-</div>
-<hr>
+
 {%  if in_progress %}
-    <table class="table_default">
+    <table class="table_gpon">
         <tr>
-            <th style="width: 170px">
+            <th style="width: 220px">
                 Адрес
             </th>
-            <th style="width: 170px">
+            <th style="width: 220px">
                 ФИО
             </th>
-            <th style="width: 90px">
+            <th style="width: 130px">
                 Телефон
             </th>
             <th style="width: 60px">
@@ -26,35 +20,33 @@
             <th style="width: 90px">
                 Дата подключения
             </th>
-            <th style="width: 50px">
+            <th style="width: 90px">
                 Тариф (Мбит/с)
             </th>
-            <th style="width: 100px">
+            <th>
                 Модель ONT
             </th>
             <th style="width: 120px">
                 Модель Wi-Fi роутера
             </th>
-            <th style="width: 110px">
+            <th style="width: 170px">
                 Монтажники
             </th>
-            <th style="width: 110px">
+            <th style="width: 170px">
                 Менеджер
             </th>
-            <th style="width: 130px">
+            <th style="width: 200px">
                Примечание
             </th>
-            <th style="width: 30px">
-            </th>
-            <th style="width: 30px">
+            <th style="width: 60px">
             </th>
         </tr>
     {% for house in in_progress %}
         <tr>
-            <td>
+            <td style="text-align: left">
                 {{ house.address }}
             </td>
-            <td>
+            <td style="text-align: left">
                 {{ house.name }}
             </td>
             <td>
@@ -67,11 +59,7 @@
                 {{ house.date_con|date:'d.m.Y H:i' }}
             </td>
             <td>
-                {% if house.tariff is None %}
-                    -----
-                {% else %}
-                    {{ house.tariff.speed }}
-                {% endif %}
+                {{ house.tariff.speed }}
             </td>
             <td>
                 {% if house.ont is None %}
@@ -87,33 +75,33 @@
                     {{ house.router }}
                 {% endif %}
             </td>
-            <td>
+            <td style="text-align: left">
                 {% for i in house.installer.all %}
                     {{ i.last_name }} {{ i.first_name }}<br>
                 {% endfor %}
             </td>
-            <td>
-                {% if house.manager is None %}
-                    -----
-                {% else %}
-                    {{ house.manager }}
-                {% endif %}
+            <td style="text-align: left">
+                {{ house.manager.last_name }} {{ house.manager.first_name }}
             </td>
-            <td>
+            <td style="text-align: left">
                 {{ house.note }}
             </td>
             <td>
-                <a href="{% url 'request_update' house.pk %}" title="Изменить"><img src="/static/images/icon_edit.png"
-                    width="23" height="23">
-                </a>
-            </td>
-            <td>
-                <form action="{% url 'request_finish' house.pk %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" style="background-color:transparent; border-color:transparent;" title="Завершить">
-                        <img src="/static/images/icon_complete.png" width="23" height="23">
-                    </button>
-                </form>
+                <ul class="actions_2">
+                    <li>
+                        <a href="{% url 'request_update' house.pk %}" title="Изменить">
+                            <img src="/static/images/icon_edit.png" width="23" height="23">
+                        </a>
+                    </li>
+                    <li>
+                        <form action="{% url 'request_finish' house.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" style="background-color:transparent; border-color:transparent;" title="Завершить">
+                                <img src="/static/images/icon_complete.png" width="23" height="23">
+                            </button>
+                        </form>
+                    </li>
+                </ul>
             </td>
         </tr>
     {% endfor %}

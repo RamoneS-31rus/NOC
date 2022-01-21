@@ -1,6 +1,7 @@
 {%extends 'default.html' %}
 
 {% block content %}
+
 <br><br>
 <style>
    li {
@@ -12,24 +13,24 @@
 </style>
 <form method="POST">
     {% csrf_token %}
-    <table class="table_default">
+    <table class="table_gpon">
     <tr>
-        <th style="width: 100px">
+        <th>
             ФИО
         </th>
-        <th style="width: 100px">
+        <th>
             Телефон
         </th>
-        <th style="width: 100px">
+        <th>
             Дата подключения
         </th>
-        <th style="width: 120px">
+        <th>
             Тариф
         </th>
-        <th style="width: 100px">
+        <th>
             Модель ONT
         </th>
-        <th style="width: 120px">
+        <th>
             Модель Wi-Fi роутера
         </th>
         <th style="width: 120px">
@@ -38,7 +39,7 @@
         <th style="width: 120px">
             Менеджер
         </th>
-        <th style="width: 130px">
+        <th>
            Примечание
         </th>
     </tr>
@@ -61,10 +62,8 @@
         <td>
             {{ form.router }}
         </td>
-        <td>
-            {% for i in form.installer %}
-                    {{ i }} <br>
-                {% endfor %}
+        <td>{{ form.installer }}
+
         </td>
         <td>
             {{ form.manager }}

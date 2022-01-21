@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+
+  <meta charset="utf-8">
+  <title>ООО "БТК"</title>
+  <link href="{% static 'css/default.css'%}" rel="stylesheet">
+
+</head>
+
+
+
+  <!-- Navigation -->
+<div class="navbar">
+  <div class="dropdown">
+    <button class="dropbtn">Сеть
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="{% url 'vlan_list' %}">Vlans</a>
+      <a href="{% url 'switch_list' %}">Коммутаторы</a>
+      <a href="#">IP-адреса</a>
+    </div>
+  </div>{% comment %}
+  <div class="dropdown">
+    <button class="dropbtn">Склад
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="{% url 'product_list' %}">Наличие</a>
+      <a href="{% url 'income_list' %}">Приход</a>
+      <a href="{% url 'object_list' %}">Расход</a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">Контакты
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="{% url 'address_list' %}">Адреса объектов</a>
+      <a href="#">Операторы</a>
+    </div>
+  </div>{% endcomment %}
+  <div class="dropdown">
+    <button class="dropbtn">GPON
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="{% url 'house_list' %}">Зона покрытия</a>
+      <a href="{% url 'requests_new' %}">Заявки</a>
+      <a href="{% url 'requests_statistic' %}">Статистика</a>
+    </div>
+  </div>
+  <div class="dropdown-pro">
+    <button class="dropbtn-pro">{{ user.username }}
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content-pro">
+      <a href="{% url 'profile' %}">Профиль</a>
+      <a href="http://127.0.0.1:8000/admin/">admin</a>
+      <a href="{% url 'logout' %}">Выйти</a>
+    </div>
+  </div>
+</div>
+
+<body>
+<hr>
+<div style="text-align: center;">
+    <a class="button15" href="{% url 'requests_new' %}">Новые</a>
+    <a class="button15" href="{% url 'requests_in_progress' %}">Выполняются</a>
+    <a class="button15" href="{% url 'requests_completed' %}">Завершенные</a>
+</div>
+<hr>
+    {% block content %}
+    {% endblock content %}
+</body>
+
+</html>

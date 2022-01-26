@@ -45,20 +45,16 @@ class RequestFormUpdate(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RequestFormUpdate, self).__init__(*args, **kwargs)
-        self.fields['installer'].queryset = User.objects.all().filter(groups__name='Installers')
-        self.fields['manager'].queryset = User.objects.all().filter(groups__name='Managers')
+        self.fields['installer'].queryset = User.objects.filter(groups__name='Installers', is_active=True).order_by('last_name')
+        self.fields['manager'].queryset = User.objects.filter(groups__name='Managers', is_active=True).order_by('last_name')
+        self.fields['installer'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
+        self.fields['manager'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
 
     class Meta:
         model = Request
         fields = ['name', 'phone', 'date_con', 'tariff', 'ont', 'router', 'installer', 'manager', 'note']
 
-    # installers = []
-    # for user in User.objects.all():
-    #     if user.groups.filter(name='Installers').exists():
-    #         installers.append(user)
-
         widgets = {
-            #     'address': forms.Select(),
             'name': forms.TextInput(attrs={'size': 25}),
             'phone': forms.TextInput(attrs={'size': 12}),
             #     'date_con': forms.SelectDateWidget(attrs={'class': 'form-control'}),

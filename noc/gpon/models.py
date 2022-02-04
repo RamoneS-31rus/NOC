@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+
 from addressbook.models import Address
+from storage.models import Product
 
 
 class Area(models.Model):
@@ -21,7 +23,6 @@ class House(models.Model):
     status = models.CharField(max_length=20, choices=type, default=cable, verbose_name='Статус')
     note = models.TextField(blank=True, verbose_name='Примечание')
     time = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')  # TODO УБРАТЬ!!!
 
     # class Meta:
     #     ordering = ['id']
@@ -42,21 +43,6 @@ class Tariff(models.Model):
         return f'{self.name}'
 
 
-class Ont(models.Model):
-    name = models.CharField(max_length=50, unique=True, verbose_name='Модель ONT')
-
-    def __str__(self):
-        return f'{self.name}'
-
-
-class Router(models.Model):
-    name = models.CharField(max_length=50, unique=True, verbose_name='Модель Wi-Fi роутера')
-    price = models.IntegerField(verbose_name='Стоимость Wi-Fi роутера')
-
-    def __str__(self):
-        return f'{self.name}'
-
-
 class Request(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', verbose_name='Пользователь')
     address = models.ForeignKey(House, on_delete=models.CASCADE, related_name='request', verbose_name='Адрес')
@@ -66,8 +52,8 @@ class Request(models.Model):
     date_con = models.DateTimeField(blank=True, null=True, verbose_name='Дата подключения')
     price_con = models.IntegerField(default='6000', verbose_name='Цена подключения')
     tariff = models.ForeignKey(Tariff, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Тариф')
-    ont = models.ForeignKey(Ont, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Модель ONT')
-    router = models.ForeignKey(Router, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Модель Wi-Fi роутера')
+    ont = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='ont', verbose_name='Модель ONT')
+    router = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='router', verbose_name='Модель Wi-Fi роутера')
     note = models.TextField(blank=True, verbose_name='Примечание')
     time = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
     installer = models.ManyToManyField(User, blank=True, related_name='installer', verbose_name='Монтажники')

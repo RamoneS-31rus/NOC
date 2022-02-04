@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
+
 from .models import House, Request
 from .forms import HouseForm, RequestFormCreate, RequestFormUpdate
 from .filters import HouseFilter
@@ -22,20 +23,20 @@ class HouseCreate(CreateView):
     model = Request
     template_name = 'gpon/house_form.html'
     form_class = HouseForm
-    # success_url = '/gpon/houses/'
+    success_url = '/gpon/houses/'
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.user = self.request.user
-        obj.save()
-        return redirect('house_list')
+    # def post(self, request, *args, **kwargs):
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_invalid(form)
+    #
+    # def form_valid(self, form):
+    #     obj = form.save(commit=False)
+    #     obj.user = self.request.user
+    #     obj.save()
+    #     return redirect('house_list')
 
 
 class HouseUpdate(UpdateView):
@@ -52,13 +53,13 @@ class RequestList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_new'] = Request.objects.filter(status='False').filter(date_con__isnull=True).order_by('-id')
-        context['in_progress'] = Request.objects.filter(status='False').exclude(date_con__isnull=True).order_by('-id')
+        context['in_progress'] = Request.objects.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
         context['is_completed'] = Request.objects.filter(status='True').order_by('-id')
-        context['sold_routers'] = Request.objects.filter(status='True').exclude(router__isnull=True)
         context['total_houses'] = House.objects.all()
-        context['ready_houses'] = House.objects.filter(status='Готов к подключению')
-        context['welding_houses'] = House.objects.filter(status='Необходима сварка')
         context['cable_houses'] = House.objects.filter(status='Нет кабеля')
+        context['welding_houses'] = House.objects.filter(status='Необходима сварка')
+        context['ready_houses'] = House.objects.filter(status='Готов к подключению')
+        context['sold_routers'] = Request.objects.filter(status='True').exclude(router__isnull=True)
         return context
 
 

@@ -2,19 +2,52 @@
 
 {% block content %}
 
-    <p>Всего домов: {{ total_houses.count }}</p>
-    Нет кабеля: {{ cable_houses.count }}
-    Нужна сварка: {{ welding_houses.count }}
-    Готов к подключению: {{ ready_houses.count }}
-    <div>
-        <p>Всего заявок: {{ requests.count }}</p>
-        Новые: {{ is_new.count }}
-        Выполняются: {{ in_progress.count }}
-        Завершенные: {{ is_completed.count }}
-    </div>
-    <p>Продано роутеров: {{ sold_routers.count }}</p>
-    <p>TL-WR845N</p>
-    <p>TL-WR844N</p>
+<table>
+    <tr>
+        <th>Статус домов</th>
+        <th>Количество</th>
+    </tr>
+    <tr>
+        <td>Нет кабеля</td>
+        <td>{{ cable_houses.count }}</td>
+    </tr>
+    <tr>
+        <td>Нужна сварка</td>
+        <td>{{ welding_houses.count }}</td>
+    </tr>
+    <tr>
+        <td>Готов к подключению</td>
+        <td>{{ ready_houses.count }}</td>
+    </tr>
+    <tr>
+        <td>Всего домов</td>
+        <td>{{ total_houses.count }}</td>
+    </tr>
+</table>
 
+<table>
+    <tr>
+        <th>Статус заявок</th>
+        <th>Количество</th>
+    </tr>
+    <tr>
+        <td>Новая</td>
+        <td>{{ is_new.count }}</td>
+    </tr>
+    <tr>
+        <td>Выполняется</td>
+        <td>{{ in_progress.count }}</td>
+    </tr>
+    <tr>
+        <td>Завершена</td>
+        <td>{{ is_completed.count }}</td>
+    </tr>
+    <tr>
+        <td>Всего заявок</td>
+        <td>{{ requests.count }}</td>
+    </tr>
+</table>
+
+<p>Продано роутеров: {{ sold_routers.count }}</p>
 
 {% endblock content %}

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 
-from .models import Area, House, Tariff, Ont, Router, Request
+from .models import Area, House, Tariff, Request
 
 
 class AdminRequest(admin.ModelAdmin):
@@ -18,6 +18,4 @@ class AdminRequest(admin.ModelAdmin):
 admin.site.register(Area)
 admin.site.register(House)
 admin.site.register(Tariff)
-admin.site.register(Ont)
-admin.site.register(Router)
 admin.site.register(Request, AdminRequest)

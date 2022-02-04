@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
+
 from .models import House, Request
+from storage.models import Product
 
 
 class HouseForm(forms.ModelForm):
@@ -49,6 +51,8 @@ class RequestFormUpdate(forms.ModelForm):
         self.fields['manager'].queryset = User.objects.filter(groups__name='Managers', is_active=True).order_by('last_name')
         self.fields['installer'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
         self.fields['manager'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
+        self.fields['router'].queryset = Product.objects.filter(type__type_name="Роутеры")
+        self.fields['ont'].queryset = Product.objects.filter(type__type_name="Оптические терминалы")
 
     class Meta:
         model = Request

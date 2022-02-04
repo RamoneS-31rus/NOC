@@ -24,10 +24,10 @@
             <th style="width: 220px">
                 Адрес
             </th>
-            <th>
+            <th style="width: 150px">
                 Статус ВОЛС
             </th>
-            <th>
+            <th style="width: 125px">
                 Статус заявки
             </th>
             <th style="width: 200px">
@@ -48,11 +48,11 @@
                 {% if house.request.all %}
                     {% for i in house.request.all %}
                         {% if i.status is False and not i.date_con %}
-                            Новая
+                            <a href="{% url 'requests_new' %}">Новая</a>
                         {% elif i.status is False and i.date_con %}
-                            Выполняется
+                            <a href="{% url 'requests_in_progress' %}">Выполняется</a>
                         {% elif i.status is True %}
-                            Завершена
+                            <a href="{% url 'requests_completed' %}">Завершена</a>
                         {% endif %}
                     {% endfor %}
                 {% else %}
@@ -71,7 +71,7 @@
     {% endfor %}
     </table>
 {%  else %}
-    <h1>пусто</h1>
+    <h1 style="text-align: center">По вашему запросу ничего не найдено</h1>
 {% endif %}
 
 {% if is_paginated %}

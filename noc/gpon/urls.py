@@ -1,12 +1,11 @@
 from django.urls import path
 from.views import (
-    HouseList, HouseCreate, HouseUpdate, RequestList, RequestCreate, RequestUpdate, RequestStatus,
+    HouseList, HouseUpdate, RequestList, RequestCreate, RequestUpdate, RequestStatus,
 )
 
 
 urlpatterns = [
     path('houses/', HouseList.as_view(), name='house_list'),
-    path('houses/create/', HouseCreate.as_view(), name='house_create'),
     path('houses/<int:pk>/edit/', HouseUpdate.as_view(), name='house_update'),
     path('request/<int:pk>/create/', RequestCreate.as_view(), name='request_create'),
     path('request/<int:pk>/edit/', RequestUpdate.as_view(), name='request_update'),

@@ -20,26 +20,6 @@ class HouseList(ListView):
         return context
 
 
-class HouseCreate(CreateView):
-    model = Request
-    template_name = 'gpon/house_form.html'
-    form_class = HouseForm
-    success_url = '/gpon/houses/'
-
-    # def post(self, request, *args, **kwargs):
-    #     form = self.get_form()
-    #     if form.is_valid():
-    #         return self.form_valid(form)
-    #     else:
-    #         return self.form_invalid(form)
-    #
-    # def form_valid(self, form):
-    #     obj = form.save(commit=False)
-    #     obj.user = self.request.user
-    #     obj.save()
-    #     return redirect('house_list')
-
-
 class HouseUpdate(UpdateView):
     model = House
     form_class = HouseForm
@@ -50,13 +30,14 @@ class HouseUpdate(UpdateView):
 class RequestList(ListView):
     model = Request
     context_object_name = 'requests'
-    paginate_by = 10
+    paginate_by = 3
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_new'] = Request.objects.filter(status='False', date_con__isnull=True).order_by('-id')
         context['in_progress'] = Request.objects.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
         context['is_completed'] = Request.objects.filter(status='True').order_by('-id')
+        context['total_requests'] = Request.objects.all()
         context['total_houses'] = House.objects.all()
         context['cable_houses'] = House.objects.filter(status='Нет кабеля')
         context['welding_houses'] = House.objects.filter(status='Необходима сварка')

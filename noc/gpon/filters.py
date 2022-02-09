@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django_filters import FilterSet, CharFilter, ChoiceFilter, ModelChoiceFilter
 
-from .models import Area, House
+from .models import House
 from addressbook.models import Address
 
 

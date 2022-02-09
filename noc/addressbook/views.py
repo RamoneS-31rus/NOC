@@ -1,8 +1,11 @@
-# from django.views.generic import ListView
-# from .models import Address
-#
-#
-# class AddressList(ListView):
-#     model = Address
-#     # template_name = 'gpon/house_list.html'
-#     context_object_name = 'addresses'
+from django.views.generic import CreateView
+
+from .forms import AddressForm
+from .models import Address
+
+
+class AddressCreate(CreateView):
+    model = Address
+    template_name = 'addressbook/form.html'
+    form_class = AddressForm
+    success_url = '/gpon/houses/'

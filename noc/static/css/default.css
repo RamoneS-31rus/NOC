@@ -292,6 +292,7 @@ button {
     /*color: #497c9d; /* Цвет ссылок */
   /*  padding: 5px; /* Поля вокруг текста */
 /*}*/
+/*
 a.button15 {
   display: inline-block;
   font-family: arial,sans-serif;
@@ -318,4 +319,52 @@ a.button15:active {
   border: 1px solid rgb(204,204,204);
   background: rgb(238,238,238) linear-gradient(rgb(238,238,238), rgb(224,224,224));
   box-shadow: 0 1px 2px rgba(0,0,0,.1) inset;
+}
+*/
+.center {
+    text-align: center;
+}
+
+.request_status {
+    display: inline-block;
+}
+.request_status a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+.request_status a.active {
+    background-color: #497c9d;
+    color: white;
+    border: 1px solid #497c9d;
+}
+.request_status a:hover:not(.active) {background-color: #ddd;}
+
+.pagination {
+    display: inline-block;
+}
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+}
+.pagination a.active {
+    background-color: #497c9d;
+    color: white;
+    border: 1px solid #497c9d;
+}
+.pagination a:hover:not(.active) {background-color: #ddd;}
+.pagination a:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.pagination a:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }

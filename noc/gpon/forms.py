@@ -9,11 +9,11 @@ class HouseForm(forms.ModelForm):
 
     class Meta:
         model = House
-        fields = ['area', 'address', 'status', 'note']
+        fields = ['status', 'note']
 
         widgets = {
             # 'address': forms.TextInput(attrs={'size': 23}),
-            'address': forms.Select(),
+            # 'address': forms.Select(),
             'status': forms.Select(),
             'note': forms.TextInput(attrs={'size': 44}),
         }

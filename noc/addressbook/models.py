@@ -13,7 +13,7 @@ class Address(models.Model):
 
     list = [(avenue, 'проспект'), (street, 'улица'), (boulevard, 'бульвар'), (passage, 'проезд'),
             (lane, 'переулок'), (highway, 'шоссе')]
-    address_type = models.CharField(max_length=10, choices=list, verbose_name='Тип')
+    address_type = models.CharField(max_length=10, choices=list, default=street, verbose_name='Тип')
     address_name = models.CharField(max_length=50, verbose_name='Название')
     address_house = models.CharField(max_length=5, verbose_name='Номер дома')
     # slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')

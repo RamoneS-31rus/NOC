@@ -25,6 +25,7 @@ urlpatterns = [
     path('network/', include('network.urls')),
     path('storage/', include('storage.urls')),
     path('contacts/', include('phonebook.urls')),
+    path('address/', include('addressbook.urls')),
     path('gpon/', include('gpon.urls')),
 ]
 

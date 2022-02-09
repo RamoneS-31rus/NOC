@@ -1,8 +1,8 @@
-# from django.urls import path
-# from.views import (AddressList)
-#
-#
-# urlpatterns = [
-#     path('addresses/', AddressList.as_view(), name='addresses'),
-#
-# ]
+from django.urls import path
+from .views import AddressCreate
+
+
+urlpatterns = [
+    path('create/', AddressCreate.as_view(), name='address_create'),
+
+]

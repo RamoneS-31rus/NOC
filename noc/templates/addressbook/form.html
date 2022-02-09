@@ -6,19 +6,14 @@
     {% csrf_token %}
     <table class="table_gpon">
     <tr>
-        <th>
-            Статус
-        </th>
-        <th>
-            Примечание
-        </th>
-    </tr>
-    <tr>
         <td>
-            {{ form.status }}
+            {{ form.address_type }}
         </td>
         <td>
-            {{ form.note }}
+            {{ form.address_name }}
+        </td>
+        <td>
+            {{ form.address_house }}
         </td>
     </tr>
     </table>

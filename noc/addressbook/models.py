@@ -1,6 +1,4 @@
 from django.db import models
-from django.urls import reverse
-from slugify import slugify
 
 
 class Address(models.Model):
@@ -16,7 +14,10 @@ class Address(models.Model):
     address_type = models.CharField(max_length=10, choices=list, default=street, verbose_name='Тип')
     address_name = models.CharField(max_length=50, verbose_name='Название')
     address_house = models.CharField(max_length=5, verbose_name='Номер дома')
-    # slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')
+
+    class Meta:
+        ordering = ['address_type', 'address_name', 'address_house']
+
     #
     # def save(self, *args, **kwargs):
     #     if not self.slug:

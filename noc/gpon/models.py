@@ -65,11 +65,12 @@ class Request(models.Model):
         self.phone = self.phone[0] + ' (' + self.phone[1:4] + ') ' + self.phone[4:7] + '-' + self.phone[7:9] + '-' + self.phone[9:11]
         super(Request, self).save(*args, **kwargs)
 
-    # class Meta:
-    #     ordering = ['id']
+    class Meta:
+        ordering = ['id']
     #
     # def get_absolute_url(self):
     #     return reverse('vlan_detail', kwargs={'pk': self.pk})
     #
+
     def __str__(self):
         return f'{self.name}'

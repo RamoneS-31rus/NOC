@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 from .models import House, Request
 from .forms import HouseForm, RequestFormCreate, RequestFormUpdate
@@ -49,10 +50,11 @@ class HouseUpdate(UpdateView):
 class RequestList(ListView):
     model = Request
     context_object_name = 'requests'
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_new'] = Request.objects.filter(status='False').filter(date_con__isnull=True).order_by('-id')
+        context['is_new'] = Request.objects.filter(status='False', date_con__isnull=True).order_by('-id')
         context['in_progress'] = Request.objects.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
         context['is_completed'] = Request.objects.filter(status='True').order_by('-id')
         context['total_houses'] = House.objects.all()
@@ -61,6 +63,19 @@ class RequestList(ListView):
         context['ready_houses'] = House.objects.filter(status='Готов к подключению')
         context['sold_routers'] = Request.objects.filter(status='True').exclude(router__isnull=True)
         return context
+    """
+    Переопределяем queryset в зависимости от url запроса.
+    """
+    def get_queryset(self):
+        qs = self.model.objects.all()
+        url = self.request.get_full_path()
+        if 'new' in url:
+            qs = qs.filter(status='False', date_con__isnull=True).order_by('date_req')
+        elif 'in-progress' in url:
+            qs = qs.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
+        elif 'completed' in url:
+            qs = qs.filter(status='True').order_by('-date_con')
+        return qs
 
 
 class RequestCreate(CreateView):

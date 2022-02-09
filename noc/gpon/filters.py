@@ -18,8 +18,12 @@ class HouseFilter(FilterSet):
         fields = ['address', 'status']
 
     def custom_filter(self, queryset, name, value):
-        value = value.split()
-        value[0] = value[0].capitalize()
+        value = value.split()  # Разбиваем строку на список с элементами по одному слову
+        value[0] = value[0].capitalize()  # У мервого слова делаем первую букву заглавную, а остнольные маленькие
+        """
+        Если в списке один элемент, то фильтруем или по названию улицы, или по номеру дома.
+        Если элементов больше одного, то фильтруем по названию и номеру.
+        """
         if len(value) < 2:
             return House.objects.filter(Q(address__address_name__icontains=value[0]) | Q(address__address_house=value[0]))
         return House.objects.filter(Q(address__address_name__icontains=value[0]) & Q(address__address_house=value[1]))

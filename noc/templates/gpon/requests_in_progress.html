@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{%  if in_progress %}
+{%  if requests %}
     <table class="table_gpon">
         <tr>
             <th style="width: 220px">
@@ -41,7 +41,7 @@
             <th style="width: 60px">
             </th>
         </tr>
-    {% for house in in_progress %}
+    {% for house in requests %}
         <tr>
             <td style="text-align: left">
                 {{ house.address }}
@@ -108,6 +108,24 @@
     </table>
 {%  else %}
     <h1>пусто</h1>
+{% endif %}
+
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+{% endif %}
+{% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+        <a>{{ num }}</a>
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}">{{ num }}</a>
+    {% endif %}
+{% endfor %}
+{% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">>>></a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
 {% endif %}
 
 {% endblock content %}

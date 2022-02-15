@@ -9,6 +9,17 @@ from .forms import HouseForm, RequestFormCreate, RequestFormUpdate
 from .filters import HouseFilter
 
 
+class RedirectToPreviousMixin:  # Миксин для редиректа на предыдущию страницу
+    default_redirect = '/'
+
+    def get(self, request, *args, **kwargs):
+        request.session['previous_page'] = request.META.get('HTTP_REFERER', self.default_redirect)
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.request.session['previous_page']
+
+
 class HouseList(ListView):
     model = House
     template_name = 'gpon/house_list.html'
@@ -30,7 +41,7 @@ class HouseUpdate(UpdateView):
 class RequestList(ListView):
     model = Request
     context_object_name = 'requests'
-    paginate_by = 3
+    paginate_by = 8
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,7 +74,6 @@ class RequestCreate(CreateView):
     model = Request
     template_name = 'gpon/request_form_create.html'
     form_class = RequestFormCreate
-    success_url = '/gpon/requests/new/'
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -74,17 +84,25 @@ class RequestCreate(CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        obj.user = self.request.user
+        if self.request.user.groups.filter(name='Managers').exists():
+            obj.manager = self.request.user
+        else:
+            obj.manager = None
         obj.address = House.objects.get(pk=self.kwargs.get('pk'))
         obj.save()
         return redirect('requests_new')
 
 
-class RequestUpdate(UpdateView):
+class RequestUpdate(RedirectToPreviousMixin, UpdateView):
     model = Request
     template_name = 'gpon/request_form_update.html'
     form_class = RequestFormUpdate
-    success_url = '/gpon/requests/in-progress/'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if kwargs.get('instance').manager is None and self.request.user.groups.filter(name='Managers').exists():
+            kwargs.get('instance').manager = self.request.user
+        return kwargs
 
 
 class RequestStatus(UpdateView):
@@ -97,6 +115,7 @@ class RequestStatus(UpdateView):
         obj = Request.objects.get(pk=self.kwargs.get('pk'))
         if choice == 'finish':
             obj.status = True
+            obj.update_price()
             obj.save()
         elif choice == 'resume':
             obj.status = False
@@ -105,4 +124,3 @@ class RequestStatus(UpdateView):
         else:
             return redirect(request.META.get('HTTP_REFERER'))
         return redirect(request.META.get('HTTP_REFERER'))
-

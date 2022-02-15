@@ -3,7 +3,7 @@
 {% block content %}
 <hr>
 <div class="center">
-  <div class="request_status">
+  <div class="menu-status">
     <a href="{% url 'requests_new' %}">Новые</a>
     <a href="{% url 'requests_in_progress' %}">Выполняются</a>
     <a class="active" href="{% url 'requests_completed' %}">Завершенные</a>
@@ -83,7 +83,14 @@
                 {% endif %}
             </td>
             <td>
-                {{ house.price_con }}
+                {% if house.discount != 0 %}
+                    <span style="cursor: help" title="С учётом скидки {{ house.discount }} р.">
+                        {{ house.price_con }}
+                        <img src="/static/images/icon_eye.png" width="15" height="15">
+                    </span>
+                {% else %}
+                    {{ house.price_con }}
+                {% endif %}
             </td>
             <td style="text-align: left">
                 {% for i in house.installer.all %}
@@ -98,7 +105,12 @@
                 {% endif %}
             </td>
             <td style="text-align: left">
-                {{ house.note }}
+                {% if house.discount != 0 %}
+                    Скидка {{ house.discount }} р.<br>
+                    {{ house.note }}
+                {% else %}
+                    {{ house.note }}
+                {% endif %}
             </td>
             <td style="text-align: center">
                 <form action="{% url 'request_resume' house.pk %}" method="POST">

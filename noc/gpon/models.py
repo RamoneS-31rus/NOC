@@ -26,9 +26,6 @@ class House(models.Model):
 
     class Meta:
         ordering = ['address']
-    #
-    # def get_absolute_url(self):
-    #     return reverse('vlan_detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return f'{self.address}'
@@ -44,14 +41,15 @@ class Tariff(models.Model):
 
 
 class Request(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', verbose_name='Пользователь')
-    address = models.ForeignKey(House, on_delete=models.CASCADE, related_name='request', verbose_name='Адрес')
-    name = models.CharField(max_length=50, blank=True, verbose_name='ФИО')
-    phone = models.CharField(max_length=50, blank=True, verbose_name='Телефон')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user', verbose_name='Пользователь')
+    address = models.OneToOneField(House, on_delete=models.CASCADE, verbose_name='Адрес')
+    name = models.CharField(max_length=50, verbose_name='ФИО')
+    phone = models.CharField(max_length=50, verbose_name='Телефон')
     date_req = models.DateField(auto_now_add=True, verbose_name='Дата заявки')
     date_con = models.DateTimeField(blank=True, null=True, verbose_name='Дата подключения')
-    price_con = models.IntegerField(default='6000', verbose_name='Цена подключения')
     tariff = models.ForeignKey(Tariff, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Тариф')
+    discount = models.PositiveIntegerField(default=0, verbose_name='Скидка')
+    price_con = models.PositiveIntegerField(default=0, verbose_name='Цена подключения')
     ont = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='ont', verbose_name='Модель ONT')
     router = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='router', verbose_name='Модель Wi-Fi роутера')
     note = models.TextField(blank=True, verbose_name='Примечание')
@@ -63,10 +61,38 @@ class Request(models.Model):
     class Meta:
         ordering = ['id']
 
-    def save(self, *args, **kwargs):
-        self.phone = self.phone.replace('-', '').replace('(', '').replace(')', '').replace(' ', '').replace('.', '')
-        self.phone = self.phone[0] + ' (' + self.phone[1:4] + ') ' + self.phone[4:7] + '-' + self.phone[7:9] + '-' + self.phone[9:11]
+    def update_price(self):  # Расчёт стоимости подключения в зависимости от тарифа и оборудования
+        self.price_con = 0
+        price_con_ont_1 = 6000
+        price_con_ont_wifi = 7500
+
+        if self.router is None:
+            price_router = 0
+        else:
+            price_router = int(Product.objects.get(name=self.router).price)
+
+        if self.tariff is None:
+            price_tariff = 0
+        else:
+            price_tariff = int(Tariff.objects.get(name=self.tariff).price)
+
+        if str(self.ont) == 'HS8545M5':
+            self.price_con = price_con_ont_wifi + price_router + price_tariff - int(str(self.discount))
+        elif self.ont is not None and str(self.ont) != 'HS8545M5':
+            self.price_con = price_con_ont_1 + price_router + price_tariff - int(str(self.discount))
+        elif self.ont is None:
+            pass
+        self.save()
+
+    def save(self, *args, **kwargs):  # Изменение формата телефоннтого номера
+        if self.phone != '':
+            self.phone = self.phone.replace('-', '').replace('(', '').replace(')', '').replace(' ', '').replace('.', '')
+            if len(self.phone) == 6:
+                self.phone = self.phone[0:2] + '-' + self.phone[2:4] + '-' + self.phone[4:7]
+            else:
+                self.phone = self.phone[0] + ' (' + self.phone[1:4] + ') ' + self.phone[4:7] + '-' + self.phone[7:9] + '-' + self.phone[9:11]
         super(Request, self).save(*args, **kwargs)
+
 
     #
     # def get_absolute_url(self):

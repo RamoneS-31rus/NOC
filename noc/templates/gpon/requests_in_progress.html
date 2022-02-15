@@ -3,7 +3,7 @@
 {% block content %}
 <hr>
 <div class="center">
-  <div class="request_status">
+  <div class="menu-status">
     <a href="{% url 'requests_new' %}">Новые</a>
     <a class="active" href="{% url 'requests_in_progress' %}">Выполняются</a>
     <a href="{% url 'requests_completed' %}">Завершенные</a>
@@ -92,7 +92,12 @@
                 {{ house.manager.last_name }} {{ house.manager.first_name }}
             </td>
             <td style="text-align: left">
-                {{ house.note }}
+                {% if house.discount != 0 %}
+                    Скидка {{ house.discount }} р.<br>
+                    {{ house.note }}
+                {% else %}
+                    {{ house.note }}
+                {% endif %}
             </td>
             <td>
                 <ul class="actions_2">

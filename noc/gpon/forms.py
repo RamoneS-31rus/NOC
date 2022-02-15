@@ -48,15 +48,15 @@ class RequestFormUpdate(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RequestFormUpdate, self).__init__(*args, **kwargs)
         self.fields['installer'].queryset = User.objects.filter(groups__name='Installers', is_active=True).order_by('last_name')
-        self.fields['manager'].queryset = User.objects.filter(groups__name='Managers', is_active=True).order_by('last_name')
+        # self.fields['manager'].queryset = User.objects.filter(groups__name='Managers', is_active=True).order_by('last_name')
         self.fields['installer'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
-        self.fields['manager'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
+        # self.fields['manager'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
         self.fields['router'].queryset = Product.objects.filter(type__type_name="Роутеры")
         self.fields['ont'].queryset = Product.objects.filter(type__type_name="Оптические терминалы")
 
     class Meta:
         model = Request
-        fields = ['name', 'phone', 'date_con', 'tariff', 'ont', 'router', 'installer', 'manager', 'note']
+        fields = ['name', 'phone', 'date_con', 'tariff', 'ont', 'router', 'discount', 'installer', 'note']
 
         widgets = {
             'name': forms.TextInput(attrs={'size': 25}),
@@ -65,8 +65,9 @@ class RequestFormUpdate(forms.ModelForm):
             'date_con': forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 2021-12-22 14:00',
                                                    'size': 25,
                                                    }),
+            'discount': forms.TextInput(attrs={'size': 4}),
             'installer': forms.CheckboxSelectMultiple(),
-            'manager': forms.Select(),
+            # 'manager': forms.Select(),
             'note': forms.Textarea(attrs={'cols': 45,
                                           'rows': 2,
                                           }),

@@ -33,12 +33,15 @@
         <th>
             Модель Wi-Fi роутера
         </th>
+        <th>
+            Скидка
+        </th>
         <th style="width: 200px">
             Монтажники
-        </th>
+        </th>{% comment %}
         <th style="width: 120px">
             Менеджер
-        </th>
+        </th>{% endcomment %}
         <th>
            Примечание
         </th>
@@ -62,12 +65,15 @@
         <td>
             {{ form.router }}
         </td>
+        <td>
+            {{ form.discount }}
+        </td>
         <td style="text-align: left">
             {{ form.installer }}
-        </td>
+        </td>{% comment %}
         <td>
             {{ form.manager }}
-        </td>
+        </td>{% endcomment %}
         <td>
             {{ form.note }}
         </td>

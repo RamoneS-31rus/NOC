@@ -325,24 +325,24 @@ a.button15:active {
     text-align: center;
 }
 
-.request_status {
+.menu-status {
     display: inline-block;
 }
-.request_status a {
+.menu-status a {
     color: black;
     float: left;
-    padding: 8px 16px;
+    padding: 7px 14px;
     text-decoration: none;
     transition: background-color .3s;
     border: 1px solid #ddd;
     margin: 0 4px;
 }
-.request_status a.active {
+.menu-status a.active {
     background-color: #497c9d;
     color: white;
     border: 1px solid #497c9d;
 }
-.request_status a:hover:not(.active) {background-color: #ddd;}
+.menu-status a:hover:not(.active) {background-color: #ddd;}
 
 .pagination {
     display: inline-block;
@@ -350,7 +350,7 @@ a.button15:active {
 .pagination a {
     color: black;
     float: left;
-    padding: 8px 16px;
+    padding: 7px 14px;
     text-decoration: none;
     border: 1px solid #ddd;
 }

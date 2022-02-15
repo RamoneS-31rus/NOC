@@ -45,16 +45,14 @@
                 {{ house.status }}
             </td>
             <td>
-                {% if house.request.all %}
-                    {% for i in house.request.all %}
-                        {% if i.status is False and not i.date_con %}
-                            <a href="{% url 'requests_new' %}">Новая</a>
-                        {% elif i.status is False and i.date_con %}
-                            <a href="{% url 'requests_in_progress' %}">Выполняется</a>
-                        {% elif i.status is True %}
-                            <a href="{% url 'requests_completed' %}">Завершена</a>
-                        {% endif %}
-                    {% endfor %}
+                {% if house.request %}
+                    {% if house.request.status is False and not house.request.date_con %}
+                        Новая
+                    {% elif house.request.status is False and house.request.date_con %}
+                        Выполняется
+                    {% elif house.request.status is True %}
+                        Завершена
+                    {% endif %}
                 {% else %}
                     <a href="{% url 'request_create' house.pk %}">Добавить заявку</a>
                 {% endif %}

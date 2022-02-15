@@ -1,12 +1,14 @@
 {%extends 'default.html' %}
 
+{% load search_pagination %}
+
 {% block content %}
 
 <hr>
 <ul class="actions_1">
     <li>
         <form method="GET">
-            {{ filter.form }}
+            {{ filterset.form }}
             <button class="button_cancel_form" type="submit">Найти</button>
         </form>
     </li>
@@ -18,7 +20,7 @@
 </ul>
 <hr>
 
-{%  if filter.qs %}
+{%  if object_list %}
     <table class="table_gpon">
         <tr>
             <th style="width: 220px">
@@ -36,7 +38,7 @@
             <th style="width: 10px">
             </th>
         </tr>
-    {% for house in filter.qs %}
+    {% for house in object_list %}
         <tr>
             <td>
                 {{ house.address }}
@@ -71,5 +73,27 @@
 {%  else %}
     <h1 style="text-align: center">По вашему запросу ничего не найдено</h1>
 {% endif %}
+<br>
+<div class="center">
+    <div class="pagination">
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a href="?{% param_replace page=1 %}">«</a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.paginator.num_pages > 1 %}
+                    {% if page_obj.number == num %}
+                        <a class="active">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?{% param_replace page=num %}">{{ num }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?{% param_replace page=paginator.num_pages %}">»</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
 
 {% endblock content %}

@@ -20,15 +20,30 @@ class RedirectToPreviousMixin:  # Миксин для редиректа на п
         return self.request.session['previous_page']
 
 
-class HouseList(ListView):
-    model = House
-    template_name = 'gpon/house_list.html'
-    context_object_name = 'house_list'
+class FilteredListView(ListView):
+    filterset_class = None
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = HouseFilter(self.request.GET, queryset=self.get_queryset())
+        context['filterset'] = self.filterset
         return context
+
+
+class HouseList(FilteredListView):
+    model = House
+    template_name = 'gpon/house_list.html'
+    filterset_class = HouseFilter
+    paginate_by = 10
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['filter'] = HouseFilter(self.request.GET, queryset=self.get_queryset())
+    #     return context
 
 
 class HouseUpdate(UpdateView):
@@ -41,7 +56,7 @@ class HouseUpdate(UpdateView):
 class RequestList(ListView):
     model = Request
     context_object_name = 'requests'
-    paginate_by = 8
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

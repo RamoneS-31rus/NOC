@@ -81,7 +81,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'noc.wsgi.application'
 
 LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = '/network/vlans'
+LOGIN_REDIRECT_URL = '/'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

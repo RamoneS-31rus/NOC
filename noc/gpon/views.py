@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect, render
 
-from .models import House, Request
+from .models import House, Request, Tariff
 from storage.models import Product
 from .forms import HouseForm, RequestFormCreate, RequestFormUpdate
 from .filters import HouseFilter
@@ -59,8 +59,8 @@ class RequestList(ListView):
     context_object_name = 'requests'
     paginate_by = 10
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
         # context['is_new'] = Request.objects.filter(status='False', date_con__isnull=True).order_by('-id')
         # context['in_progress'] = Request.objects.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
         # context['is_completed'] = Request.objects.filter(status='True').order_by('-id')
@@ -69,8 +69,8 @@ class RequestList(ListView):
         # context['cable_houses'] = House.objects.filter(status='Нет кабеля')
         # context['welding_houses'] = House.objects.filter(status='Необходима сварка')
         # context['ready_houses'] = House.objects.filter(status='Готов к подключению')
-        context['sold_routers'] = Request.objects.filter(status='True').exclude(router__isnull=True)
-        return context
+        # context['sold_routers'] = Request.objects.filter(status='True').exclude(router__isnull=True)
+        # return context
     """
     Переопределяем queryset в зависимости от url запроса.
     """
@@ -174,6 +174,20 @@ def statistic(request):
         for cord in cord_list:
             value = len(Request.objects.filter(status='True').filter(cord__name=cord))
             used_cord[str(cord)] = value
+        """Стоимость всех подключений, тарифов и роутеров"""
+        con_list = Request.objects.filter(status='True')
+        cost = {'total': 0, 'connections': 0, 'tariffs': 0, 'routers': 0}
+        for req in con_list:
+            price_con = req.price_con
+            price_tariff = Tariff.objects.get(name=req.tariff).price
+            if req.router is None:
+                price_router = 0
+            else:
+                price_router = Product.objects.get(name=req.router).price
+            cost.update({'total': int(cost.get('total') + price_con)})
+            cost.update({'connections': int(cost.get('connections') + (price_con - price_router - price_tariff))})
+            cost.update({'tariffs': int(cost.get('tariffs') + price_tariff)})
+            cost.update({'routers': int(cost.get('routers') + price_router)})
 
         data = {"req_new": req_new,
                 "req_pro": req_pro,
@@ -186,6 +200,7 @@ def statistic(request):
                 "sold_routers": sold_routers,
                 "sold_ont": sold_ont,
                 "used_cord": used_cord,
+                "cost": cost,
                 }
         return render(request, 'gpon/statistic.html', context=data)
     else:

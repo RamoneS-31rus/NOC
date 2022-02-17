@@ -1,6 +1,6 @@
 from django.urls import path
 from.views import (
-    HouseList, HouseUpdate, RequestList, RequestCreate, RequestUpdate, RequestStatus,
+    HouseList, HouseUpdate, RequestList, RequestCreate, RequestUpdate, RequestStatus, statistic
 )
 
 
@@ -14,5 +14,6 @@ urlpatterns = [
     path('requests/completed/', RequestList.as_view(template_name='gpon/requests_completed.html'), name='requests_completed'),
     path('request/<int:pk>/finish/', RequestStatus.as_view(choice='finish'), name='request_finish'),
     path('request/<int:pk>/resume/', RequestStatus.as_view(choice='resume'), name='request_resume'),
-    path('requests/statistic/', RequestList.as_view(template_name='gpon/requests_statistic.html'), name='requests_statistic'),
+    # path('requests/statistic/', RequestList.as_view(template_name='gpon/statistic.html'), name='requests_statistic'),
+    path('statistic/', statistic, name='statistic')
 ]

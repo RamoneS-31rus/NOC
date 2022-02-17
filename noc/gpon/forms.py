@@ -53,10 +53,11 @@ class RequestFormUpdate(forms.ModelForm):
         # self.fields['manager'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
         self.fields['router'].queryset = Product.objects.filter(type__type_name="Роутеры")
         self.fields['ont'].queryset = Product.objects.filter(type__type_name="Оптические терминалы")
+        self.fields['cord'].queryset = Product.objects.filter(type__type_name="Оптические патч-корды")
 
     class Meta:
         model = Request
-        fields = ['name', 'phone', 'date_con', 'tariff', 'ont', 'router', 'discount', 'installer', 'note']
+        fields = ['name', 'phone', 'date_con', 'tariff', 'ont', 'router', 'cord', 'discount', 'installer', 'note']
 
         widgets = {
             'name': forms.TextInput(attrs={'size': 25}),

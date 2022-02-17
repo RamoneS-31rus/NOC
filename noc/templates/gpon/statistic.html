@@ -1,0 +1,110 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+<ul class="actions_1">
+    <li>
+        <table>
+            <tr>
+                <th colspan="2">Статус домов</th>
+            </tr>
+            <tr>
+                <td>Нет кабеля</td>
+                <td>{{ cable_houses }}</td>
+            </tr>
+            <tr>
+                <td>Нужна сварка</td>
+                <td>{{ welding_houses }}</td>
+            </tr>
+            <tr>
+                <td>Готов к подключению</td>
+                <td>{{ ready_houses }}</td>
+            </tr>
+            <tr>
+                <td>Всего домов</td>
+                <td>{{ total_houses }}</td>
+            </tr>
+        </table>
+    </li>
+    <li>
+        <table>
+            <tr>
+                <th colspan="2">Статус заявок</th>
+            </tr>
+            <tr>
+                <td>Новая</td>
+                <td>{{ req_new }}</td>
+            </tr>
+            <tr>
+                <td>Выполняется</td>
+                <td>{{ req_pro }}</td>
+            </tr>
+            <tr>
+                <td>Завершена</td>
+                <td>{{ req_com }}</td>
+            </tr>
+            <tr>
+                <td>Всего заявок</td>
+                <td>{{ req_all }}</td>
+            </tr>
+        </table>
+    </li>
+</ul>
+<br>
+
+
+
+
+<ul class="actions_1">
+    <li>
+        <table>
+            <tr>
+                <th colspan="2">Роутеры</th>
+            </tr>
+            {% for key, value in sold_routers.items %}
+                {% if not forloop.first %}  {% comment %} Если не первая итерация то выводим значения {% endcomment %}
+                <tr>
+                    <td>{{ key }}</td> <td>{{ value }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td>Всего</td>
+                <td>{{ sold_routers.all }}</td>
+            </tr>
+        </table>
+    </li>
+    <li>
+        <table>
+            <tr>
+                <th colspan="2">ONT</th>
+            </tr>
+            {% for key, value in sold_ont.items %}
+                {% if not forloop.first %}  {% comment %} Если не первая итерация то выводим значения {% endcomment %}
+                <tr>
+                    <td>{{ key }}</td> <td>{{ value }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td>Всего</td>
+                <td>{{ sold_ont.all }}</td>
+            </tr>
+        </table>
+    </li>
+    <li>
+        <table>
+            <tr>
+                <th colspan="2">Оптические патч-корды</th>
+            </tr>
+            {% for key, value in used_cord.items %}
+                <tr>
+                    <td>{{ key }}</td> <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </li>
+</ul>
+
+
+{% endblock content %}

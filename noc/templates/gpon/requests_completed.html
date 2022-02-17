@@ -37,6 +37,9 @@
             <th style="width: 120px">
                 Модель Wi-Fi роутера
             </th>
+            <th style="width: 100px">
+                Оптический патч-корд
+            </th>
             <th style="width: 90px">
                 Стоимость подключения
             </th>
@@ -64,7 +67,7 @@
                 {{ house.phone }}
             </td>
             <td>
-                {{ house.date_req|date:'d.m.Y' }}
+                {{ house.date_reg|date:'d.m.Y' }}
             </td>
             <td>
                 {{ house.date_con|date:'d.m.Y H:i' }}
@@ -80,6 +83,13 @@
                     -----
                 {% else %}
                     {{ house.router }}
+                {% endif %}
+            </td>
+            <td>
+                {% if house.cord is None %}
+                    -----
+                {% else %}
+                    {{ house.cord }}
                 {% endif %}
             </td>
             <td>

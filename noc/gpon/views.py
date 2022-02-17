@@ -5,6 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.shortcuts import redirect, render
 
 from .models import House, Request
+from storage.models import Product
 from .forms import HouseForm, RequestFormCreate, RequestFormUpdate
 from .filters import HouseFilter
 
@@ -60,14 +61,14 @@ class RequestList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_new'] = Request.objects.filter(status='False', date_con__isnull=True).order_by('-id')
-        context['in_progress'] = Request.objects.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
-        context['is_completed'] = Request.objects.filter(status='True').order_by('-id')
-        context['total_requests'] = Request.objects.all()
-        context['total_houses'] = House.objects.all()
-        context['cable_houses'] = House.objects.filter(status='Нет кабеля')
-        context['welding_houses'] = House.objects.filter(status='Необходима сварка')
-        context['ready_houses'] = House.objects.filter(status='Готов к подключению')
+        # context['is_new'] = Request.objects.filter(status='False', date_con__isnull=True).order_by('-id')
+        # context['in_progress'] = Request.objects.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
+        # context['is_completed'] = Request.objects.filter(status='True').order_by('-id')
+        # context['total_requests'] = Request.objects.all()
+        # context['total_houses'] = House.objects.all()
+        # context['cable_houses'] = House.objects.filter(status='Нет кабеля')
+        # context['welding_houses'] = House.objects.filter(status='Необходима сварка')
+        # context['ready_houses'] = House.objects.filter(status='Готов к подключению')
         context['sold_routers'] = Request.objects.filter(status='True').exclude(router__isnull=True)
         return context
     """
@@ -77,7 +78,7 @@ class RequestList(ListView):
         qs = self.model.objects.all()
         url = self.request.get_full_path()
         if 'new' in url:
-            qs = qs.filter(status='False', date_con__isnull=True).order_by('date_req')
+            qs = qs.filter(status='False', date_con__isnull=True).order_by('date_reg')
         elif 'in-progress' in url:
             qs = qs.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
         elif 'completed' in url:
@@ -139,3 +140,53 @@ class RequestStatus(UpdateView):
         else:
             return redirect(request.META.get('HTTP_REFERER'))
         return redirect(request.META.get('HTTP_REFERER'))
+
+
+def statistic(request):
+    if request.user.is_authenticated:
+        """Статус заявок"""
+        req_new = len(Request.objects.filter(status='False', date_con__isnull=True))
+        req_pro = len(Request.objects.filter(status='False').exclude(date_con__isnull=True))
+        req_com = len(Request.objects.filter(status='True'))
+        req_all = len(Request.objects.all())
+        """Статус домов"""
+        cable_houses = len(House.objects.filter(status='Нет кабеля'))
+        welding_houses = len(House.objects.filter(status='Необходима сварка'))
+        ready_houses = len(House.objects.filter(status='Готов к подключению'))
+        total_houses = len(House.objects.all())
+        """Проданные роутеры"""
+        router_list = Product.objects.filter(type__type_name="Роутеры")
+        sold_routers = {'all': 0}
+        for router in router_list:
+            value = len(Request.objects.filter(status='True').exclude(router__isnull=True).filter(router__name=router))
+            sold_routers.update({'all': int(sold_routers.get('all') + value)})
+            sold_routers[str(router)] = value
+        """Установленные ONT"""
+        ont_list = Product.objects.filter(type__type_name="Оптические терминалы")
+        sold_ont = {'all': 0}
+        for ont in ont_list:
+            value = len(Request.objects.filter(status='True').filter(ont__name=ont))
+            sold_ont.update({'all': int(sold_ont.get('all') + value)})
+            sold_ont[str(ont)] = value
+        """Использованные патч-корды"""
+        cord_list = Product.objects.filter(type__type_name="Оптические патч-корды")
+        used_cord = {}
+        for cord in cord_list:
+            value = len(Request.objects.filter(status='True').filter(cord__name=cord))
+            used_cord[str(cord)] = value
+
+        data = {"req_new": req_new,
+                "req_pro": req_pro,
+                "req_com": req_com,
+                "req_all": req_all,
+                "cable_houses": cable_houses,
+                "welding_houses": welding_houses,
+                "ready_houses": ready_houses,
+                "total_houses": total_houses,
+                "sold_routers": sold_routers,
+                "sold_ont": sold_ont,
+                "used_cord": used_cord,
+                }
+        return render(request, 'gpon/statistic.html', context=data)
+    else:
+        return render(request, 'sign/login.html')

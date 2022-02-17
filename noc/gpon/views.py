@@ -149,11 +149,23 @@ def statistic(request):
         req_pro = len(Request.objects.filter(status='False').exclude(date_con__isnull=True))
         req_com = len(Request.objects.filter(status='True'))
         req_all = len(Request.objects.all())
+        requests = {'req_new': req_new,
+                    'req_pro': req_pro,
+                    'req_com': req_com,
+                    'req_all': req_all}
         """Статус домов"""
-        cable_houses = len(House.objects.filter(status='Нет кабеля'))
-        welding_houses = len(House.objects.filter(status='Необходима сварка'))
-        ready_houses = len(House.objects.filter(status='Готов к подключению'))
-        total_houses = len(House.objects.all())
+        cable = len(House.objects.filter(status='Нет кабеля'))
+        welding = len(House.objects.filter(status='Необходима сварка'))
+        total = len(House.objects.all())
+        ready = 0  # Счетаем только дома по которым заявки не завершены
+        ready_list = House.objects.filter(status='Готов к подключению')
+        for house in ready_list:
+            if not house.request.status:
+                ready += 1
+        houses = {'cable': cable,
+                  'welding': welding,
+                  'ready': ready,
+                  'total': total}
         """Проданные роутеры"""
         router_list = Product.objects.filter(type__type_name="Роутеры")
         sold_routers = {'all': 0}
@@ -189,14 +201,8 @@ def statistic(request):
             cost.update({'tariffs': int(cost.get('tariffs') + price_tariff)})
             cost.update({'routers': int(cost.get('routers') + price_router)})
 
-        data = {"req_new": req_new,
-                "req_pro": req_pro,
-                "req_com": req_com,
-                "req_all": req_all,
-                "cable_houses": cable_houses,
-                "welding_houses": welding_houses,
-                "ready_houses": ready_houses,
-                "total_houses": total_houses,
+        data = {'requests': requests,
+                'houses': houses,
                 "sold_routers": sold_routers,
                 "sold_ont": sold_ont,
                 "used_cord": used_cord,

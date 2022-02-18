@@ -13,7 +13,7 @@
 
 
   <!-- Navigation -->
-<div class="navbar">
+<div class="navbar">{% comment %}
   <div class="dropdown">
     <button class="dropbtn">Сеть
       <i class="fa fa-caret-down"></i>
@@ -23,7 +23,7 @@
       <a href="{% url 'switch_list' %}">Коммутаторы</a>
       <a href="#">IP-адреса</a>
     </div>
-  </div>{% comment %}
+  </div>
   <div class="dropdown">
     <button class="dropbtn">Склад
       <i class="fa fa-caret-down"></i>
@@ -48,7 +48,7 @@
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
-      <a href="{% url 'house_list' %}">Зона покрытия</a>
+      <a href="{% url 'house_list' %}">Покрытие</a>
       <a href="{% url 'requests_new' %}">Заявки</a>
       <a href="{% url 'statistic' %}">Статистика</a>
     </div>

@@ -78,7 +78,7 @@ class RequestList(ListView):
         qs = self.model.objects.all()
         url = self.request.get_full_path()
         if 'new' in url:
-            qs = qs.filter(status='False', date_con__isnull=True).order_by('date_reg')
+            qs = qs.filter(status='False', date_con__isnull=True).order_by('date_req')
         elif 'in-progress' in url:
             qs = qs.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
         elif 'completed' in url:

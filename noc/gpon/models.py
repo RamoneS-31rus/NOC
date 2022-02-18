@@ -46,7 +46,7 @@ class Request(models.Model):
     address = models.OneToOneField(House, on_delete=models.CASCADE, verbose_name='Адрес')
     name = models.CharField(max_length=50, verbose_name='ФИО')
     phone = models.CharField(max_length=50, verbose_name='Телефон')
-    date_reg = models.DateField(auto_now_add=True, verbose_name='Дата заявки')
+    date_req = models.DateField(auto_now_add=True, verbose_name='Дата заявки')
     date_con = models.DateTimeField(blank=True, null=True, verbose_name='Дата подключения')
     tariff = models.ForeignKey(Tariff, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Тариф')
     discount = models.PositiveIntegerField(default=0, verbose_name='Скидка')

@@ -73,13 +73,13 @@ class VlanHistory(models.Model):
 
 class SwitchHistory(models.Model):
     switch_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    switch_order = models.ForeignKey(Switch, on_delete=models.CASCADE, verbose_name='Номер')
+    switch_order = models.ForeignKey(Switch, on_delete=models.CASCADE, verbose_name='Номер')  # TODO Изменить на OneToOne!!!
     switch_address = models.CharField(max_length=20, blank=True, verbose_name='Адрес')
     switch_ip = models.CharField(max_length=15, verbose_name='IP')
-    switch_mac = models.CharField(max_length=50, verbose_name='MAC')
-    switch_model = models.CharField(max_length=20, blank=True, verbose_name='Модель')
+    switch_mac = models.CharField(max_length=50, verbose_name='MAC')  # TODO Убрать!!!
+    switch_model = models.CharField(max_length=20, blank=True, verbose_name='Модель')  # TODO Убрать!!!
     switch_firmware = models.CharField(max_length=20, blank=True, verbose_name='Прошивка')
-    switch_serial = models.CharField(max_length=20, verbose_name='Серийный номер')
+    switch_serial = models.CharField(max_length=20, verbose_name='Серийный номер')  # TODO Убрать!!!
     switch_note = models.TextField(blank=True, verbose_name='Примечание')
     switch_time = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 

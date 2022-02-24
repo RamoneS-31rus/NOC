@@ -57,7 +57,7 @@ class HouseUpdate(UpdateView):
 class RequestList(ListView):
     model = Request
     context_object_name = 'requests'
-    paginate_by = 10
+    paginate_by = 50
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
@@ -130,9 +130,18 @@ class RequestStatus(UpdateView):
         choice = self.choice
         obj = Request.objects.get(pk=self.kwargs.get('pk'))
         if choice == 'finish':
-            obj.status = True
-            obj.update_price()
-            obj.save()
+            if not obj.installer.all():
+                messages.error(request, 'Заполните поле "Монтажники"')
+            elif obj.tariff is None:
+                messages.error(request, 'Заполните поле "Тариф"')
+            elif obj.ont is None:
+                messages.error(request, 'Заполните поле "Модель ONT"')
+            elif obj.cord is None and obj.whose_cord is False:
+                messages.error(request, 'Заполните поле "Оптический патч-корд"')
+            else:
+                obj.status = True
+                obj.update_price()
+                obj.save()
         elif choice == 'resume':
             obj.status = False
             obj.save()

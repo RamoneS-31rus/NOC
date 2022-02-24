@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import NON_FIELD_ERRORS
 
 from .models import Address
 
@@ -16,3 +17,10 @@ class AddressForm(forms.ModelForm):
             'address_house': forms.TextInput(attrs={'placeholder': 'Номер дома',
                                                     'size': 7}),
         }
+        """Переопределяем вывод при ошибке дублирования"""
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "Такой адрес уже существует!",
+            }
+        }
+

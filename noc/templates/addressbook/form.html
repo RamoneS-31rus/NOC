@@ -4,6 +4,14 @@
 <br>
 <form method="POST">
     {% csrf_token %}
+        <div class="center" style="color: red">
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    {{error}}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <br>
     <table class="table_gpon">
     <tr>
         <td>

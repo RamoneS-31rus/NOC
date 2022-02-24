@@ -21,6 +21,11 @@ class HouseForm(forms.ModelForm):
 
 class RequestFormCreate(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(RequestFormCreate, self).__init__(*args, **kwargs)
+        self.fields['router'].queryset = Product.objects.filter(type__type_name="Роутеры")
+        self.fields['ont'].queryset = Product.objects.filter(type__type_name="Оптические терминалы")
+
     class Meta:
         model = Request
         fields = ['name', 'phone', 'date_con', 'tariff', 'ont', 'router', 'note']
@@ -57,7 +62,7 @@ class RequestFormUpdate(forms.ModelForm):
 
     class Meta:
         model = Request
-        fields = ['name', 'phone', 'date_con', 'tariff', 'ont', 'router', 'cord', 'discount', 'installer', 'note']
+        fields = ['name', 'phone', 'date_con', 'tariff', 'ont', 'router', 'cord', 'whose_cord', 'discount', 'installer', 'note']
 
         widgets = {
             'name': forms.TextInput(attrs={'size': 25}),

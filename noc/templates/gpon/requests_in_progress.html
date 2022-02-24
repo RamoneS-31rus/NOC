@@ -10,6 +10,12 @@
   </div>
 </div>
 <hr>
+{% for message in messages %}
+    <div class="center" style="color: red">
+        {{ message }}
+    </div>
+    <br>
+{% endfor %}
 {%  if requests %}
     <table class="table_gpon">
         <tr>
@@ -88,7 +94,11 @@
             </td>
             <td>
                 {% if house.cord is None %}
-                    -----
+                    {% if house.whose_cord is True %}
+                        Абонентский
+                    {% else %}
+                        -----
+                    {% endif %}
                 {% else %}
                     {{ house.cord }}
                 {% endif %}

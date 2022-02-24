@@ -17,6 +17,7 @@ class Address(models.Model):
 
     class Meta:
         ordering = ['address_type', 'address_name', 'address_house']
+        unique_together = ('address_type', 'address_name', 'address_house')
 
     #
     # def save(self, *args, **kwargs):

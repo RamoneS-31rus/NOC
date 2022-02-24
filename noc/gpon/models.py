@@ -54,6 +54,7 @@ class Request(models.Model):
     ont = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='ont', verbose_name='Модель ONT')
     router = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='router', verbose_name='Модель Wi-Fi роутера')
     cord = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='cord', verbose_name='Патч-корд')
+    whose_cord = models.BooleanField(default=False, verbose_name='Абонентский')  # Если True, то патч абонента
     note = models.TextField(blank=True, verbose_name='Примечание')
     time = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
     installer = models.ManyToManyField(User, blank=True, related_name='installer', verbose_name='Монтажники')

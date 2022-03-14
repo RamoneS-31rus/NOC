@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -35,26 +36,21 @@ class FilteredListView(ListView):
         return context
 
 
-class HouseList(FilteredListView):
+class HouseList(LoginRequiredMixin, FilteredListView):
     model = House
     template_name = 'gpon/house_list.html'
     filterset_class = HouseFilter
-    paginate_by = 10
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['filter'] = HouseFilter(self.request.GET, queryset=self.get_queryset())
-    #     return context
+    paginate_by = 50
 
 
-class HouseUpdate(UpdateView):
+class HouseUpdate(LoginRequiredMixin, UpdateView):
     model = House
     form_class = HouseForm
     template_name = 'gpon/house_form.html'
     success_url = '/gpon/houses/'
 
 
-class RequestList(ListView):
+class RequestList(LoginRequiredMixin, ListView):
     model = Request
     context_object_name = 'requests'
     paginate_by = 50
@@ -86,7 +82,7 @@ class RequestList(ListView):
         return qs
 
 
-class RequestCreate(CreateView):
+class RequestCreate(LoginRequiredMixin, CreateView):
     model = Request
     template_name = 'gpon/request_form_create.html'
     form_class = RequestFormCreate
@@ -109,7 +105,7 @@ class RequestCreate(CreateView):
         return redirect('requests_new')
 
 
-class RequestUpdate(RedirectToPreviousMixin, UpdateView):
+class RequestUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
     model = Request
     template_name = 'gpon/request_form_update.html'
     form_class = RequestFormUpdate
@@ -169,7 +165,7 @@ def statistic(request):
         ready = 0  # Счетаем только дома по которым заявки не завершены
         ready_list = House.objects.filter(status='Готов к подключению')
         for house in ready_list:
-            if not house.request.status:
+            if not Request.objects.filter(address_id=house.id).exists() or not house.request.status:
                 ready += 1
         houses = {'cable': cable,
                   'welding': welding,

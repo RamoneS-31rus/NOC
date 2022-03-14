@@ -32,7 +32,7 @@
 {% for product in income_list %}
     <tr>
         <td>
-            {{ product.income_date_create | date:'d.m.Y H:i' }}
+            {{ product.income_date_create | date:'d.m.Y' }}
         </td>
         <td>
             {{ product.income_name }}

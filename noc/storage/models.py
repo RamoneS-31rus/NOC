@@ -23,7 +23,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     type = models.ForeignKey(Type, on_delete=models.CASCADE, verbose_name='Тип')
     name = models.CharField(max_length=50, unique=True, verbose_name='Название')
-    # image = models.ImageField()
+    image = models.ImageField(default='default.jpg')
     quality = models.PositiveIntegerField(default=0, verbose_name='Количество')
     price = models.PositiveIntegerField(default=0, verbose_name='Цена')
     description = models.CharField(max_length=100, blank=True, verbose_name='Описание')
@@ -48,8 +48,7 @@ class Income(models.Model):
     income_name = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Название')
     income_quality = models.IntegerField(default=0, verbose_name='Количество')
     income_note = models.CharField(max_length=50, blank=True, verbose_name='Примечание')
-    income_date_create = models.DateTimeField(auto_now_add=True)
-    income_date_update = models.DateTimeField(auto_now=True)
+    income_date_create = models.DateField(auto_now_add=True)
     slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')
 
     class Meta:
@@ -69,10 +68,10 @@ class Income(models.Model):
 
 
 class Object(models.Model):
-    date_create = models.DateTimeField(auto_now_add=True)
     address = models.CharField(max_length=20, blank=True, verbose_name='Адрес')
     purpose = models.CharField(max_length=20, blank=True, verbose_name='Назначение')
     note = models.CharField(max_length=50, blank=True, verbose_name='Примечание')
+    date_create = models.DateField(auto_now_add=True)
     slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')
 
     class Meta:

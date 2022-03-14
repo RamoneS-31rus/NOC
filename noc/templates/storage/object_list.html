@@ -24,7 +24,7 @@
 {% for object in object_list %}
     <tr>
         <td>
-            {{ object.date_create | date:'d.m.Y H:i' }}
+            {{ object.date_create | date:'d.m.Y' }}
         </td>
         <td>
             <a href="{% url 'object_detail' object.slug %}">{{ object.address }}</a>

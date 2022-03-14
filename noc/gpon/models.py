@@ -6,7 +6,7 @@ from addressbook.models import Address
 from storage.models import Product
 
 
-# class Area(models.Model):
+# class District(models.Model):
 #     name = models.CharField(max_length=50, unique=True)
 #
 #     def __str__(self):
@@ -18,7 +18,7 @@ class House(models.Model):
     welding = 'Необходима сварка'
     ready = 'Готов к подключению'
     type = [(cable, 'Нет кабеля'), (welding, 'Необходима сварка'), (ready, 'Готов к подключению')]
-    # area = models.ForeignKey(Area, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Зона')
+    # district = models.ForeignKey(Area, blank=True, null=True, on_delete=models.CASCADE, verbose_name='район')
     address = models.OneToOneField(Address, on_delete=models.CASCADE, unique=True, verbose_name='Адрес')
     status = models.CharField(max_length=20, choices=type, default=cable, verbose_name='Статус')
     note = models.TextField(blank=True, verbose_name='Примечание')
@@ -42,7 +42,6 @@ class Tariff(models.Model):
 
 
 class Request(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='user', verbose_name='Пользователь')
     address = models.OneToOneField(House, on_delete=models.CASCADE, verbose_name='Адрес')
     name = models.CharField(max_length=50, verbose_name='ФИО')
     phone = models.CharField(max_length=50, verbose_name='Телефон')
@@ -55,10 +54,9 @@ class Request(models.Model):
     router = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='router', verbose_name='Модель Wi-Fi роутера')
     cord = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='cord', verbose_name='Патч-корд')
     whose_cord = models.BooleanField(default=False, verbose_name='Абонентский')  # Если True, то патч абонента
-    note = models.TextField(blank=True, verbose_name='Примечание')
-    time = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
     installer = models.ManyToManyField(User, blank=True, related_name='installer', verbose_name='Монтажники')
     manager = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='manager', verbose_name='Менеджер')
+    note = models.TextField(blank=True, verbose_name='Примечание')
     status = models.BooleanField(default=False)
 
     class Meta:

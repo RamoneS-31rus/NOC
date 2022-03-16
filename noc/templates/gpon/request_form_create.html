@@ -2,7 +2,8 @@
 
 {% block content %}
 
-<br><br>
+<h3 class="center">{{ address }}</h3>
+
 <form method="POST">
     {% csrf_token %}
     <table class="table_gpon" style="width: auto; align: center;">
@@ -31,7 +32,7 @@
     </tr>
     <tr>
         <td>
-            {{ form.name }}
+            {{ form.name }}{{ form.address.address }}
         </td>
         <td>
             {{ form.phone }}

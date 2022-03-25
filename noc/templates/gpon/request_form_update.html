@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h3 class="center">{{ request.pk }}</h3>
+<h3 class="center">{{ request.address }}</h3>
 
 <style>
    li {
@@ -14,7 +14,7 @@
 </style>
 <form method="POST">
     {% csrf_token %}
-    <table class="table_gpon">
+    <table class="table_gpon_form">
     <tr>
         <th>
             ФИО

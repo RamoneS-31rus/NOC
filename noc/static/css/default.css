@@ -249,6 +249,26 @@ button {
     color: #497c9d; /* Цвет ссылок */
     padding: 5px; /* Поля вокруг текста */
 }
+
+.table_gpon_form {
+    border-collapse: collapse; /* Убирает двойные линии между ячейками */
+    border-spacing: 1px; /* Расстояние между ячейками */
+    table-layout: fixed;
+    margin: auto;
+}
+.table_gpon_form th, td {
+    border: 1px solid black; /* Граница вокруг ячеек */
+    padding: 1px 3px; /* Поля вокруг текста */
+    word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+}
+.table_gpon_form th {
+    background: #497c9d;
+    color: #fff;
+}
+.table_gpon_form td {
+	text-align: center;
+}
+
 .actions_1 {
 	text-align: center;
   padding: 0;
@@ -257,7 +277,6 @@ button {
 .actions_1 li {
 	display:inline-block;
 	margin: 0 70px; /* расстояние между пунктами по ширине */
-
 }
  .actions_1 li img, .actions_1 li a{
 		vertical-align: middle; /* центровка по вертикали */

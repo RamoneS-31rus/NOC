@@ -1,5 +1,10 @@
+import datetime
+
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext
+from django.contrib.admin import widgets
 
 from .models import House, Request
 from storage.models import Product
@@ -20,6 +25,14 @@ class HouseForm(forms.ModelForm):
 
 
 class RequestFormCreate(forms.ModelForm):
+    """переопределяем формат ввода даты"""
+    date_con = forms.DateTimeField(
+        required=False,
+        input_formats=['%d.%m.%Y %H:%M'],
+        widget=forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 22.01.2021 14:00',
+                                          'size': 25,
+                                          }),
+    )
 
     def __init__(self, *args, **kwargs):
         super(RequestFormCreate, self).__init__(*args, **kwargs)
@@ -34,9 +47,9 @@ class RequestFormCreate(forms.ModelForm):
             'name': forms.TextInput(attrs={'size': 55}),
             'phone': forms.TextInput(attrs={'size': 27}),
             #     'date_con': forms.SelectDateWidget(attrs={'class': 'form-control'}),
-            'date_con': forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 2021-12-22 14:00',
-                                                   'size': 25,
-                                                   }),
+            # 'date_con': forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 2021-12-22 14:00',
+            #                                        'size': 25,
+            #                                        }),
             'note': forms.Textarea(attrs={'cols': 45,
                                           'rows': 2,
                                           }),
@@ -44,11 +57,18 @@ class RequestFormCreate(forms.ModelForm):
 
 
 class RequestFormUpdate(forms.ModelForm):
-    # date_con = forms.DateTimeField(
-    #     label='Дата подключения',
-    #     input_formats=['%d.%m.%Y %H:%M'],
-    #     widget=forms.DateTimeInput()
-    # )
+    """переопределяем формат ввода и вывода даты"""
+    date_con = forms.DateTimeField(
+        required=False,
+        input_formats=['%d.%m.%Y %H:%M'],
+        widget=forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 22.01.2021 14:00',
+                                          'size': 25,
+                                          },
+                                   format='%d.%m.%Y %H:%M')
+    )
+    # date_con = forms.SplitDateTimeField(widget=widgets.AdminSplitDateTime)
+    # date_field = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+    #                                  initial=format(datetime.date.today(), '%Y-%m-%dT%H:%M'), localize=True)
 
     def __init__(self, *args, **kwargs):
         super(RequestFormUpdate, self).__init__(*args, **kwargs)
@@ -68,9 +88,10 @@ class RequestFormUpdate(forms.ModelForm):
             'name': forms.TextInput(attrs={'size': 25}),
             'phone': forms.TextInput(attrs={'size': 12}),
             #     'date_con': forms.SelectDateWidget(attrs={'class': 'form-control'}),
-            'date_con': forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 2021-12-22 14:00',
-                                                   'size': 25,
-                                                   }),
+            # 'date_con': forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 2021-12-22 14:00',
+            #                                        'size': 25,
+            #                                        },
+            #                                 format='%d.%m.%Y %H:%M'),
             'discount': forms.TextInput(attrs={'size': 4}),
             'installer': forms.CheckboxSelectMultiple(),
             # 'manager': forms.Select(),
@@ -78,3 +99,18 @@ class RequestFormUpdate(forms.ModelForm):
                                           'rows': 2,
                                           }),
         }
+
+# class EventSplitDateTime(forms.SplitDateTimeWidget):
+#     def __init__(self, attrs=None):
+#         widgets = [forms.TextInput(attrs={'class': 'vDateField'}),
+#                    forms.TextInput(attrs={'class': 'vTimeField'})]
+#         # Note that we're calling MultiWidget, not SplitDateTimeWidget, because
+#         # we want to define widgets.
+#         forms.MultiWidget.__init__(self, widgets, attrs)
+#
+#     def format_output(self, rendered_widgets):
+#         return mark_safe(u'%s<br />%s' % (rendered_widgets[0], rendered_widgets[1]))
+#
+# class EventForm(forms.Form):
+#     start = forms.DateTimeField(label=ugettext("Start"), widget=EventSplitDateTime())
+#     end = forms.DateTimeField(label=ugettext("End"), widget=EventSplitDateTime())

@@ -54,19 +54,6 @@ class RequestList(LoginRequiredMixin, ListView):
     model = Request
     context_object_name = 'requests'
     paginate_by = 50
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-        # context['is_new'] = Request.objects.filter(status='False', date_con__isnull=True).order_by('-id')
-        # context['in_progress'] = Request.objects.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
-        # context['is_completed'] = Request.objects.filter(status='True').order_by('-id')
-        # context['total_requests'] = Request.objects.all()
-        # context['total_houses'] = House.objects.all()
-        # context['cable_houses'] = House.objects.filter(status='Нет кабеля')
-        # context['welding_houses'] = House.objects.filter(status='Необходима сварка')
-        # context['ready_houses'] = House.objects.filter(status='Готов к подключению')
-        # context['sold_routers'] = Request.objects.filter(status='True').exclude(router__isnull=True)
-        # return context
     """
     Переопределяем queryset в зависимости от url запроса.
     """
@@ -92,20 +79,35 @@ class RequestCreate(LoginRequiredMixin, CreateView):
         context['address'] = House.objects.get(pk=self.kwargs.get('pk'))
         return context
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
+    # def post(self, request, *args, **kwargs):
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_invalid(form)
+    """
+    Заполняем поле manager на авторизованного пользователя, если пользователь в группе Managers.
+    Заполняем поля стоимости тарифа и стоимости роутера в зависимости от выбранного.
+    """
     def form_valid(self, form):
         obj = form.save(commit=False)
         if self.request.user.groups.filter(name='Managers').exists():
             obj.manager = self.request.user
         else:
             obj.manager = None
+
         obj.address = House.objects.get(pk=self.kwargs.get('pk'))
+
+        if obj.tariff is not None:
+            obj.tariff_cost = Tariff.objects.get(name=obj.tariff).price
+        else:
+            obj.tariff_cost = 0
+
+        if obj.router is not None:
+            obj.router_cost = Product.objects.get(name=obj.router).price
+        else:
+            obj.router_cost = 0
+
         obj.save()
         return redirect('requests_new')
 
@@ -114,12 +116,28 @@ class RequestUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
     model = Request
     template_name = 'gpon/request_form_update.html'
     form_class = RequestFormUpdate
-
+    """Заполняем поле manager на авторизованного пользователя, если оно пустое и пользователь в группе Managers"""
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         if kwargs.get('instance').manager is None and self.request.user.groups.filter(name='Managers').exists():
             kwargs.get('instance').manager = self.request.user
         return kwargs
+    """Заполняем поля стоимости тарифа и стоимости роутера в зависимости от выбранного"""
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        if 'tariff' in form.changed_data:  # Проверяем менялось ли поле tariff
+            if obj.tariff is not None:
+                obj.tariff_cost = Tariff.objects.get(name=obj.tariff).price
+            else:
+                obj.tariff_cost = 0
+
+        if 'router' in form.changed_data:  # Проверяем менялось ли поле router
+            if obj.router is not None:
+                obj.router_cost = Product.objects.get(name=obj.router).price
+            else:
+                obj.router_cost = 0
+        obj.save()
+        return super().form_valid(form)
 
 
 class RequestStatus(UpdateView):
@@ -139,10 +157,12 @@ class RequestStatus(UpdateView):
                 messages.error(request, 'Заполните поле "Модель ONT"')
             elif obj.cord is None and obj.whose_cord is False:
                 messages.error(request, 'Заполните поле "Оптический патч-корд"')
+            elif obj.manager is None:
+                messages.error(request, 'Поле "Менеджер" не заполнено')
             else:
                 obj.status = True
-                obj.update_price()
                 obj.save()
+                obj.update_price()
         elif choice == 'resume':
             obj.status = False
             obj.save()
@@ -200,16 +220,18 @@ def statistic(request):
         con_list = Request.objects.filter(status='True')
         cost = {'total': 0, 'connections': 0, 'tariffs': 0, 'routers': 0}
         for req in con_list:
-            price_con = req.price_con
-            price_tariff = Tariff.objects.get(name=req.tariff).price
-            if req.router is None:
-                price_router = 0
-            else:
-                price_router = Product.objects.get(name=req.router).price
-            cost.update({'total': int(cost.get('total') + price_con)})
-            cost.update({'connections': int(cost.get('connections') + (price_con - price_router - price_tariff))})
-            cost.update({'tariffs': int(cost.get('tariffs') + price_tariff)})
-            cost.update({'routers': int(cost.get('routers') + price_router)})
+            cost_con = req.cost_con
+            tariff_cost = req.tariff_cost
+            router_cost = req.router_cost
+            # price_tariff = Tariff.objects.get(name=req.tariff).price
+            # if req.router is None:
+            #     price_router = 0
+            # else:
+            #     price_router = Product.objects.get(name=req.router).price
+            cost.update({'total': int(cost.get('total') + cost_con)})
+            cost.update({'connections': int(cost.get('connections') + (cost_con - router_cost - tariff_cost))})
+            cost.update({'tariffs': int(cost.get('tariffs') + tariff_cost)})
+            cost.update({'routers': int(cost.get('routers') + router_cost)})
 
         data = {'requests': requests,
                 'houses': houses,

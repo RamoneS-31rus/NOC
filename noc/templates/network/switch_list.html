@@ -1,23 +1,29 @@
 {%extends 'default.html' %}
 
+{% load search_pagination %}
+
 {% block content %}
 
-<hr>
-
-<div>
-    <form method="GET">
-        {{ filter.form }}
+<br>
+<ul class="actions_1" style="background-color: green">
+    <li>
+        <form method="GET">
+            {{ filterset.form }}
             <button class="button_cancel_form" type="submit">Найти</button>
+        </form>
+    </li>
+    <li>
         {% if is_Administrators %}
-            <a class="button_add" href="{% url 'switch_create' %}">Добавить</a>
+        <a href="{% url 'switch_create' %}" title="Добавить коммутатор">
+            <img src="/static/images/icon_add.png" width="25" height="25">
+        </a>
         {% endif %}
-    </form>
-</div>
+    </li>
+</ul>
+<br>
 
-<hr>
-
-{%  if switches %}
-    <table class="table_default">
+{%  if object_list %}
+    <table class="table_gpon" style="background-color: red">
         <tr>
             <th style="width: 50px">
                 Номер
@@ -31,71 +37,87 @@
             <th style="width: 130px">
                MAC
             </th>
-            <th style="width: 200px">
+            <th style="width: 150px">
                 Модель
             </th>
-            <th style="width: 200px">
+            <th style="width: 150px">
                 Прошивка
             </th>
-            <th style="width: 200px">
+            <th style="width: 150px">
                 Серийный номер
             </th>
-            <th>
+            <th style="width: 200px">
                 Примечание
             </th>
+            <th></th>
         </tr>
-    {% for switch in filter.qs %}
+    {% for switch in object_list %}
         <tr>
             <td>
-                <a href="{% url 'switch_detail' switch.id %}">{{ switch.switch_order }}</a>
+                {{ switch.order }}
             </td>
             <td>
-                {{ switch.switch_address }}
+                {{ switch.address }}
             </td>
             <td>
-                {{ switch.switch_ip }}
+                {{ switch.ip }}
             </td>
             <td>
-                {{ switch.switch_mac }}
+                {{ switch.mac }}
             </td>
             <td>
-                {{ switch.switch_model }}
+                {{ switch.model }}
             </td>
             <td>
-                {{ switch.switch_firmware }}
+                {{ switch.firmware }}
             </td>
             <td>
-                {{ switch.switch_serial }}
+                {{ switch.serial }}
             </td>
             <td>
-                {{ switch.switch_note }}
+                {{ switch.note }}
+            </td>
+            <td>
+                <ul class="actions_2" style="text-align: center">
+                    <li>
+                        <a href="{% url 'switch_update' switch.pk %}" title="Изменить">
+                            <img src="/static/images/icon_edit.png" width="23" height="23">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'switch_detail' switch.pk %}" title="История">
+                            <img src="/static/images/icon_history.png" width="23" height="23">
+                        </a>
+                    </li>
+                </ul>
             </td>
         </tr>
     {% endfor %}
     </table>
 {%  else %}
-    <h1>пусто</h1>
+    <h1 style="text-align: center">По Вашему запросу ничего не найдено</h1>
 {% endif %}
-
-{% if is_paginated %}
-
-    {% if page_obj.has_previous %}
-        <a href="?page=1">Первая</a>
-        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
-    {% endif %}
-
-    {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-            <a>{{ num }}</a>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <a href="?page={{ num }}">{{ num }}</a>
+<br>
+<div class="center">
+    <div class="pagination">
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a href="?{% param_replace page=1 %}">«</a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.paginator.num_pages > 1 %}
+                    {% if page_obj.number == num %}
+                        <a class="active">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?{% param_replace page=num %}">{{ num }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?{% param_replace page=paginator.num_pages %}">»</a>
+            {% endif %}
         {% endif %}
-    {% endfor %}
-
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">>>></a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
-    {% endif %}
-{% endif %}
+    </div>
+</div>
 
 {% endblock content %}

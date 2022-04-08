@@ -2,9 +2,11 @@ from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
 
 from .models import Address
+from gpon.models import District
 
 
 class AddressForm(forms.ModelForm):
+    district = forms.ModelChoiceField(queryset=District.objects.all())  # Поле для последующей передачи в объект House
 
     class Meta:
         model = Address

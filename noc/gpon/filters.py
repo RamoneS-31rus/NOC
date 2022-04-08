@@ -7,7 +7,7 @@ from addressbook.models import Address
 
 
 class HouseFilter(FilterSet):
-    # area = CharFilter(field_name='area__name', lookup_expr='icontains', label='Зона')
+    # district = CharFilter(field_name='district__name', lookup_expr='icontains', label='Район')
     # area = ModelChoiceFilter(field_name='area__name', widget=Select(attrs={'class': 'form-control mb-2'}))
     # area = ModelChoiceFilter(queryset=Area.objects.all())
     # address = CharFilter(field_name='address__address_name', lookup_expr='icontains', label='Улица')
@@ -17,7 +17,7 @@ class HouseFilter(FilterSet):
 
     class Meta:
         model = House
-        fields = ['address', 'status']
+        fields = ['address', 'district', 'status']
 
     def address_filter(self, queryset, name, value):
         value = value.split()  # разбиваем строку на список с элементами по одному слову

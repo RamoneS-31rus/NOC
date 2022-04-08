@@ -75,8 +75,8 @@
             <td>
                 {{ house.date_con|date:'d.m.Y H:i' }}
             </td>
-            <td>
-                {{ house.tariff.speed }}
+            <td><span style="cursor: help" title="Стоимость {{ house.tariff_cost }} р.">
+                {{ house.tariff.speed }}</span>
             </td>
             <td>
                 {% if house.ont is None %}
@@ -89,7 +89,9 @@
                 {% if house.router is None %}
                     -----
                 {% else %}
-                    {{ house.router }}
+                    <span style="cursor: help" title="Стоимость {{ house.router_cost }} р.">
+                        {{ house.router }}
+                    </span>
                 {% endif %}
             </td>
             <td>

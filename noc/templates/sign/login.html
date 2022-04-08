@@ -1,7 +1,9 @@
 {% extends "main.html" %}
 
 {% block content %}
+
 <div class="login-page">
+    <img src="/static/images/btk.png" width="360" height="78">
   <div class="form">
     <form class="login-form" method="post" action="{% url 'login' %}">
         {% csrf_token %}
@@ -11,6 +13,5 @@
     </form>
   </div>
 </div>
+
 {% endblock %}
-
-

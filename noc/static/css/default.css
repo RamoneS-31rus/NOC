@@ -142,21 +142,25 @@ button {
 .table_default td a:hover {
     background: #ddd;
 }
+
 .table_detail {
     border-collapse: collapse; /* Убирает двойные линии между ячейками */
-    width: 100%; /* Ширина таблицы */
+    /*width: 100%; /* Ширина таблицы */
     border-spacing: 1px; /* Расстояние между ячейками */
     table-layout: fixed;
+    margin: auto;
 }
 .table_detail th, td {
-    position: relative; /* Относительное позиционирование */
     border: 1px solid black; /* Граница вокруг ячеек */
-    padding: 5px; /* Поля вокруг текста */
+    padding: 1px 3px; /* Поля вокруг текста */
     word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
 }
 .table_detail th {
     background: #497c9d;
     color: #fff;
+}
+.table_detail td {
+	text-align: center;
 }
 
 .button_edit {

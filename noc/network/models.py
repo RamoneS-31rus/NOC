@@ -26,30 +26,30 @@ class Vlan(models.Model):
 
 
 class Switch(models.Model):
-    switch_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    switch_order = models.IntegerField(unique=True, verbose_name='Номер')
-    switch_address = models.CharField(max_length=20, blank=True, verbose_name='Адрес')
-    switch_ip = models.CharField(max_length=15, unique=True, verbose_name='IP')
-    switch_mac = models.CharField(max_length=50, unique=True, verbose_name='MAC')
-    switch_model = models.CharField(max_length=20, blank=True, verbose_name='Модель')
-    switch_firmware = models.CharField(max_length=20, blank=True, verbose_name='Прошивка')
-    switch_serial = models.CharField(max_length=20, unique=True, verbose_name='Серийный номер')
-    switch_note = models.TextField(blank=True, verbose_name='Примечание')
-    switch_time = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-    switch_status = models.BooleanField(default=False)
+    order = models.IntegerField(unique=True, verbose_name='Номер')
+    address = models.CharField(max_length=20, blank=True, verbose_name='Адрес')
+    ip = models.CharField(max_length=15, unique=True, verbose_name='IP')
+    mac = models.CharField(max_length=50, unique=True, verbose_name='MAC')
+    model = models.CharField(max_length=20, blank=True, verbose_name='Модель')
+    firmware = models.CharField(max_length=20, blank=True, verbose_name='Прошивка')
+    serial = models.CharField(max_length=20, unique=True, verbose_name='Серийный номер')
+    note = models.TextField(blank=True, verbose_name='Примечание')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    status = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['id']
 
     def save(self, *args, **kwargs):
-        self.switch_mac = self.switch_mac.upper().replace('-', ':')
+        self.mac = self.mac.upper().replace('-', ':')
         super(Switch, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse('switch_detail', kwargs={'pk': self.pk})
+    # def get_absolute_url(self):
+    #     return reverse('switch_detail', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return f'{self.switch_order}'
+        return f'{self.order}'
 
 
 class VlanHistory(models.Model):
@@ -72,15 +72,15 @@ class VlanHistory(models.Model):
 
 
 class SwitchHistory(models.Model):
-    switch_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     switch_order = models.ForeignKey(Switch, on_delete=models.CASCADE, verbose_name='Номер')  # TODO Изменить на OneToOne!!!
     switch_address = models.CharField(max_length=20, blank=True, verbose_name='Адрес')
     switch_ip = models.CharField(max_length=15, verbose_name='IP')
-    switch_mac = models.CharField(max_length=50, verbose_name='MAC')  # TODO Убрать!!!
-    switch_model = models.CharField(max_length=20, blank=True, verbose_name='Модель')  # TODO Убрать!!!
+    switch_mac = models.CharField(max_length=50, verbose_name='MAC')
+    switch_model = models.CharField(max_length=20, blank=True, verbose_name='Модель')
     switch_firmware = models.CharField(max_length=20, blank=True, verbose_name='Прошивка')
-    switch_serial = models.CharField(max_length=20, verbose_name='Серийный номер')  # TODO Убрать!!!
+    switch_serial = models.CharField(max_length=20, verbose_name='Серийный номер')
     switch_note = models.TextField(blank=True, verbose_name='Примечание')
+    switch_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     switch_time = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
     class Meta:

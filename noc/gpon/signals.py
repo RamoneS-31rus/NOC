@@ -1,17 +1,17 @@
 # from django.db.models.signals import pre_save, pre_delete
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-from addressbook.models import Address
-from .models import House
-# from storage.models import Product, Income, Expense
-
-
-@receiver(post_save, sender=Address)
-def save(sender, instance, created, **kwargs):
-    if created:
-        House.objects.create(address=Address.objects.get(id=instance.id))
-        return
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
+#
+# from addressbook.models import Address
+# from .models import House
+# # from storage.models import Product, Income, Expense
+#
+#
+# @receiver(post_save, sender=Address)
+# def save(instance, created, **kwargs):
+#     if created:
+#         House.objects.create(address=Address.objects.get(id=instance.id))
+#         return
 
 # @receiver(pre_save, sender=Request)
 # def expense_quality_update(sender, instance, **kwargs):

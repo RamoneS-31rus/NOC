@@ -2,85 +2,80 @@
 
 {% block content %}
 
-<h1 style="text-align: center;">Коммутатор №{{ switch.switch_order }}</h1>
+<h1 style="text-align: center;">Коммутатор №{{ switch.order }}</h1>
+
 <table class="table_detail">
-        <tr>
-            <th style="width: 80px">
-                Дата
-            </th>
-            <th style="width: 200px">
-                Адрес
-            </th>
-            <th style="width: 110px">
-                IP
-            </th>
-            <th style="width: 130px">
-               MAC
-            </th>
-            <th style="width: 200px">
-                Модель
-            </th>
-            <th style="width: 200px">
-                Прошивка
-            </th>
-            <th style="width: 200px">
-                Серийный номер
-            </th>
-            <th>
-                Примечание
-            </th>
-            <th style="width: 100px">
-                Изменил
-            </th>
-        </tr>
-        <tr>
-            <td>
-                {{ switch.switch_time|date:'d.m.Y H:i' }}
-            </td>
-            <td>
-                {{ switch.switch_address }}
-            </td>
-            <td>
-                {{ switch.switch_ip }}
-            </td>
-            <td>
-                {{ switch.switch_mac }}
-            </td>
-            <td>
-                {{ switch.switch_model }}
-            </td>
-            <td>
-                {{ switch.switch_firmware }}
-            </td>
-            <td>
-                {{ switch.switch_serial }}
-            </td>
-            <td>
-                {{ switch.switch_note }}
-            </td>
-            <td>
-                {{ switch.switch_user }}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                {{ switch.switch_status }}
-            </td>
-        </tr>
-    </table>
+    <tr>
+        <th style="width: 200px">
+            Адрес
+        </th>
+        <th style="width: 110px">
+            IP
+        </th>
+        <th style="width: 130px">
+            MAC
+        </th>
+        <th style="width: 150px">
+            Модель
+        </th>
+        <th style="width: 150px">
+            Прошивка
+        </th>
+        <th style="width: 150px">
+            Серийный номер
+        </th>
+        <th style="width: 200px">
+            Примечание
+        </th>
+        <th style="width: 100px">
+            Изменил
+        </th>
+        <th style="width: 80px">
+            Дата
+        </th>
+    </tr>
+    <tr>
+        <td>
+            {{ switch.address }}
+        </td>
+        <td>
+            {{ switch.ip }}
+        </td>
+        <td>
+            {{ switch.mac }}
+        </td>
+        <td>
+            {{ switch.model }}
+        </td>
+        <td>
+            {{ switch.firmware }}
+        </td>
+        <td>
+            {{ switch.serial }}
+        </td>
+        <td>
+            {{ switch.note }}
+        </td>
+        <td>
+            {{ switch.user }}
+        </td>
+        <td>
+            {{ switch.date|date:'d.m.Y H:i' }}
+        </td>
+    </tr>
+</table>
+<br>
+{% comment %}
 {% if is_Administrators %}
 <div style="text-align: center">
    <br><a class="button_edit" href="{% url 'switch_update' switch.id %}">Редактировать</a><br>
 </div>
 {% endif %}
-
+{% endcomment %}
 {%  if history %}
 <h3 style="text-align: center">История изменений:</h3>
     <table class="table_detail">
         <tr>
-            <th style="width: 80px">
-                Дата
-            </th>
             <th style="width: 200px">
                 Адрес
             </th>
@@ -90,27 +85,27 @@
             <th style="width: 130px">
                MAC
             </th>
-            <th style="width: 200px">
+            <th style="width: 150px">
                 Модель
             </th>
-            <th style="width: 200px">
+            <th style="width: 150px">
                 Прошивка
             </th>
-            <th style="width: 200px">
+            <th style="width: 150px">
                 Серийный номер
             </th>
-            <th>
+            <th style="width: 200px">
                 Примечание
             </th>
             <th style="width: 100px">
                 Изменил
             </th>
+            <th style="width: 80px">
+                Дата
+            </th>
         </tr>
     {% for switch in history %}
         <tr>
-            <td>
-                {{ switch.switch_time|date:'d.m.Y H:i' }}
-            </td>
             <td>
                 {{ switch.switch_address }}
             </td>
@@ -134,6 +129,9 @@
             </td>
             <td>
                 {{ switch.switch_user }}
+            </td>
+            <td>
+                {{ switch.switch_time|date:'d.m.Y H:i' }}
             </td>
         </tr>
     {% endfor %}

@@ -73,7 +73,9 @@
                 {{ house.date_con|date:'d.m.Y H:i' }}
             </td>
             <td>
-                {{ house.tariff.speed }}
+                <span style="cursor: help" title="Стоимость {{ house.tariff_cost }} р.">
+                    {{ house.tariff.speed }}
+                </span>
             </td>
             <td>
                 {{ house.ont }}
@@ -82,12 +84,18 @@
                 {% if house.router is None %}
                     -----
                 {% else %}
-                    {{ house.router }}
+                    <span style="cursor: help" title="Стоимость {{ house.router_cost }} р.">
+                        {{ house.router }}
+                    </span>
                 {% endif %}
             </td>
             <td>
                 {% if house.cord is None %}
-                    -----
+                    {% if house.whose_cord is True %}
+                        Абонентский
+                    {% else %}
+                        -----
+                    {% endif %}
                 {% else %}
                     {{ house.cord }}
                 {% endif %}
@@ -95,11 +103,11 @@
             <td>
                 {% if house.discount != 0 %}
                     <span style="cursor: help" title="С учётом скидки {{ house.discount }} р.">
-                        {{ house.price_con }}
+                        {{ house.cost_con }}
                         <img src="/static/images/icon_eye.png" width="15" height="15">
                     </span>
                 {% else %}
-                    {{ house.price_con }}
+                    {{ house.cost_con }}
                 {% endif %}
             </td>
             <td style="text-align: left">

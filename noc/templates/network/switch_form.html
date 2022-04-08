@@ -1,27 +1,33 @@
-{% extends 'default.html' %}
+{%extends 'default.html' %}
+
 {% block content %}
 
-<br>
+<br><br>
 <form method="POST">
     {% csrf_token %}
+    <div class="center" style="color: red">
+        {{form.ip.errors}}
+        {{form.mac.errors}}
+        {{form.serial.errors}}
+    </div>
     <table class="table_detail">
     <tr>
-        <th style="width: 200px">
+        <th>
             Адрес
         </th>
-        <th style="width: 110px">
+        <th>
             IP
         </th>
-        <th style="width: 130px">
+        <th>
             MAC
         </th>
-        <th style="width: 200px">
+        <th>
             Модель
         </th>
-        <th style="width: 200px">
+        <th>
             Прошивка
         </th>
-        <th style="width: 200px">
+        <th>
             Серийный номер
         </th>
         <th>
@@ -30,34 +36,33 @@
     </tr>
     <tr>
         <td>
-            {{ form.switch_address }}
+            {{ form.address }}
         </td>
         <td>
-            {{ form.switch_ip }}
+            {{ form.ip }}
         </td>
         <td>
-            {{ form.switch_mac }}
+            {{ form.mac }}
         </td>
         <td>
-            {{ form.switch_model }}
+            {{ form.model }}
         </td>
         <td>
-            {{ form.switch_firmware }}
+            {{ form.firmware }}
         </td>
         <td>
-            {{ form.switch_serial }}
+            {{ form.serial }}
         </td>
         <td>
-            {{ form.switch_note }}
+            {{ form.note }}
         </td>
     </tr>
     </table>
-    {{ form.switch_status}} Оборудование на складе
     <br>
     <div style="text-align: center">
         <button class="button_add_form" type="submit">Добавить</button>
-        <a class="button_cancel_form" href="{% url 'switch_detail' switch.id %}" role="button">Отмена</a>
+        <a class="button_cancel_form" href="javascript:window.history.back()" role="button">Отменить</a>
     </div>
 </form>
 
-{% endblock %}
+{% endblock content %}

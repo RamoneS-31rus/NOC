@@ -8,6 +8,31 @@ from django.views import View
 from django_filters.views import FilterView
 
 
+class RedirectToPreviousMixin:  # Миксин для редиректа на предыдущию страницу
+    default_redirect = '/'
+
+    def get(self, request, *args, **kwargs):
+        request.session['previous_page'] = request.META.get('HTTP_REFERER', self.default_redirect)
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.request.session['previous_page']
+
+
+class FilteredListView(ListView):
+    filterset_class = None
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
+
 class VlanList(LoginRequiredMixin, ListView):
     model = Vlan  # queryset = Vlan.objects.all()
     template_name = 'network/vlan_list.html'
@@ -63,17 +88,16 @@ class VlanUpdate(LoginRequiredMixin, UpdateView):
     #permission_required = 'vlan.change_vlan'
 
 
-class SwitchList(LoginRequiredMixin, ListView):
+class SwitchList(LoginRequiredMixin, FilteredListView):
     model = Switch
     template_name = 'network/switch_list.html'
-    context_object_name = 'switches'
-    paginate_by = 100
-    #form_class = VlanForm
+    filterset_class = SwitchFilter
+    paginate_by = 50
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_Administrators'] = self.request.user.groups.filter(name='Administrators').exists()
-        context['filter'] = SwitchFilter(self.request.GET, queryset=self.get_queryset())
+        # context['filter'] = SwitchFilter(self.request.GET, queryset=self.get_queryset())
         return context
 
 
@@ -92,42 +116,30 @@ class SwitchDetail(LoginRequiredMixin, DetailView):
         return context
 
 
-class SwitchUpdate(LoginRequiredMixin, UpdateView):
+class SwitchCreate(LoginRequiredMixin, RedirectToPreviousMixin, CreateView):
     model = Switch
-    form_class = SwitchForm
-    template_name = 'network/switch_update.html'
-    #permission_required = 'switch.change_switch'
-
-    # def post(self, request, *args, **kwargs):
-    #     object = self.get_object()
-    #     print(object)
-    #     print(object.switch_address)
-    #     print(object.switch_status)
-    #     if object.switch_status:
-    #         print("***"+str(object))
-    #         object.switch_address = 'Склад'
-    #         print("***" + str(object.switch_address))
-    #         return redirect(object.get_absolute_url())
-    #     else:
-    #         return super(SwitchUpdate, self).post(request, *args, **kwargs)
-
-
-class SwitchCreate(LoginRequiredMixin, CreateView):
-    model = Switch
-    template_name = 'network/switch_create.html'
+    template_name = 'network/switch_form.html'
     form_class = SwitchForm
     #permission_required = 'switch.add_switch'
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
     def form_valid(self, form):
-        post = form.save(commit=False)
-        post.switch_user = self.request.user
-        post.switch_order = len(Switch.objects.all()) + 1
-        post.save()
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.order = len(Switch.objects.all()) + 1
+        obj.save()
         return redirect('/network/switches')
+
+
+class SwitchUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
+    model = Switch
+    form_class = SwitchForm
+    template_name = 'network/switch_form.html'
+    #permission_required = 'switch.change_switch'
+
+    # def form_valid(self, form):
+    #     obj = form.save(commit=False)
+    #     obj.user = self.request.user
+    #     if obj.status:
+    #         obj.address = 'Склад'
+    #     obj.save()
+    #     return redirect('/network/switches')

@@ -107,31 +107,31 @@
     {% for switch in history %}
         <tr>
             <td>
-                {{ switch.switch_address }}
+                {{ switch.address }}
             </td>
             <td>
-                {{ switch.switch_ip }}
+                {{ switch.ip }}
             </td>
             <td>
-                {{ switch.switch_mac }}
+                {{ switch.mac }}
             </td>
             <td>
-                {{ switch.switch_model }}
+                {{ switch.model }}
             </td>
             <td>
-                {{ switch.switch_firmware }}
+                {{ switch.firmware }}
             </td>
             <td>
-                {{ switch.switch_serial }}
+                {{ switch.serial }}
             </td>
             <td>
-                {{ switch.switch_note }}
+                {{ switch.note }}
             </td>
             <td>
-                {{ switch.switch_user }}
+                {{ switch.user }}
             </td>
             <td>
-                {{ switch.switch_time|date:'d.m.Y H:i' }}
+                {{ switch.date|date:'d.m.Y H:i' }}
             </td>
         </tr>
     {% endfor %}

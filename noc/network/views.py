@@ -109,8 +109,8 @@ class SwitchDetail(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_Administrators'] = self.request.user.groups.filter(name='Administrators').exists()
-        if len(SwitchHistory.objects.filter(switch_order=self.kwargs.get('pk'))) > 1:
-            context['history'] = SwitchHistory.objects.filter(switch_order=self.kwargs.get('pk'))[1::]
+        if len(SwitchHistory.objects.filter(order=self.kwargs.get('pk'))) > 1:
+            context['history'] = SwitchHistory.objects.filter(order=self.kwargs.get('pk'))[1::]
         else:
             context['history'] = None
         return context

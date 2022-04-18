@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<br>
-<ul class="actions_1" style="background-color: green">
+<hr>
+<ul class="actions_1">
     <li>
         <form method="GET">
             {{ filterset.form }}
@@ -20,10 +20,10 @@
         {% endif %}
     </li>
 </ul>
-<br>
+<hr>
 
 {%  if object_list %}
-    <table class="table_gpon" style="background-color: red">
+    <table class="table_gpon">
         <tr>
             <th style="width: 50px">
                 Номер

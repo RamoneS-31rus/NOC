@@ -1,9 +1,9 @@
-# from django.contrib.auth.models import User
-# from django.db.models.signals import post_save, pre_save
-# from django.dispatch import receiver
-# from .models import Vlan, Switch, VlanHistory, SwitchHistory
-#
-#
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+from .models import Vlan, Switch, VlanHistory, SwitchHistory
+
+
 # @receiver(post_save, sender=Vlan)
 # def vlan_history(sender, instance, **kwargs):
 #     import inspect
@@ -22,19 +22,17 @@
 #                                vlan_note=instance.vlan_note, vlan_time=instance.vlan_time)
 #
 #
-# @receiver(post_save, sender=Switch)
-# def switch_history(sender, instance, **kwargs):
-#     import inspect
-#     for frame_record in inspect.stack():
-#         if frame_record[3] == 'get_response':
-#             request = frame_record[0].f_locals['request']
-#             break
-#     else:
-#         request = None
-#
-#     SwitchHistory.objects.create(switch_user=User.objects.get(username=request.user),
-#                                  switch_order=Switch.objects.get(switch_order=instance.switch_order),
-#                                  switch_address=instance.switch_address, switch_ip=instance.switch_ip,
-#                                  switch_mac=instance.switch_mac, switch_model=instance.switch_model,
-#                                  switch_firmware=instance.switch_firmware, switch_serial=instance.switch_serial,
-#                                  switch_note=instance.switch_note, switch_time=instance.switch_time)
+@receiver(post_save, sender=Switch)
+def switch_history(sender, instance, **kwargs):
+    # import inspect
+    # for frame_record in inspect.stack():
+    #     if frame_record[3] == 'get_response':
+    #         request = frame_record[0].f_locals['request']
+    #         break
+    # else:
+    #     request = None
+
+    SwitchHistory.objects.create(
+        order=instance.order, address=instance.address, ip=instance.ip, mac=instance.mac, model=instance.model,
+        firmware=instance.firmware, serial=instance.serial, note=instance.note, user=instance.user, date=instance.date
+    )

@@ -1,106 +1,92 @@
 .navbar {
-    overflow: hidden;
-    background-color: #497c9d;
-    font-family: Arial, Helvetica, sans-serif;
+	overflow: hidden;
+	background-color: #497c9d;
+	font-family: Arial, Helvetica, sans-serif;
 }
-
 .navbar a {
-    float: left;
-    font-size: 16px;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+	float: left;
+	font-size: 16px;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
 }
-
 .dropdown {
-    float: left;
-    overflow: hidden;
+	float: left;
+	overflow: hidden;
 }
-
 .dropdown .dropbtn {
-    font-size: 16px;
-    border: none;
-    outline: none;
-    color: white;
-    padding: 14px 16px;
-    background-color: inherit;
-    font-family: inherit;
-    margin: 0;
+	font-size: 16px;
+	border: none;
+	outline: none;
+	color: white;
+	padding: 14px 16px;
+	background-color: inherit;
+	font-family: inherit;
+	margin: 0;
 }
-
 .navbar a:hover, .dropdown:hover .dropbtn, .dropdown-pro:hover .dropbtn-pro{
-    background-color: #f9f9f9;
-    color: black;
+	background-color: #f9f9f9;
+	color: black;
 }
-
 .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
 }
-
 .dropdown-content a {
-    float: none;
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
+	float: none;
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+	text-align: left;
 }
-
 .dropdown-content a:hover {
-    background-color: #ddd;
+	background-color: #ddd;
 }
-
 .dropdown:hover .dropdown-content {
-    display: block;
+	display: block;
 }
-
 .dropdown-pro {
-    float: right;
-    overflow: hidden;
+	float: right;
+	overflow: hidden;
 }
-
 .dropdown-pro .dropbtn-pro {
-    font-size: 16px;
-    border: none;
-    outline: none;
-    color: white;
-    padding: 14px 16px;
-    background-color: inherit;
-    font-family: inherit;
-    margin: 0;
+	font-size: 16px;
+	border: none;
+	outline: none;
+	color: white;
+	padding: 14px 16px;
+	background-color: inherit;
+	font-family: inherit;
+	margin: 0;
 }
-
 .dropdown-content-pro {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    right: 1px;
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+	right: 1px;
 }
-
 .dropdown-content-pro a {
-    float: none;
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
+	float: none;
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+	text-align: left;
 }
-
 .dropdown-content-pro a:hover {
-    background-color: #ddd;
+	background-color: #ddd;
 }
-
 .dropdown-pro:hover .dropdown-content-pro {
-    display: block;
+	display: block;
 }
 
 button {
@@ -108,60 +94,100 @@ button {
 }
 
 .table_default {
-    border-collapse: collapse; /* Убирает двойные линии между ячейками */
-    width: 100%; /* Ширина таблицы */
-    border-spacing: 1px; /* Расстояние между ячейками */
-    table-layout: fixed;
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	width: 100%; /* Ширина таблицы */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	table-layout: fixed;
 }
 .table_default th, td {
-    position: relative; /* Относительное позиционирование */
-    border: 1px solid black; /* Граница вокруг ячеек */
-    padding: 5px; /* Поля вокруг текста */
-    word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+	position: relative; /* Относительное позиционирование */
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 5px; /* Поля вокруг текста */
+	word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
 }
 .table_default th {
-    background: #497c9d;
-    color: #fff;
+	background: #497c9d;
+	color: #fff;
 }
 .table_default tr:hover {
-    background: #ddd;
+	background: #ddd;
 }
 .table_default th:hover {
-    background: #497c9d;
+	background: #497c9d;
 }
 .table_default td a{
-    position: absolute; /* Абсолютное позиционирование */
-    text-align: center; /* Текст по центру */
-    text-decoration: none; /* Отменяем подчеркивание у ссылки */
-    left: 0; right: 0; /* По ширине ячейки */
-    top: 0; bottom: 0; /* По высоте ячейки */
-    background: #fff; /* Цвет фона */
-    color: #497c9d; /* Цвет ссылок */
-    padding: 5px; /* Поля вокруг текста */
+	position: absolute; /* Абсолютное позиционирование */
+	text-align: center; /* Текст по центру */
+	text-decoration: none; /* Отменяем подчеркивание у ссылки */
+	left: 0; right: 0; /* По ширине ячейки */
+	top: 0; bottom: 0; /* По высоте ячейки */
+	background: #fff; /* Цвет фона */
+	color: #497c9d; /* Цвет ссылок */
+	padding: 5px; /* Поля вокруг текста */
 }
 .table_default td a:hover {
-    background: #ddd;
+	background: #ddd;
 }
 
 .table_detail {
-    border-collapse: collapse; /* Убирает двойные линии между ячейками */
-    /*width: 100%; /* Ширина таблицы */
-    border-spacing: 1px; /* Расстояние между ячейками */
-    table-layout: fixed;
-    margin: auto;
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	/*width: 100%; /* Ширина таблицы */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	table-layout: fixed;
+	margin: auto;
 }
 .table_detail th, td {
-    border: 1px solid black; /* Граница вокруг ячеек */
-    padding: 1px 3px; /* Поля вокруг текста */
-    word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 1px 3px; /* Поля вокруг текста */
+	word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
 }
 .table_detail th {
-    background: #497c9d;
-    color: #fff;
+	background: #497c9d;
+	color: #fff;
 }
 .table_detail td {
 	text-align: center;
 }
+/* *** */
+.switch-detail {
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	table-layout: fixed;
+	margin: auto;
+}
+.switch-detail th, td {
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 1px 3px; /* Поля вокруг текста */
+	word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+}
+.switch-detail th {
+	background: #497c9d;
+	color: #fff;
+}
+
+.switch-form {
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	/*width: 100%; /* Ширина таблицы */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	table-layout: fixed;
+	margin: auto;
+}
+.switch-form th, td {
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 1px 3px; /* Поля вокруг текста */
+	word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+}
+.switch-form th {
+	background: #497c9d;
+	color: #fff;
+}
+.switch-form input {
+	padding: 1px 3px;
+}
+.switch-form Textarea {
+	vertical-align: middle;
+}
+/* *** */
 
 .button_edit {
   display: inline-block;
@@ -179,7 +205,6 @@ button {
 .button_edit:active { background: linear-gradient(#f59500, #f5ae00) #f59500; }
 
 .button_add {
-
   display: inline-block;
   margin-left: 41%;
   color: white;
@@ -223,87 +248,104 @@ button {
 .button_cancel_form:hover { background: #006da3}
 
 .table_gpon {
-    border-collapse: collapse; /* Убирает двойные линии между ячейками */
-    /*width: 100%; /* Ширина таблицы */
-    border-spacing: 1px; /* Расстояние между ячейками */
-    table-layout: fixed;
-    margin: auto;
-}
-.table_gpon th, td {
-
-    border: 1px solid black; /* Граница вокруг ячеек */
-    padding: 1px 3px; /* Поля вокруг текста */
-    word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	table-layout: fixed;
+	margin: auto;  /* при значении auto объект центруется по горизонтали */
 }
 .table_gpon th {
-    background: #497c9d;
-    color: #fff;
-}
-.table_gpon tr:hover {
-    background: #ddd;
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 1px 3px; /* Поля вокруг текста */
+	word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+	background: #497c9d;
+	color: #fff;
 }
 .table_gpon td {
-	text-align: center;
+	padding: 3px;
 }
-.table_gpon td a{
-    text-align: center; /* Текст по центру */
-    text-decoration: none; /* Отменяем подчеркивание у ссылки */
-    left: 0; right: 0; /* По ширине ячейки */
-    top: 0; bottom: 0; /* По высоте ячейки */
-    color: #497c9d; /* Цвет ссылок */
-    padding: 5px; /* Поля вокруг текста */
+.table_gpon tr:hover {
+	background: #ddd;
+}
+.table_gpon td ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.table_gpon td li {
+	display:inline-block;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+.table_gpon td li button {
+	background-color:transparent;
+	border-color:transparent;
+	height: 25px;
+	width: 25px;
+	padding: 0;
+}
+.table_gpon td button img {
+	vertical-align: middle;
+}
+.table_gpon td a {
+	text-decoration: none; /* Отменяем подчеркивание у ссылки */
+	color: #497c9d; /* Цвет ссылок */
+}
+.table_gpon td a img {
+	vertical-align: middle;
 }
 
 .table_gpon_form {
-    border-collapse: collapse; /* Убирает двойные линии между ячейками */
-    border-spacing: 1px; /* Расстояние между ячейками */
-    table-layout: fixed;
-    margin: auto;
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	table-layout: fixed;
+	margin: auto;
 }
 .table_gpon_form th, td {
-    border: 1px solid black; /* Граница вокруг ячеек */
-    padding: 1px 3px; /* Поля вокруг текста */
-    word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 1px 3px; /* Поля вокруг текста */
+	word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
 }
 .table_gpon_form th {
-    background: #497c9d;
-    color: #fff;
+	background: #497c9d;
+	color: #fff;
 }
 .table_gpon_form td {
 	text-align: center;
 }
+.table_gpon_form Textarea {
+	vertical-align: middle;
+}
 
-.actions_1 {
+.actions-1 {
 	text-align: center;
   padding: 0;
   margin: 0;
 }
-.actions_1 li {
+.actions-1 li {
 	display:inline-block;
 	margin: 0 70px; /* расстояние между пунктами по ширине */
 }
- .actions_1 li img, .actions_1 li a{
-		vertical-align: middle; /* центровка по вертикали */
+.actions-1 li img, .actions-1 li a{
+	vertical-align: middle; /* центровка по вертикали */
 }
-.actions_2 {
-		list-style: none;
-    padding: 0;
-    margin: 0;
+
+.actions-3 {
+  padding: 0;
+  margin: auto;
+  width: 1410px;
 }
-.actions_2 li {
+.actions-3 li {
 	display:inline-block;
-	text-align: center;
+	margin: 0 0 0 44%; /* расстояние между пунктами по ширине */
 }
-.actions_2 li img, .actions_2 li a, .actions_2 li button{
-		display: block;
-  	margin: 0 auto;
-  	padding: 0;
+.actions-3 li img, .actions_1 li a{
+	vertical-align: middle; /* центровка по вертикали */
 }
+
 /*.status li {
 	display:inline-block;
 	width:10%;
 }*/
-
 
 /*.table_gpon td a{*/
     /*position: absolute; /* Абсолютное позиционирование */
@@ -345,49 +387,62 @@ a.button15:active {
 }
 */
 .center {
-    text-align: center;
+	text-align: center;
 }
 
 .menu-status {
-    display: inline-block;
+	display: inline-block;
 }
 .menu-status a {
-    color: black;
-    float: left;
-    padding: 7px 14px;
-    text-decoration: none;
-    transition: background-color .3s;
-    border: 1px solid #ddd;
-    margin: 0 4px;
+	color: black;
+	float: left;
+	padding: 7px 14px;
+	text-decoration: none;
+	transition: background-color .3s;
+	border: 1px solid #ddd;
+	margin: 0 4px;
 }
 .menu-status a.active {
-    background-color: #497c9d;
-    color: white;
-    border: 1px solid #497c9d;
+	background-color: #497c9d;
+	color: white;
+	border: 1px solid #497c9d;
 }
 .menu-status a:hover:not(.active) {background-color: #ddd;}
 
 .pagination {
-    display: inline-block;
+	display: inline-block;
 }
 .pagination a {
-    color: black;
-    float: left;
-    padding: 7px 14px;
-    text-decoration: none;
-    border: 1px solid #ddd;
+	color: black;
+	float: left;
+	padding: 7px 14px;
+	text-decoration: none;
+	border: 1px solid #ddd;
 }
 .pagination a.active {
-    background-color: #497c9d;
-    color: white;
-    border: 1px solid #497c9d;
+	background-color: #497c9d;
+	color: white;
+	border: 1px solid #497c9d;
 }
 .pagination a:hover:not(.active) {background-color: #ddd;}
 .pagination a:first-child {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
 }
 .pagination a:last-child {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.search {
+	outline: 1px solid #9A9A9A;
+	padding-left: 10px;
+}
+.search input {
+	border:none;  /* Отключаем рамку у поля ввода */
+	vertical-align: middle;
+}
+.search input :active, :focus {  /* Отключаем рамку при выделении поля ввода */
+	outline: 0;
+	outline-offset: 0;
 }

@@ -2,9 +2,11 @@
 
 {% block content %}
 
-<h1 style="text-align: center;">Коммутатор №{{ switch.order }}</h1>
+<a class="button_cancel_form" style="position: absolute; left: 150px; top: 80px" href="javascript:window.history.back()" role="button">Назад</a>
 
-<table class="table_detail">
+<h1 style="text-align: center">Коммутатор №{{ switch.order }}</h1>
+
+<table class="switch-detail">
     <tr>
         <th style="width: 200px">
             Адрес
@@ -64,17 +66,12 @@
         </td>
     </tr>
 </table>
+
 <br>
-{% comment %}
-{% if is_Administrators %}
-<div style="text-align: center">
-   <br><a class="button_edit" href="{% url 'switch_update' switch.id %}">Редактировать</a><br>
-</div>
-{% endif %}
-{% endcomment %}
+
 {%  if history %}
 <h3 style="text-align: center">История изменений:</h3>
-    <table class="table_detail">
+    <table class="table_gpon">
         <tr>
             <th style="width: 200px">
                 Адрес

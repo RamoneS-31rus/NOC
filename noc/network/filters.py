@@ -1,8 +1,10 @@
 from django.db.models import Q
+from django.forms import TextInput
 from django_filters import FilterSet, CharFilter
 from .models import Vlan, Switch
 
 import re
+
 
 class VlanFilter(FilterSet):
     vlan_name = CharFilter(label='Vlan', field_name='vlan_name', lookup_expr='exact')
@@ -16,7 +18,7 @@ class SwitchFilter(FilterSet):
     # ip = filters.CharFilter(label='IP', field_name='ip', lookup_expr='exact')
     # mac = filters.CharFilter(label='', field_name='mac', lookup_expr='icontains')
     # model = filters.CharFilter(label='Модель', field_name='model', lookup_expr='icontains')
-    switch = CharFilter(label='', method='search')
+    switch = CharFilter(label='', method='search', widget=TextInput(attrs={'placeholder': 'Поиск'}))
 
     def search(self, queryset, name, value):
         ipv4_re = (
@@ -34,9 +36,8 @@ class SwitchFilter(FilterSet):
             value = value.upper().replace('-', ':')
             return Switch.objects.filter(mac=value)
         else:
-            print('FALSE')
             return Switch.objects.filter(
-                Q(address__icontains=value) | Q(serial=value))
+                Q(address__icontains=value) | Q(model=value) | Q(serial=value))
 
 
         # if len(value) < 2:

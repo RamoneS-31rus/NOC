@@ -42,12 +42,12 @@ class SwitchForm(forms.ModelForm):
         }
 
         widgets = {
-            'address': forms.TextInput(attrs={'size': 23}),
+            'address': forms.TextInput(attrs={'size': 30}),
             'ip': forms.TextInput(attrs={'size': 10}),
             'mac': forms.TextInput(attrs={'size': 13}),
             'model': forms.TextInput(attrs={'size': 23}),
             'firmware': forms.TextInput(attrs={'size': 23}),
             'serial': forms.TextInput(attrs={'size': 23}),
-            'note': forms.Textarea(attrs={'rows': 2}),
+            'note': forms.Textarea(attrs={'rows': 1}),
             'status': forms.CheckboxInput()
         }

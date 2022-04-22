@@ -262,6 +262,7 @@ button {
 }
 .table_gpon td {
 	padding: 3px;
+	text-align: center;
 }
 .table_gpon tr:hover {
 	background: #ddd;

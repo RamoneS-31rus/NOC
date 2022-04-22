@@ -1,19 +1,12 @@
 from django.db.models import Q
-from django.forms import CheckboxInput
-from django_filters import FilterSet, CharFilter, ChoiceFilter, BooleanFilter, ModelChoiceFilter
+from django_filters import FilterSet, CharFilter, ChoiceFilter
 
 from .models import House
-from addressbook.models import Address
 
 
 class HouseFilter(FilterSet):
-    # district = CharFilter(field_name='district__name', lookup_expr='icontains', label='Район')
-    # area = ModelChoiceFilter(field_name='area__name', widget=Select(attrs={'class': 'form-control mb-2'}))
-    # area = ModelChoiceFilter(queryset=Area.objects.all())
-    # address = CharFilter(field_name='address__address_name', lookup_expr='icontains', label='Улица')
     address = CharFilter(method='address_filter')
     status = ChoiceFilter(field_name='status', choices=House.type, label='Статус ВОЛС')
-    # complete = BooleanFilter(method='complete_filter', widget=CheckboxInput, label='Завершенные')
 
     class Meta:
         model = House
@@ -23,9 +16,15 @@ class HouseFilter(FilterSet):
         value = value.split()  # разбиваем строку на список с элементами по одному слову
         if len(value) == 1 & value[0][-2:-1].isdigit():  # если ищем по номеру дома и в нем есть буква, дулаем её заглавной
             value = [value[0][:-1] + value[0][-1:].upper()]
-        elif len(value) > 1:
-            value[0] = value[0].capitalize()  # у первого слова делаем первую букву заглавную, а остнольные маленькие
-            value[1] = value[1][:-1] + value[1][-1:].upper()  # у номера дома делаем букву заглавной, если она есть
+        elif len(value) == 2:
+            if value[0][:1:].isdigit():  # Если название двойное и начинается с числа, то объединяем в одно
+                value = [value[0] + ' ' + value[1].capitalize()]
+            else:
+                value[0] = value[0].capitalize()  # у первого слова делаем первую букву заглавную, а остнольные маленькие
+                value[1] = value[1][:-1] + value[1][-1:].upper()  # у номера дома делаем букву заглавной, если она есть
+        elif len(value) == 3:
+            value[0] = value[0] + ' ' + value[1].capitalize()  # Если у улицы двойное название (1-й Заводской), то объединяем в одно значение
+            value[1] = value.pop()  # Номер дома переносим с 3-й позиции на вторую
         else:
             value[0] = value[0].capitalize()
         """
@@ -35,8 +34,3 @@ class HouseFilter(FilterSet):
         if len(value) < 2:
             return House.objects.filter(Q(address__address_name__icontains=value[0]) | Q(address__address_house=value[0]))
         return House.objects.filter(Q(address__address_name__icontains=value[0]) & Q(address__address_house=value[1]))
-
-    # def complete_filter(self, queryset, name, value):
-    #     if not value:
-    #         return queryset.exclude(request__status=True)
-    #     return queryset

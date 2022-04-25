@@ -19,12 +19,18 @@ class HouseFilter(FilterSet):
         elif len(value) == 2:
             if value[0][:1:].isdigit():  # Если название двойное и начинается с числа, то объединяем в одно
                 value = [value[0] + ' ' + value[1].capitalize()]
-            else:
+            elif value[1][:1:].isdigit():
                 value[0] = value[0].capitalize()  # у первого слова делаем первую букву заглавную, а остнольные маленькие
                 value[1] = value[1][:-1] + value[1][-1:].upper()  # у номера дома делаем букву заглавной, если она есть
-        elif len(value) == 3:
-            value[0] = value[0] + ' ' + value[1].capitalize()  # Если у улицы двойное название (1-й Заводской), то объединяем в одно значение
-            value[1] = value.pop()  # Номер дома переносим с 3-й позиции на вторую
+            else:
+                value = [value[0].capitalize() + ' ' + value[1].capitalize()]
+        elif len(value) == 3:  # Если у улицы двойное название
+            if value[0][:1:].isdigit():
+                value[0] = value[0] + ' ' + value[1].capitalize()  # и начинается с числа (1-й Заводской), то объединяем в одно значение
+                value[1] = value.pop().upper()  # Номер дома переносим с 3-й позиции на вторую
+            else:
+                value[0] = value[0].capitalize() + ' ' + value[1].capitalize()
+                value[1] = value.pop().upper()
         else:
             value[0] = value[0].capitalize()
         """

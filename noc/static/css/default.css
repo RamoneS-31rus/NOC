@@ -164,6 +164,9 @@ button {
 	background: #497c9d;
 	color: #fff;
 }
+.switch-detail td {
+	text-align: center;
+}
 
 .switch-form {
 	border-collapse: collapse; /* Убирает двойные линии между ячейками */

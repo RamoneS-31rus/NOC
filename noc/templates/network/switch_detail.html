@@ -8,7 +8,7 @@
 
 <table class="switch-detail">
     <tr>
-        <th style="width: 200px">
+        <th style="width: 300px">
             Адрес
         </th>
         <th style="width: 110px">
@@ -26,7 +26,7 @@
         <th style="width: 150px">
             Серийный номер
         </th>
-        <th style="width: 200px">
+        <th style="width: 250px">
             Примечание
         </th>
         <th style="width: 100px">
@@ -37,7 +37,7 @@
         </th>
     </tr>
     <tr>
-        <td>
+        <td style="text-align: left">
             {{ switch.address }}
         </td>
         <td>
@@ -55,7 +55,7 @@
         <td>
             {{ switch.serial }}
         </td>
-        <td>
+        <td style="text-align: left">
             {{ switch.note }}
         </td>
         <td>
@@ -73,7 +73,7 @@
 <h3 style="text-align: center">История изменений:</h3>
     <table class="table_gpon">
         <tr>
-            <th style="width: 200px">
+            <th style="width: 300px">
                 Адрес
             </th>
             <th style="width: 110px">
@@ -91,7 +91,7 @@
             <th style="width: 150px">
                 Серийный номер
             </th>
-            <th style="width: 200px">
+            <th style="width: 250px">
                 Примечание
             </th>
             <th style="width: 100px">
@@ -103,7 +103,7 @@
         </tr>
     {% for switch in history %}
         <tr>
-            <td>
+            <td style="text-align: left">
                 {{ switch.address }}
             </td>
             <td>
@@ -121,7 +121,7 @@
             <td>
                 {{ switch.serial }}
             </td>
-            <td>
+            <td style="text-align: left">
                 {{ switch.note }}
             </td>
             <td>

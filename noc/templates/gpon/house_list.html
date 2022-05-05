@@ -19,11 +19,12 @@
     </li>
 </ul>
 <hr>
+<button onclick="topFunction()" id="scrollup">Наверх</button>
 
 {%  if object_list %}
     <table class="table_gpon">
         <tr>
-            <th style="width: 220px">
+            <th style="width: 240px">
                 Адрес
             </th>
             <th style="width: 220px">
@@ -76,15 +77,19 @@
         </tr>
     {% endfor %}
     </table>
+    {% if is_paginated %}
+        <div class="center" style="margin: 10px 0 0 0">{{ page_obj.start_index }}-{{ page_obj.end_index }} из {{ page_obj.paginator.count }}</div>
+    {% else %}
+        <div class="center" style="margin: 10px 0 0 0">Всего: {{ page_obj.end_index }}</div>
+    {% endif %}
 {%  else %}
     <h1 style="text-align: center">По Вашему запросу ничего не найдено</h1>
 {% endif %}
-<br>
 <div class="center">
     <div class="pagination">
         {% if is_paginated %}
             {% if page_obj.has_previous %}
-                <a href="?{% param_replace page=1 %}">«</a>
+                <a href="?{% param_replace page=1 %}" title="Первая страница">«</a>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.paginator.num_pages > 1 %}
@@ -96,7 +101,7 @@
                 {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
-                <a href="?{% param_replace page=paginator.num_pages %}">»</a>
+                <a href="?{% param_replace page=paginator.num_pages %}" title="Последняя страница: {{ page_obj.paginator.num_pages }}">»</a>
             {% endif %}
         {% endif %}
     </div>

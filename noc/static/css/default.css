@@ -320,6 +320,40 @@ button {
 	vertical-align: middle;
 }
 
+.table_vlan {
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	table-layout: fixed;
+	margin: auto;  /* при значении auto объект центруется по горизонтали */
+}
+.table_vlan th {
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 1px 3px; /* Поля вокруг текста */
+	word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+	background: #497c9d;
+	color: #fff;
+}
+.table_vlan td {
+	padding: 3px;
+	text-align: center;
+}
+.table_vlan tbody:hover {
+	background: #ddd;
+}
+.table_vlan td ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.table_vlan td li {
+	display:inline-block;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+.table_vlan td a img {
+	vertical-align: middle;
+}
+
 .actions-1 {
 	text-align: center;
   padding: 0;
@@ -327,7 +361,7 @@ button {
 }
 .actions-1 li {
 	display:inline-block;
-	margin: 0 70px; /* расстояние между пунктами по ширине */
+	margin: 0 80px; /* расстояние между пунктами по ширине */
 }
 .actions-1 li img, .actions-1 li a{
 	vertical-align: middle; /* центровка по вертикали */
@@ -415,6 +449,7 @@ a.button15:active {
 
 .pagination {
 	display: inline-block;
+	margin: 10px 0 10px 0
 }
 .pagination a {
 	color: black;
@@ -449,4 +484,27 @@ a.button15:active {
 .search input :active, :focus {  /* Отключаем рамку при выделении поля ввода */
 	outline: 0;
 	outline-offset: 0;
+}
+
+#scrollup {
+  display: none;
+  position: fixed;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  z-index: 99;
+  font-size: 12.5px;
+	font-weight: 700;
+  border: none;
+  outline: none;
+  background-color: #edeef0;
+  /*background: url(/static/images/icon_toplink.png) no-repeat;*/
+  color: #45688e;
+  cursor: pointer;
+  padding: 0 24px;
+  height: 100vh;
+  opacity: .5;
+}
+#scrollup:hover {
+	opacity: 1;
 }

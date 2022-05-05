@@ -2,17 +2,11 @@
 
 {% block content %}
 
-<h1 style="text-align: center;">vlan {{ vlan.vlan_name }}</h1>
+<h1 style="text-align: center">vlan {{ vlan.number }}</h1>
 <table class="table_detail">
         <tr>
-            <th style="width: 80px">
-                Дата
-            </th>
             <th style="width: 200px">
                 Заказчик
-            </th>
-            <th style="width: 100px">
-                Номер заказа
             </th>
             <th style="width: 350px">
                Назначение
@@ -23,6 +17,9 @@
             <th style="width: 200px">
                 Точка Б
             </th>
+            <th style="width: 100px">
+                Номер заказа
+            </th>
             <th style="width: 70px">
                 Скорость (Mbps)
             </th>
@@ -32,34 +29,37 @@
             <th style="width: 100px">
                 Изменил
             </th>
+            <th style="width: 80px">
+                Дата
+            </th>
         </tr>
         <tr>
             <td>
-                {{ vlan.vlan_time|date:'d.m.Y H:i' }}
+                {{ vlan.client }}
             </td>
             <td>
-                {{ vlan.vlan_client }}
+                {{ vlan.used_for }}
             </td>
             <td>
-                {{ vlan.vlan_order }}
+                {{ vlan.point_a }}
             </td>
             <td>
-                {{ vlan.vlan_used_for }}
+                {{ vlan.point_b }}
             </td>
             <td>
-                {{ vlan.vlan_point_a }}
+                {{ vlan.order }}
             </td>
             <td>
-                {{ vlan.vlan_point_b }}
+                {{ vlan.speed }}
             </td>
             <td>
-                {{ vlan.vlan_speed }}
+                {{ vlan.note }}
             </td>
             <td>
-                {{ vlan.vlan_note }}
+                {{ vlan.user }}
             </td>
             <td>
-                {{ vlan.vlan_user }}
+                {{ vlan.date|date:'d.m.Y H:i' }}
             </td>
         </tr>
     </table>

@@ -116,11 +116,7 @@
                 {% endfor %}
             </td>
             <td style="text-align: left">
-                {% if house.manager is None %}
-                    -----
-                {% else %}
-                    {{ house.manager.last_name }} {{ house.manager.first_name }}
-                {% endif %}
+                {{ house.manager.last_name }} {{ house.manager.first_name }}
             </td>
             <td style="text-align: left">
                 {% if house.discount != 0 %}

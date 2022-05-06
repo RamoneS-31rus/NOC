@@ -37,6 +37,9 @@
             <th style="width: 120px">
                 Модель Wi-Fi роутера
             </th>
+            <th style="width: 170px">
+                Менеджер
+            </th>
             <th style="width: 350px">
                Примечание
             </th>
@@ -76,6 +79,9 @@
                 {% else %}
                     {{ house.router }}
                 {% endif %}
+            </td>
+            <td style="text-align: left">
+                {{ house.manager.last_name }} {{ house.manager.first_name }}
             </td>
             <td style="text-align: left">
                 {{ house.note }}

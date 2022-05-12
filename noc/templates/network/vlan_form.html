@@ -1,7 +1,8 @@
 {% extends 'default.html' %}
+
 {% block content %}
 
-<h1 style="text-align: center;">vlan {{ vlan.number }}</h1>
+<h1 style="text-align: center;">vlan {{ vlan }}</h1>
 <form method="POST">
     {% csrf_token %}
     <table class="table_detail">

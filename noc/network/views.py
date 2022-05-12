@@ -65,6 +65,11 @@ class VlanCreateView(LoginRequiredMixin, RedirectToPreviousMixin, CreateView):
     form_class = VlanForm
     #permission_required = 'switch.add_switch'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['vlan'] = VlanNumber.objects.get(number=self.kwargs.get('pk'))
+        return context
+
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.number_id = self.kwargs.get('pk')

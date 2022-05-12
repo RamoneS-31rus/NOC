@@ -42,12 +42,12 @@
                                 <td style="" rowspan="{{ forloop.revcounter }}">{{ obj.pk }}</td>
                             {% endifchanged %}
                             <td>{{ i.client }}</td>
-                            <td>{{ i.used_for }}</td>
+                            <td style="text-align: left">{{ i.used_for }}</td>
                             <td>{{ i.point_a }}</td>
                             <td>{{ i.point_b }}</td>
                             <td>{{ i.order }}</td>
                             <td>{{ i.speed }}</td>
-                            <td>{{ i.note }}</td>
+                            <td style="text-align: left">{{ i.note }}</td>
                             {% ifchanged obj.pk %}
                                 <td style="" rowspan="{{ forloop.revcounter }}">
                                     <a href="{% url 'vlan_detail' obj.pk %}" title="Детали">

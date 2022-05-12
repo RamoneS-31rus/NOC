@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<a class="button_cancel_form" style="position: absolute; left: 150px; top: 80px" href="javascript:window.history.back()" role="button">Назад</a>
+<a class="button_cancel_form" style="position: absolute; left: 95px; top: 95px" href="{% url 'vlan_list' %}" role="button">Назад</a>
 
 <h1 style="text-align: center">vlan {{ object.number }}</h1>
 
@@ -15,7 +15,7 @@
             <th style="width: 200px">Точка Б</th>
             <th style="width: 100px">Номер заказа</th>
             <th style="width: 70px">Скорость (Mbps)</th>
-            <th>Примечание</th>
+            <th style="width: 250px">Примечание</th>
             <th style="width: 100px">Изменил</th>
             <th style="width: 80px">Дата</th>
             <th></th>
@@ -23,19 +23,19 @@
     {% for order in order_list %}
         <tr>
             <td>{{ order.client }}</td>
-            <td>{{ order.used_for }}</td>
+            <td style="text-align: left">{{ order.used_for }}</td>
             <td>{{ order.point_a }}</td>
             <td>{{ order.point_b }}</td>
             <td>{{ order.order }}</td>
             <td>{{ order.speed }}</td>
-            <td>{{ order.note }}</td>
+            <td style="text-align: left">{{ order.note }}</td>
             <td>{{ order.user }}</td>
-            <td style="cursor: help" title="{{ order.date|date:'H:i' }}">{{ order.date|date:'d.m.Y H:i' }}</td>
+            <td style="cursor: help" title="{{ order.date|date:'H:i' }}">{{ order.date|date:'d.m.Y' }}</td>
             {% comment %}{% if is_Administrators %}{% endcomment %}
                 <td>
                     <ul class="actions-2" style="text-align: center">
                         <li>
-                            <a href="{% url 'vlan_update' order.pk %}" title="Изменить">
+                            <a href="{% url 'vlan_update' object.number order.pk %}" title="Изменить">
                                 <img style="color: red" src="/static/images/icon_edit.png" width="23" height="23">
                             </a>
                         </li>
@@ -55,7 +55,7 @@
     </table>
 {% endif %}
 
-<a href="{% url 'vlan_create' object.number %}" title="Добавить">
+<a style="position: absolute; right: 220px; top: 95px" href="{% url 'vlan_create' object.number %}" title="Добавить">
     <img src="/static/images/icon_add.png" width="32" height="32">
 </a>
 
@@ -69,7 +69,7 @@
         <th style="width: 200px">Точка Б</th>
         <th style="width: 100px">Номер заказа</th>
         <th style="width: 70px">Скорость (Mbps)</th>
-        <th>Примечание</th>
+        <th style="width: 250px">Примечание</th>
         <th style="width: 100px">Изменил</th>
         <th style="width: 80px">Дата</th>
         <th></th>
@@ -77,14 +77,14 @@
 {% for vlan in history %}
     <tr>
         <td>{{ vlan.client }}</td>
-        <td>{{ vlan.used_for }}</td>
+        <td style="text-align: left">{{ vlan.used_for }}</td>
         <td>{{ vlan.point_a }}</td>
         <td>{{ vlan.point_b }}</td>
         <td>{{ vlan.order }}</td>
         <td>{{ vlan.speed }}</td>
-        <td>{{ vlan.note }}</td>
+        <td style="text-align: left">{{ vlan.note }}</td>
         <td>{{ vlan.user }}</td>
-        <td style="cursor: help" title="{{ vlan.date|date:'H:i' }}">{{ vlan.date|date:'d.m.Y H:i' }}</td>
+        <td style="cursor: help" title="{{ vlan.date|date:'H:i' }}">{{ vlan.date|date:'d.m.Y' }}</td>
         <td>
             {% if vlan.status is True %}
                 <img src="/static/images/icon_edit.png" width="23" height="23">

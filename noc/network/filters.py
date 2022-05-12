@@ -9,7 +9,7 @@ from .models import VlanNumber, Switch
 
 class VlanFilter(FilterSet):
     vlan = CharFilter(label='', method='search', widget=TextInput(attrs={'placeholder': 'Поиск'}))
-    hide = BooleanFilter(label='', method='hide_null', widget=CheckboxInput(attrs={'title': 'Показать свободные'}))
+    show_empty = BooleanFilter(label='', method='hide_null', widget=CheckboxInput(attrs={'title': 'Показать свободные'}))
     # show = BooleanFilter(label='', lookup_expr='isnull', field_name='vlan__number', widget=CheckboxInput(attrs={'title': 'Показать свободные'}))
 
     def search(self, queryset, name, value):

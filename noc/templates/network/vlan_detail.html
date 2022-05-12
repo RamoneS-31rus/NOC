@@ -2,139 +2,103 @@
 
 {% block content %}
 
-<h1 style="text-align: center">vlan {{ vlan.number }}</h1>
-<table class="table_detail">
-        <tr>
-            <th style="width: 200px">
-                Заказчик
-            </th>
-            <th style="width: 350px">
-               Назначение
-            </th>
-            <th style="width: 200px">
-                Точка А
-            </th>
-            <th style="width: 200px">
-                Точка Б
-            </th>
-            <th style="width: 100px">
-                Номер заказа
-            </th>
-            <th style="width: 70px">
-                Скорость (Mbps)
-            </th>
-            <th>
-                Примечание
-            </th>
-            <th style="width: 100px">
-                Изменил
-            </th>
-            <th style="width: 80px">
-                Дата
-            </th>
-        </tr>
-        <tr>
-            <td>
-                {{ vlan.client }}
-            </td>
-            <td>
-                {{ vlan.used_for }}
-            </td>
-            <td>
-                {{ vlan.point_a }}
-            </td>
-            <td>
-                {{ vlan.point_b }}
-            </td>
-            <td>
-                {{ vlan.order }}
-            </td>
-            <td>
-                {{ vlan.speed }}
-            </td>
-            <td>
-                {{ vlan.note }}
-            </td>
-            <td>
-                {{ vlan.user }}
-            </td>
-            <td>
-                {{ vlan.date|date:'d.m.Y H:i' }}
-            </td>
-        </tr>
-    </table>
-{% if is_Administrators %}
-<div style="text-align: center">
-   <br><a class="button_edit" href="{% url 'vlan_update' vlan.id %}">Редактировать</a><br>
-</div>
-{% endif %}
+<a class="button_cancel_form" style="position: absolute; left: 150px; top: 80px" href="javascript:window.history.back()" role="button">Назад</a>
 
-{%  if history %}
-<h3 style="text-align: center">История изменений:</h3>
-    <table class="table_detail">
+<h1 style="text-align: center">vlan {{ object.number }}</h1>
+
+{% if order_list %}
+    <table class="table_gpon">
         <tr>
-            <th style="width: 80px">
-                Дата
-            </th>
-            <th style="width: 200px">
-                Заказчик
-            </th>
-            <th style="width: 100px">
-                Номер заказа
-            </th>
-            <th style="width: 350px">
-               Назначение
-            </th>
-            <th style="width: 200px">
-                Точка А
-            </th>
-            <th style="width: 200px">
-                Точка Б
-            </th>
-            <th style="width: 70px">
-                Скорость (Mbps)
-            </th>
-            <th>
-                Примечание
-            </th>
-            <th style="width: 100px">
-                Изменил
-            </th>
+            <th style="width: 200px">Заказчик</th>
+            <th style="width: 350px">Назначение</th>
+            <th style="width: 200px">Точка А</th>
+            <th style="width: 200px">Точка Б</th>
+            <th style="width: 100px">Номер заказа</th>
+            <th style="width: 70px">Скорость (Mbps)</th>
+            <th>Примечание</th>
+            <th style="width: 100px">Изменил</th>
+            <th style="width: 80px">Дата</th>
+            <th></th>
         </tr>
-    {% for vlan in history %}
+    {% for order in order_list %}
         <tr>
-            <td>
-                {{ vlan.vlan_time|date:'d.m.Y H:i' }}
-            </td>
-            <td>
-                {{ vlan.vlan_client }}
-            </td>
-            <td>
-                {{ vlan.vlan_order }}
-            </td>
-            <td>
-                {{ vlan.vlan_used_for }}
-            </td>
-            <td>
-                {{ vlan.vlan_point_a }}
-            </td>
-            <td>
-                {{ vlan.vlan_point_b }}
-            </td>
-            <td>
-                {{ vlan.vlan_speed }}
-            </td>
-            <td>
-                {{ vlan.vlan_note }}
-            </td>
-            <td>
-                {{ vlan.vlan_user }}
-            </td>
+            <td>{{ order.client }}</td>
+            <td>{{ order.used_for }}</td>
+            <td>{{ order.point_a }}</td>
+            <td>{{ order.point_b }}</td>
+            <td>{{ order.order }}</td>
+            <td>{{ order.speed }}</td>
+            <td>{{ order.note }}</td>
+            <td>{{ order.user }}</td>
+            <td style="cursor: help" title="{{ order.date|date:'H:i' }}">{{ order.date|date:'d.m.Y H:i' }}</td>
+            {% comment %}{% if is_Administrators %}{% endcomment %}
+                <td>
+                    <ul class="actions-2" style="text-align: center">
+                        <li>
+                            <a href="{% url 'vlan_update' order.pk %}" title="Изменить">
+                                <img style="color: red" src="/static/images/icon_edit.png" width="23" height="23">
+                            </a>
+                        </li>
+                        <li>
+                            <form action="{% url 'vlan_delete' order.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" title="Удалить">
+                                    <img src="/static/images/icon_delete.png" width="23" height="23">
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </td>
+            {% comment %}{% endif %}{% endcomment %}
         </tr>
     {% endfor %}
     </table>
+{% endif %}
+
+<a href="{% url 'vlan_create' object.number %}" title="Добавить">
+    <img src="/static/images/icon_add.png" width="32" height="32">
+</a>
+
+{%  if history %}
+<h3 style="text-align: center">История изменений:</h3>
+<table class="table_detail">
+    <tr>
+        <th style="width: 200px">Заказчик</th>
+        <th style="width: 350px">Назначение</th>
+        <th style="width: 200px">Точка А</th>
+        <th style="width: 200px">Точка Б</th>
+        <th style="width: 100px">Номер заказа</th>
+        <th style="width: 70px">Скорость (Mbps)</th>
+        <th>Примечание</th>
+        <th style="width: 100px">Изменил</th>
+        <th style="width: 80px">Дата</th>
+        <th></th>
+    </tr>
+{% for vlan in history %}
+    <tr>
+        <td>{{ vlan.client }}</td>
+        <td>{{ vlan.used_for }}</td>
+        <td>{{ vlan.point_a }}</td>
+        <td>{{ vlan.point_b }}</td>
+        <td>{{ vlan.order }}</td>
+        <td>{{ vlan.speed }}</td>
+        <td>{{ vlan.note }}</td>
+        <td>{{ vlan.user }}</td>
+        <td style="cursor: help" title="{{ vlan.date|date:'H:i' }}">{{ vlan.date|date:'d.m.Y H:i' }}</td>
+        <td>
+            {% if vlan.status is True %}
+                <img src="/static/images/icon_edit.png" width="23" height="23">
+            {% elif vlan.status is False %}
+                <img src="/static/images/icon_delete.png" width="23" height="23">
+            {% else %}
+                <img src="/static/images/icon_add.png" width="23" height="23">
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+</table>
 {%  else %}
-    <h1></h1>
+<h1></h1>
 {% endif %}
 
 {% endblock content %}

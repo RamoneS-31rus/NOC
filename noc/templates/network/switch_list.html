@@ -23,62 +23,31 @@
     </li>
 </ul>
 <hr>
+<button onclick="topFunction()" id="scrollup">Наверх</button>
 
 {%  if object_list %}
     <table class="table_gpon">
         <tr>
-            <th style="width: 50px">
-                Номер
-            </th>
-            <th style="width: 300px">
-                Адрес
-            </th>
-            <th style="width: 110px">
-                IP
-            </th>
-            <th style="width: 130px">
-               MAC
-            </th>
-            <th style="width: 150px">
-                Модель
-            </th>
-            <th style="width: 150px">
-                Прошивка
-            </th>
-            <th style="width: 150px">
-                Серийный номер
-            </th>
-            <th style="width: 250px">
-                Примечание
-            </th>
+            <th style="width: 50px">Номер</th>
+            <th style="width: 300px">Адрес</th>
+            <th style="width: 110px">IP</th>
+            <th style="width: 130px">MAC</th>
+            <th style="width: 150px">Модель</th>
+            <th style="width: 150px">Прошивка</th>
+            <th style="width: 150px">Серийный номер</th>
+            <th style="width: 250px">Примечание</th>
             <th></th>
         </tr>
     {% for switch in object_list %}
         <tr>
-            <td>
-                {{ switch.order }}
-            </td>
-            <td style="text-align: left">
-                {{ switch.address }}
-            </td>
-            <td>
-                {{ switch.ip }}
-            </td>
-            <td>
-                {{ switch.mac }}
-            </td>
-            <td>
-                {{ switch.model }}
-            </td>
-            <td>
-                {{ switch.firmware }}
-            </td>
-            <td>
-                {{ switch.serial }}
-            </td>
-            <td style="text-align: left">
-                {{ switch.note }}
-            </td>
+            <td>{{ switch.order }}</td>
+            <td style="text-align: left">{{ switch.address }}</td>
+            <td>{{ switch.ip }}</td>
+            <td>{{ switch.mac }}</td>
+            <td>{{ switch.model }}</td>
+            <td>{{ switch.firmware }}</td>
+            <td>{{ switch.serial }}</td>
+            <td style="text-align: left">{{ switch.note }}</td>
             <td>
                 <ul class="actions-2" style="text-align: center">
                     <li>

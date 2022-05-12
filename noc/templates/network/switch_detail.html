@@ -2,68 +2,32 @@
 
 {% block content %}
 
-<a class="button_cancel_form" style="position: absolute; left: 150px; top: 80px" href="javascript:window.history.back()" role="button">Назад</a>
+<a class="button_cancel_form" style="position: absolute; left: 100px; top: 80px" href="javascript:window.history.back()" role="button">Назад</a>
 
 <h1 style="text-align: center">Коммутатор №{{ switch.order }}</h1>
 
 <table class="switch-detail">
     <tr>
-        <th style="width: 300px">
-            Адрес
-        </th>
-        <th style="width: 110px">
-            IP
-        </th>
-        <th style="width: 130px">
-            MAC
-        </th>
-        <th style="width: 150px">
-            Модель
-        </th>
-        <th style="width: 150px">
-            Прошивка
-        </th>
-        <th style="width: 150px">
-            Серийный номер
-        </th>
-        <th style="width: 250px">
-            Примечание
-        </th>
-        <th style="width: 100px">
-            Изменил
-        </th>
-        <th style="width: 80px">
-            Дата
-        </th>
+        <th style="width: 300px">Адрес</th>
+        <th style="width: 110px">IP</th>
+        <th style="width: 130px">MAC</th>
+        <th style="width: 150px">Модель</th>
+        <th style="width: 150px">Прошивка</th>
+        <th style="width: 150px">Серийный номер</th>
+        <th style="width: 250px">Примечание</th>
+        <th style="width: 100px">Изменил</th>
+        <th style="width: 80px">Дата</th>
     </tr>
     <tr>
-        <td style="text-align: left">
-            {{ switch.address }}
-        </td>
-        <td>
-            {{ switch.ip }}
-        </td>
-        <td>
-            {{ switch.mac }}
-        </td>
-        <td>
-            {{ switch.model }}
-        </td>
-        <td>
-            {{ switch.firmware }}
-        </td>
-        <td>
-            {{ switch.serial }}
-        </td>
-        <td style="text-align: left">
-            {{ switch.note }}
-        </td>
-        <td>
-            {{ switch.user }}
-        </td>
-        <td>
-            {{ switch.date|date:'d.m.Y H:i' }}
-        </td>
+        <td style="text-align: left">{{ switch.address }}</td>
+        <td>{{ switch.ip }}</td>
+        <td>{{ switch.mac }}</td>
+        <td>{{ switch.model }}</td>
+        <td>{{ switch.firmware }}</td>
+        <td>{{ switch.serial }}</td>
+        <td style="text-align: left">{{ switch.note }}</td>
+        <td>{{ switch.user }}</td>
+        <td>{{ switch.date|date:'d.m.Y' }}</td>
     </tr>
 </table>
 
@@ -73,62 +37,36 @@
 <h3 style="text-align: center">История изменений:</h3>
     <table class="table_gpon">
         <tr>
-            <th style="width: 300px">
-                Адрес
-            </th>
-            <th style="width: 110px">
-                IP
-            </th>
-            <th style="width: 130px">
-               MAC
-            </th>
-            <th style="width: 150px">
-                Модель
-            </th>
-            <th style="width: 150px">
-                Прошивка
-            </th>
-            <th style="width: 150px">
-                Серийный номер
-            </th>
-            <th style="width: 250px">
-                Примечание
-            </th>
-            <th style="width: 100px">
-                Изменил
-            </th>
-            <th style="width: 80px">
-                Дата
-            </th>
+            <th style="width: 300px">Адрес</th>
+            <th style="width: 110px">IP</th>
+            <th style="width: 130px">MAC</th>
+            <th style="width: 150px">Модель</th>
+            <th style="width: 150px">Прошивка</th>
+            <th style="width: 150px">Серийный номер</th>
+            <th style="width: 250px">Примечание</th>
+            <th style="width: 100px">Изменил</th>
+            <th style="width: 80px">Дата</th>
+            <th></th>
         </tr>
     {% for switch in history %}
         <tr>
-            <td style="text-align: left">
-                {{ switch.address }}
-            </td>
+            <td style="text-align: left">{{ switch.address }}</td>
+            <td>{{ switch.ip }}</td>
+            <td>{{ switch.mac }}</td>
+            <td>{{ switch.model }}</td>
+            <td>{{ switch.firmware }}</td>
+            <td>{{ switch.serial }}</td>
+            <td style="text-align: left">{{ switch.note }}</td>
+            <td>{{ switch.user }}</td>
+            <td>{{ switch.date|date:'d.m.Y' }}</td>
             <td>
-                {{ switch.ip }}
-            </td>
-            <td>
-                {{ switch.mac }}
-            </td>
-            <td>
-                {{ switch.model }}
-            </td>
-            <td>
-                {{ switch.firmware }}
-            </td>
-            <td>
-                {{ switch.serial }}
-            </td>
-            <td style="text-align: left">
-                {{ switch.note }}
-            </td>
-            <td>
-                {{ switch.user }}
-            </td>
-            <td>
-                {{ switch.date|date:'d.m.Y H:i' }}
+                {% if switch.status is True %}
+                    <img src="/static/images/icon_edit.png" width="23" height="23">
+                {% elif switch.status is False %}
+                    <img src="/static/images/icon_delete.png" width="23" height="23">
+                {% else %}
+                    <img src="/static/images/icon_add.png" width="23" height="23">
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

@@ -1,78 +1,107 @@
 {%extends 'default.html' %}
 
+{% load search_pagination %}
+
 {% block content %}
 
 <hr>
-
-<form method="GET">
-    {{ filter.form }}
-    <button class="button_cancel_form" type="submit">Найти</button>
-</form>
-
+<ul class="actions-3">
+    <li class="search">
+        <form method="GET">
+            {{ filterset.form }}
+            <button style="background-color:transparent; border-color:transparent" type="submit">
+                <img src="/static/images/icon_search.png" width="23" height="23">
+            </button>
+        </form>
+    </li>
+</ul>
 <hr>
+<button onclick="topFunction()" id="scrollup">Наверх</button>
 
-{%  if filter.qs %}
-    <table class="table_default">
-        <tr>
-            <th style="width: 35px">
-                Vlan
-            </th>
-            <th style="width: 200px">
-                Заказчик
-            </th>
-            <th style="width: 100px">
-                Номер заказа
-            </th>
-            <th style="width: 350px">
-               Назначение
-            </th>
-            <th style="width: 200px">
-                Точка А
-            </th>
-            <th style="width: 200px">
-                Точка Б
-            </th>
-            <th style="width: 70px">
-                Скорость (Mbps)
-            </th>
-            <th>
-                Примечание
-            </th>
-        </tr>
-    {% for vlan in filter.qs %}
-        <tr>
-            <td>
-                <a href="{% url 'vlan_detail' vlan.id %}">{{ vlan.vlan_name }}</a>
-            </td>
-            <td>
-                {{ vlan.vlan_client }}
-            </td>
-            <td>
-                {{ vlan.vlan_order }}
-            </td>
-            <td>
-                {{ vlan.vlan_used_for }}
-            </td>
-            <td>
-                {{ vlan.vlan_point_a }}
-            </td>
-            <td>
-                {{ vlan.vlan_point_b }}
-            </td>
-            <td>
-                {{ vlan.vlan_speed }}
-            </td>
-            <td>
-                {{ vlan.vlan_note }}
-            </td>
-        </tr>
-    {% endfor %}
+{%  if object_list %}
+    <table class="table_vlan">
+        <thead>
+            <tr>
+                <th style="width: 35px">Vlan</th>
+                <th style="width: 200px">Заказчик</th>
+                <th style="width: 350px">Назначение</th>
+                <th style="width: 200px">Точка А</th>
+                <th style="width: 200px">Точка Б</th>
+                <th style="width: 100px">Номер заказа</th>
+                <th style="width: 70px">Скорость (Mbps)</th>
+                <th style="width: 250px">Примечание</th>
+                <th></th>
+            </tr>
+        </thead>
+        {% for obj in object_list %}
+            <tbody>
+                {% if obj.vlan.all %}
+                    {% for i in obj.vlan.all %}
+                        <tr>
+                            {% ifchanged obj.pk %}
+                                <td style="" rowspan="{{ forloop.revcounter }}">{{ obj.pk }}</td>
+                            {% endifchanged %}
+                            <td>{{ i.client }}</td>
+                            <td>{{ i.used_for }}</td>
+                            <td>{{ i.point_a }}</td>
+                            <td>{{ i.point_b }}</td>
+                            <td>{{ i.order }}</td>
+                            <td>{{ i.speed }}</td>
+                            <td>{{ i.note }}</td>
+                            {% ifchanged obj.pk %}
+                                <td style="" rowspan="{{ forloop.revcounter }}">
+                                    <a href="{% url 'vlan_detail' obj.pk %}" title="Детали">
+                                        <img src="/static/images/icon_history.png" width="23" height="23">
+                                    </a>
+                                </td>
+                            {% endifchanged %}
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>{{ obj.pk }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="" rowspan="{{ forloop.revcounter }}">
+                            <a href="{% url 'vlan_detail' obj.pk %}" title="Детали">
+                                <img src="/static/images/icon_history.png" width="23" height="23">
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        {% endfor %}
     </table>
 {%  else %}
-    <h1>пусто</h1>
+    <h1 style="text-align: center">По Вашему запросу ничего не найдено</h1>
 {% endif %}
-
-{% include "pagination.html" with page=filter.qs %}
+<br>
+<div class="center">
+    <div class="pagination">
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a href="?{% param_replace page=1 %}">«</a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.paginator.num_pages > 1 %}
+                    {% if page_obj.number == num %}
+                        <a class="active">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?{% param_replace page=num %}">{{ num }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?{% param_replace page=paginator.num_pages %}">»</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
 
 {% endblock content %}
 

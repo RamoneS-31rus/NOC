@@ -3,26 +3,53 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 
-class Vlan(models.Model):
-    vlan_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    vlan_name = models.CharField(max_length=4, unique=True, verbose_name='Vlan')
-    vlan_client = models.CharField(max_length=30, blank=True, verbose_name='Заказчик')
-    vlan_order = models.CharField(max_length=10, blank=True, verbose_name='Номер заказа')
-    vlan_used_for = models.CharField(max_length=50, blank=True, verbose_name='Назначение')
-    vlan_point_a = models.CharField(max_length=20, blank=True, verbose_name='Точка А')
-    vlan_point_b = models.CharField(max_length=20, blank=True, verbose_name='Точка Б')
-    vlan_speed = models.IntegerField(default=0, verbose_name='Скорость (Mbps)')
-    vlan_note = models.TextField(blank=True, verbose_name='Примечание')
-    vlan_time = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+class VlanNumber(models.Model):
+    number = models.CharField(max_length=4, verbose_name='Номер')
 
     class Meta:
         ordering = ['id']
 
-    def get_absolute_url(self):
-        return reverse('vlan_detail', kwargs={'pk': self.pk})
+    def __str__(self):
+        return f'{self.number}'
+
+
+class Vlan(models.Model):
+    number = models.ForeignKey(VlanNumber, on_delete=models.CASCADE, related_name='vlan', verbose_name='Номер')
+    client = models.CharField(max_length=30, blank=True, verbose_name='Заказчик')
+    used_for = models.CharField(max_length=50, blank=True, verbose_name='Назначение')
+    point_a = models.CharField(max_length=30, blank=True, verbose_name='Точка А')
+    point_b = models.CharField(max_length=30, blank=True, verbose_name='Точка Б')
+    order = models.CharField(max_length=10, blank=True, verbose_name='Номер заказа')
+    speed = models.IntegerField(default=0, verbose_name='Скорость (Mbps)')
+    note = models.TextField(blank=True, verbose_name='Примечание')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Изменил')
+    date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
-        return f'{self.vlan_name}'
+        return f'{self.number}'
+
+
+class VlanHistory(models.Model):
+    number = models.CharField(max_length=4, verbose_name='Номер')
+    client = models.CharField(max_length=30, blank=True, verbose_name='Заказчик')
+    used_for = models.CharField(max_length=50, blank=True, verbose_name='Назначение')
+    point_a = models.CharField(max_length=30, blank=True, verbose_name='Точка А')
+    point_b = models.CharField(max_length=30, blank=True, verbose_name='Точка Б')
+    order = models.CharField(max_length=10, blank=True, verbose_name='Номер заказа')
+    speed = models.CharField(max_length=5, verbose_name='Скорость (Mbps)')
+    note = models.TextField(blank=True, verbose_name='Примечание')
+    user = models.CharField(max_length=30, verbose_name='Изменил')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата изменения')
+    status = models.BooleanField(null=True)  # None - create, False - delete, True - update
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return f'{self.number}'
 
 
 class Switch(models.Model):
@@ -30,13 +57,13 @@ class Switch(models.Model):
     address = models.CharField(max_length=50, blank=True, verbose_name='Адрес')
     ip = models.CharField(max_length=15, unique=True, verbose_name='IP')
     mac = models.CharField(max_length=17, unique=True, verbose_name='MAC')
-    model = models.CharField(max_length=20, blank=True, verbose_name='Модель')
-    firmware = models.CharField(max_length=20, blank=True, verbose_name='Прошивка')
-    serial = models.CharField(max_length=20, unique=True, verbose_name='Серийный номер')
+    model = models.CharField(max_length=30, blank=True, verbose_name='Модель')
+    firmware = models.CharField(max_length=30, blank=True, verbose_name='Прошивка')
+    serial = models.CharField(max_length=30, unique=True, verbose_name='Серийный номер')
     note = models.TextField(blank=True, verbose_name='Примечание')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Изменил')
     date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-    status = models.BooleanField(default=False)
+    is_broken = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['id']
@@ -45,30 +72,8 @@ class Switch(models.Model):
         self.mac = self.mac.upper().replace('-', ':')
         super(Switch, self).save(*args, **kwargs)
 
-    # def get_absolute_url(self):
-    #     return reverse('switch_detail', kwargs={'pk': self.pk})
-
     def __str__(self):
         return f'{self.order}'
-
-
-class VlanHistory(models.Model):
-    vlan_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    vlan_name = models.ForeignKey(Vlan, on_delete=models.CASCADE, verbose_name='Vlan')
-    vlan_client = models.CharField(max_length=30, blank=True, verbose_name='Заказчик')
-    vlan_order = models.CharField(max_length=10, blank=True, verbose_name='Номер заказа')
-    vlan_used_for = models.CharField(max_length=50, blank=True, verbose_name='Назначение')
-    vlan_point_a = models.CharField(max_length=20, blank=True, verbose_name='Точка А')
-    vlan_point_b = models.CharField(max_length=20, blank=True, verbose_name='Точка Б')
-    vlan_speed = models.IntegerField(default=0, verbose_name='Скорость (Mbps)')
-    vlan_note = models.TextField(blank=True, verbose_name='Примечание')
-    vlan_time = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-
-    class Meta:
-        ordering = ['-vlan_time']
-
-    def __str__(self):
-        return f'{self.vlan_name}'
 
 
 class SwitchHistory(models.Model):
@@ -81,7 +86,8 @@ class SwitchHistory(models.Model):
     serial = models.CharField(max_length=30, verbose_name='Серийный номер')
     note = models.TextField(blank=True, verbose_name='Примечание')
     user = models.CharField(max_length=30, verbose_name='Изменил')
-    date = models.DateTimeField(verbose_name='Дата изменения')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата изменения')
+    status = models.BooleanField(null=True)  # None - create, False - ---, True - update
 
     class Meta:
         ordering = ['-date']

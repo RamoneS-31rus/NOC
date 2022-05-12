@@ -1,15 +1,16 @@
 from django.urls import path
-from.views import VlanList, VlanDetail, VlanUpdate, SwitchList, SwitchDetail, SwitchUpdate, SwitchCreate
+from.views import (VlanListView, VlanDetailView, VlanCreateView, VlanUpdateView, VlanDeleteView,
+                   SwitchListView, SwitchDetailView, SwitchCreateView, SwitchUpdateView)
 
 
 urlpatterns = [
-    path('vlans', VlanList.as_view(), name='vlan_list'),
-    path('vlan/<int:pk>', VlanDetail.as_view(), name='vlan_detail'),
-    path('vlan/<int:pk>/edit/', VlanUpdate.as_view(), name='vlan_update'),
-    path('search', VlanList.as_view(template_name='search.html'), name='search'),
-    path('switches', SwitchList.as_view(), name='switch_list'),
-    path('switch/<int:pk>', SwitchDetail.as_view(), name='switch_detail'),
-    path('switch/<int:pk>/edit/', SwitchUpdate.as_view(), name='switch_update'),
-    path('switch/add/', SwitchCreate.as_view(), name='switch_create'),
-    #path('search/', PostSearch.as_view(), name='search'),
+    path('vlans', VlanListView.as_view(), name='vlan_list'),
+    path('vlan/<int:pk>', VlanDetailView.as_view(), name='vlan_detail'),
+    path('vlan/<int:pk>/add/', VlanCreateView.as_view(), name='vlan_create'),
+    path('vlan/<int:pk>/edit/', VlanUpdateView.as_view(), name='vlan_update'),
+    path('vlan/<int:pk>/delete/', VlanDeleteView.as_view(), name='vlan_delete'),
+    path('switches', SwitchListView.as_view(), name='switch_list'),
+    path('switch/<int:pk>', SwitchDetailView.as_view(), name='switch_detail'),
+    path('switch/add/', SwitchCreateView.as_view(), name='switch_create'),
+    path('switch/<int:pk>/edit/', SwitchUpdateView.as_view(), name='switch_update'),
 ]

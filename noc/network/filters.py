@@ -1,23 +1,36 @@
 from django.db.models import Q
-from django.forms import TextInput
-from django_filters import FilterSet, CharFilter
-from .models import Vlan, Switch
+from django.forms import TextInput, CheckboxInput
+from django_filters import FilterSet, CharFilter, BooleanFilter
 
 import re
 
+from .models import VlanNumber, Switch
+
 
 class VlanFilter(FilterSet):
-    vlan_name = CharFilter(label='Vlan', field_name='vlan_name', lookup_expr='exact')
-    vlan_client = CharFilter(label='Заказчик', field_name='vlan_client', lookup_expr='icontains')
-    vlan_order = CharFilter(label='Номер заказа', field_name='vlan_order', lookup_expr='exact')
-    vlan_used_for = CharFilter(label='Назначение', field_name='vlan_used_for', lookup_expr='icontains')
+    vlan = CharFilter(label='', method='search', widget=TextInput(attrs={'placeholder': 'Поиск'}))
+    hide = BooleanFilter(label='', method='hide_null', widget=CheckboxInput(attrs={'title': 'Показать свободные'}))
+    # show = BooleanFilter(label='', lookup_expr='isnull', field_name='vlan__number', widget=CheckboxInput(attrs={'title': 'Показать свободные'}))
+
+    def search(self, queryset, name, value):
+        value = value.split()
+        if len(value) < 2:
+            if value[0][:1:].isdigit() & value[0][-1].isdigit():  # если первый и последний символ число
+                return VlanNumber.objects.filter(Q(number=value[0]) | Q(vlan__order=value[0]))
+            else:
+                return VlanNumber.objects.filter(Q(vlan__client__icontains=value[0]) | Q(vlan__used_for__icontains=value[0]))
+        else:
+            value = value[0] + ' ' + value[1]
+            return VlanNumber.objects.filter(vlan__used_for__icontains=value)
+
+    def hide_null(self, queryset, name, value):
+        if value:
+            return queryset
+        else:
+            return queryset.filter(vlan__number__isnull=value)
 
 
 class SwitchFilter(FilterSet):
-    # address = filters.CharFilter(label='Адрес', field_name='address', lookup_expr='icontains')
-    # ip = filters.CharFilter(label='IP', field_name='ip', lookup_expr='exact')
-    # mac = filters.CharFilter(label='', field_name='mac', lookup_expr='icontains')
-    # model = filters.CharFilter(label='Модель', field_name='model', lookup_expr='icontains')
     switch = CharFilter(label='', method='search', widget=TextInput(attrs={'placeholder': 'Поиск'}))
 
     def search(self, queryset, name, value):
@@ -38,8 +51,3 @@ class SwitchFilter(FilterSet):
         else:
             return Switch.objects.filter(
                 Q(address__icontains=value) | Q(model=value) | Q(serial=value))
-
-
-        # if len(value) < 2:
-        #     return House.objects.filter(Q(address__address_name__icontains=value[0]) | Q(address__address_house=value[0]))
-        # return House.objects.filter(Q(address__address_name__icontains=value[0]) & Q(address__address_house=value[1]))

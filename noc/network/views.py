@@ -1,11 +1,14 @@
-from django.views.generic import ListView, DetailView, UpdateView, CreateView
-from .models import Vlan, Switch, VlanHistory, SwitchHistory
-from .forms import VlanForm, SwitchForm
-from .filters import VlanFilter, SwitchFilter
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.views import View
 from django_filters.views import FilterView
+
+from .models import VlanNumber, Vlan, Switch, VlanHistory, SwitchHistory
+from .forms import VlanForm, SwitchForm
+from .filters import VlanFilter, SwitchFilter
 
 
 class RedirectToPreviousMixin:  # Миксин для редиректа на предыдущию страницу
@@ -33,62 +36,78 @@ class FilteredListView(ListView):
         return context
 
 
-class VlanList(LoginRequiredMixin, ListView):
-    model = Vlan  # queryset = Vlan.objects.all()
+class VlanListView(LoginRequiredMixin, FilteredListView):
+    model = VlanNumber
     template_name = 'network/vlan_list.html'
-    context_object_name = 'vlans'
+    filterset_class = VlanFilter
     paginate_by = 100
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['filter'] = VlanFilter(self.request.GET, queryset=self.get_queryset())
-        return context
 
-
-# class PaginatedFilterViews(View):
-#     def get_context_data(self, **kwargs):
-#         context = super(PaginatedFilterViews, self).get_context_data(**kwargs)
-#         if self.request.GET:
-#             querystring = self.request.GET.copy()
-#             if self.request.GET.get('page'):
-#                 del querystring['page']
-#             context['querystring'] = querystring.urlencode()
-#         return context
-#
-#
-# class VlanList(PaginatedFilterViews, FilterView):
-#     model = Vlan
-#     paginate_by = 10
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['filter'] = VlanFilter(self.request.GET, queryset=self.get_queryset())
-#         return context
-
-
-class VlanDetail(LoginRequiredMixin, DetailView):
-    model = Vlan
+class VlanDetailView(LoginRequiredMixin, DetailView):
+    model = VlanNumber
     template_name = 'network/vlan_detail.html'
-    context_object_name = 'vlan'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_Administrators'] = self.request.user.groups.filter(name='Administrators').exists()
-        if len(VlanHistory.objects.filter(vlan_name=self.kwargs.get('pk'))) > 1:
-            context['history'] = VlanHistory.objects.filter(vlan_name=self.kwargs.get('pk'))[1::]
-        else:
-            context['history'] = None
+        context['order_list'] = Vlan.objects.filter(number=self.kwargs.get('pk'))
+        # context['is_Administrators'] = self.request.user.groups.filter(name='Administrators').exists()
+        context['history'] = VlanHistory.objects.filter(number=self.kwargs.get('pk'))
+        # if len(VlanHistory.objects.filter(number=self.kwargs.get('pk'))) > 1:
+        #     context['history'] = VlanHistory.objects.filter(number=self.kwargs.get('pk'))[1::]
+        # else:
+        #     context['history'] = None
         return context
 
 
-class VlanUpdate(LoginRequiredMixin, UpdateView):
+class VlanCreateView(LoginRequiredMixin, RedirectToPreviousMixin, CreateView):
+    model = Vlan
+    template_name = 'network/vlan_form.html'
+    form_class = VlanForm
+    #permission_required = 'switch.add_switch'
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.number_id = self.kwargs.get('pk')
+        obj.user = self.request.user
+        obj.save()
+        VlanHistory.objects.create(
+            number=obj.number, client=obj.client, used_for=obj.used_for, point_a=obj.point_a, point_b=obj.point_b,
+            order=obj.order, speed=obj.speed, note=obj.note, user=obj.user
+        )
+        return redirect('vlan_detail', self.kwargs.get('pk'))
+
+
+class VlanUpdateView(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
     model = Vlan
     form_class = VlanForm
-    template_name = 'network/vlan_update.html'
+    template_name = 'network/vlan_form.html'
     #permission_required = 'vlan.change_vlan'
 
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        if form.changed_data:
+            VlanHistory.objects.create(
+                number=obj.number, client=obj.client, used_for=obj.used_for, point_a=obj.point_a, point_b=obj.point_b,
+                order=obj.order, speed=obj.speed, note=obj.note, user=obj.user, status=True
+            )
+        obj.save()
+        return super().form_valid(form)
 
-class SwitchList(LoginRequiredMixin, FilteredListView):
+
+class VlanDeleteView(LoginRequiredMixin, RedirectToPreviousMixin, DeleteView):
+    model = Vlan
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        VlanHistory.objects.create(
+            number=obj.number, client=obj.client, used_for=obj.used_for, point_a=obj.point_a, point_b=obj.point_b,
+            order=obj.order, speed=obj.speed, note=obj.note, user=obj.user, status=False
+        )
+        obj.delete()
+        return redirect('vlan_detail', obj)
+
+
+class SwitchListView(LoginRequiredMixin, FilteredListView):
     model = Switch
     template_name = 'network/switch_list.html'
     filterset_class = SwitchFilter
@@ -97,11 +116,10 @@ class SwitchList(LoginRequiredMixin, FilteredListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_Administrators'] = self.request.user.groups.filter(name='Administrators').exists()
-        # context['filter'] = SwitchFilter(self.request.GET, queryset=self.get_queryset())
         return context
 
 
-class SwitchDetail(LoginRequiredMixin, DetailView):
+class SwitchDetailView(LoginRequiredMixin, DetailView):
     model = Switch
     template_name = 'network/switch_detail.html'
     context_object_name = 'switch'
@@ -109,14 +127,15 @@ class SwitchDetail(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_Administrators'] = self.request.user.groups.filter(name='Administrators').exists()
-        if len(SwitchHistory.objects.filter(order=self.kwargs.get('pk'))) > 1:
-            context['history'] = SwitchHistory.objects.filter(order=self.kwargs.get('pk'))[1::]
-        else:
-            context['history'] = None
+        context['history'] = SwitchHistory.objects.filter(order=self.kwargs.get('pk'))
+        # if len(SwitchHistory.objects.filter(order=self.kwargs.get('pk'))) > 1:
+        #     context['history'] = SwitchHistory.objects.filter(order=self.kwargs.get('pk'))[1::]
+        # else:
+        #     context['history'] = None
         return context
 
 
-class SwitchCreate(LoginRequiredMixin, RedirectToPreviousMixin, CreateView):
+class SwitchCreateView(LoginRequiredMixin, RedirectToPreviousMixin, CreateView):
     model = Switch
     template_name = 'network/switch_form.html'
     form_class = SwitchForm
@@ -127,19 +146,25 @@ class SwitchCreate(LoginRequiredMixin, RedirectToPreviousMixin, CreateView):
         obj.user = self.request.user
         obj.order = len(Switch.objects.all()) + 1
         obj.save()
-        return redirect('/network/switches')
+        SwitchHistory.objects.create(
+            order=obj.order, address=obj.address, ip=obj.ip, mac=obj.mac, model=obj.model,
+            firmware=obj.firmware, serial=obj.serial, note=obj.note, user=obj.user
+        )
+        return redirect('switch_list')
 
 
-class SwitchUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
+class SwitchUpdateView(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
     model = Switch
     form_class = SwitchForm
     template_name = 'network/switch_form.html'
     #permission_required = 'switch.change_switch'
 
-    # def form_valid(self, form):
-    #     obj = form.save(commit=False)
-    #     obj.user = self.request.user
-    #     if obj.status:
-    #         obj.address = 'Склад'
-    #     obj.save()
-    #     return redirect('/network/switches')
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        if form.changed_data:
+            SwitchHistory.objects.create(
+                order=obj.order, address=obj.address, ip=obj.ip, mac=obj.mac, model=obj.model,
+                firmware=obj.firmware, serial=obj.serial, note=obj.note, user=obj.user, status=True
+            )
+        obj.save()
+        return super().form_valid(form)

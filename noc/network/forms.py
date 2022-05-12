@@ -9,17 +9,17 @@ class VlanForm(forms.ModelForm):
 
     class Meta:
         model = Vlan
-        fields = ['vlan_client', 'vlan_order', 'vlan_used_for', 'vlan_point_a', 'vlan_point_b',
-                  'vlan_speed', 'vlan_note']
+        fields = ['client', 'order', 'used_for', 'point_a', 'point_b',
+                  'speed', 'note']
 
         widgets = {
-            'vlan_client': forms.TextInput(attrs={'size': 23}),
-            'vlan_order': forms.TextInput(attrs={'size': 9}),
-            'vlan_used_for': forms.TextInput(attrs={'size': 44}),
-            'vlan_point_a': forms.TextInput(attrs={'size': 23}),
-            'vlan_point_b': forms.TextInput(attrs={'size': 23}),
-            'vlan_speed': forms.TextInput(attrs={'size': 5}),
-            'vlan_note': forms.Textarea(attrs={'rows': 1, 'cols': 97})
+            'client': forms.TextInput(attrs={'size': 23}),
+            'order': forms.TextInput(attrs={'size': 9}),
+            'used_for': forms.TextInput(attrs={'size': 44}),
+            'point_a': forms.TextInput(attrs={'size': 23}),
+            'point_b': forms.TextInput(attrs={'size': 23}),
+            'speed': forms.TextInput(attrs={'size': 5}),
+            'note': forms.Textarea(attrs={'rows': 1, 'cols': 97})
         }
 
 
@@ -28,7 +28,7 @@ class SwitchForm(forms.ModelForm):
     class Meta:
         model = Switch
         fields = ['address', 'ip', 'mac', 'model', 'firmware',
-                  'serial', 'note', 'status']
+                  'serial', 'note']
         error_messages = {
             'ip': {
                 'unique': "Комутатор с таким IP уже существует!",
@@ -49,5 +49,5 @@ class SwitchForm(forms.ModelForm):
             'firmware': forms.TextInput(attrs={'size': 23}),
             'serial': forms.TextInput(attrs={'size': 23}),
             'note': forms.Textarea(attrs={'rows': 1}),
-            'status': forms.CheckboxInput()
+            # 'is_broken': forms.CheckboxInput()
         }

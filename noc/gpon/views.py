@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from .models import House, Request, Tariff
 from storage.models import Product
 from .forms import HouseForm, RequestFormCreate, RequestFormUpdate
-from .filters import HouseFilter
+from .filters import HouseFilter, RequestFilter
 
 
 class RedirectToPreviousMixin:  # Миксин для редиректа на предыдущию страницу
@@ -26,7 +26,20 @@ class FilteredListView(ListView):
     filterset_class = None
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        if self.filterset_class == RequestFilter:
+            queryset = self.model.objects.all()
+            url = self.request.get_full_path()
+            """
+            Переопределяем queryset в зависимости от url запроса.
+            """
+            if 'new' in url:
+                queryset = queryset.filter(status='False', date_con__isnull=True).order_by('-date_req')
+            elif 'in-progress' in url:
+                queryset = queryset.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
+            elif 'completed' in url:
+                queryset = queryset.filter(status='True').order_by('-date_con')
+        else:
+            queryset = super().get_queryset()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
         return self.filterset.qs.distinct()
 
@@ -50,23 +63,22 @@ class HouseUpdate(LoginRequiredMixin, UpdateView):
     success_url = '/gpon/houses/'
 
 
-class RequestList(LoginRequiredMixin, ListView):
+class RequestList(LoginRequiredMixin, FilteredListView):
     model = Request
-    context_object_name = 'requests'
+    # context_object_name = 'requests'
+    filterset_class = RequestFilter
     paginate_by = 50
-    """
-    Переопределяем queryset в зависимости от url запроса.
-    """
-    def get_queryset(self):
-        qs = self.model.objects.all()
-        url = self.request.get_full_path()
-        if 'new' in url:
-            qs = qs.filter(status='False', date_con__isnull=True).order_by('date_req')
-        elif 'in-progress' in url:
-            qs = qs.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
-        elif 'completed' in url:
-            qs = qs.filter(status='True').order_by('-date_con')
-        return qs
+
+    # def get_queryset(self):
+    #     qs = self.model.objects.all()
+    #     url = self.request.get_full_path()
+    #     if 'new' in url:
+    #         qs = qs.filter(status='False', date_con__isnull=True).order_by('date_req')
+    #     elif 'in-progress' in url:
+    #         qs = qs.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
+    #     elif 'completed' in url:
+    #         qs = qs.filter(status='True').order_by('-date_con')
+    #     return qs
 
 
 class RequestCreate(LoginRequiredMixin, CreateView):

@@ -10,6 +10,10 @@ from storage.models import Product
 class District(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
+    class Meta:
+        verbose_name = 'Район'
+        verbose_name_plural = 'Районы'
+
     def __str__(self):
         return f'{self.name}'
 
@@ -27,6 +31,8 @@ class House(models.Model):
 
     class Meta:
         ordering = ['address']
+        verbose_name = 'Дом'
+        verbose_name_plural = 'Дома'
 
     def __str__(self):
         return f'{self.address}'
@@ -37,6 +43,10 @@ class Tariff(models.Model):
     speed = models.IntegerField(default='100', verbose_name='Скорость Мбит/с')
     price = models.IntegerField(verbose_name='Стоимость тарифа')
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'Тариф'
+        verbose_name_plural = 'Тарифы'
 
     def __str__(self):
         return f'{self.name}'
@@ -64,6 +74,8 @@ class Request(models.Model):
 
     class Meta:
         ordering = ['id']
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
 
     def update_price(self):  # Расчёт стоимости подключения в зависимости от тарифа и оборудования
         # self.cost_con = 0
@@ -96,7 +108,11 @@ class Request(models.Model):
 
     def save(self, *args, **kwargs):  # Изменение формата телефоннтого номера
         if self.phone != '':
-            self.phone = self.phone.replace('-', '').replace('(', '').replace(')', '').replace(' ', '').replace('.', '')
+            chars = ['+', '-', '.', '(', ')', ' ']
+            for c in chars:
+                if c in self.phone:
+                    self.phone = self.phone.replace(c, "")
+            # self.phone = self.phone.replace('-', '').replace('(', '').replace(')', '').replace(' ', '').replace('.', '')
             if len(self.phone) == 6:
                 self.phone = self.phone[0:2] + '-' + self.phone[2:4] + '-' + self.phone[4:7]
             else:

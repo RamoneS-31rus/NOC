@@ -1,7 +1,10 @@
 from django.db.models import Q
-from django_filters import FilterSet, CharFilter, ChoiceFilter
+from django_filters import FilterSet, CharFilter, ChoiceFilter, DateFromToRangeFilter, ModelChoiceFilter
+from django_filters.widgets import RangeWidget
+from django.contrib.auth.models import User
+from django import forms
 
-from .models import House
+from .models import House, Request
 
 
 class HouseFilter(FilterSet):
@@ -40,3 +43,12 @@ class HouseFilter(FilterSet):
         if len(value) < 2:
             return House.objects.filter(Q(address__address_name__icontains=value[0]) | Q(address__address_house=value[0]))
         return House.objects.filter(Q(address__address_name__icontains=value[0]) & Q(address__address_house=value[1]))
+
+
+class RequestFilter(FilterSet):
+    date_con = DateFromToRangeFilter(widget=RangeWidget(attrs={'type': 'date'}))
+    # installer = ModelChoiceFilter(queryset=User.objects.all(), widget=forms.Select(attrs={'class': 'form-control mb-2'}))
+
+    class Meta:
+        model = Request
+        fields = ['date_con']

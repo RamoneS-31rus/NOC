@@ -1,7 +1,8 @@
 {%extends 'default.html' %}
 
 {% block content %}
-<hr>
+
+<br>
 <div class="center">
   <div class="menu-status">
     <a href="{% url 'requests_new' %}">Новые</a>
@@ -9,8 +10,14 @@
     <a class="active" href="{% url 'requests_completed' %}">Завершенные</a>
   </div>
 </div>
-<hr>
-{%  if requests %}
+<br>
+ <form method="GET" class="center">
+    {{ filterset.form }}
+    <button class="button_cancel_form" type="submit">Найти</button>
+</form>
+<br>
+
+{%  if object_list %}
     <table class="table_gpon">
         <tr>
             <th style="width: 220px">
@@ -55,7 +62,7 @@
             <th style="width: 20px">
             </th>
         </tr>
-    {% for house in requests %}
+    {% for house in object_list %}
         <tr>
             <td style="text-align: left">
                 {{ house.address }}
@@ -137,10 +144,15 @@
         </tr>
     {% endfor %}
     </table>
+    {% if is_paginated %}
+        <div class="center" style="margin: 10px 0 0 0">{{ page_obj.start_index }}-{{ page_obj.end_index }} из {{ page_obj.paginator.count }}</div>
+    {% else %}
+        <div class="center" style="margin: 10px 0 0 0">Всего: {{ page_obj.end_index }}</div>
+    {% endif %}
 {%  else %}
     <h2 class="center">Заявок нет</h2>
 {% endif %}
-<br>
+
 {% include "pagination.html" %}
 
 {% endblock content %}

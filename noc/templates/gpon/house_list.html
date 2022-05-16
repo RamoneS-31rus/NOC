@@ -1,7 +1,5 @@
 {%extends 'default.html' %}
 
-{% load search_pagination %}
-
 {% block content %}
 
 <hr>
@@ -85,26 +83,7 @@
 {%  else %}
     <h1 style="text-align: center">По Вашему запросу ничего не найдено</h1>
 {% endif %}
-<div class="center">
-    <div class="pagination">
-        {% if is_paginated %}
-            {% if page_obj.has_previous %}
-                <a href="?{% param_replace page=1 %}" title="Первая страница">«</a>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.paginator.num_pages > 1 %}
-                    {% if page_obj.number == num %}
-                        <a class="active">{{ num }}</a>
-                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <a href="?{% param_replace page=num %}">{{ num }}</a>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <a href="?{% param_replace page=paginator.num_pages %}" title="Последняя страница: {{ page_obj.paginator.num_pages }}">»</a>
-            {% endif %}
-        {% endif %}
-    </div>
-</div>
+
+{% include "pagination.html" %}
 
 {% endblock content %}

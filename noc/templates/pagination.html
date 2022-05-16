@@ -1,20 +1,22 @@
+{% load search_pagination %}
+
 <div class="center">
     <div class="pagination">
         {% if is_paginated %}
             {% if page_obj.has_previous %}
-                <a href="?page=1" title="Первая страница">«</a>
+                <a href="?{% param_replace page=1 %}" title="Первая страница">«</a>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.paginator.num_pages > 1 %}
                     {% if page_obj.number == num %}
                         <a class="active">{{ num }}</a>
                     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <a href="?page={{ num }}">{{ num }}</a>
+                        <a href="?{% param_replace page=num %}">{{ num }}</a>
                     {% endif %}
                 {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.paginator.num_pages }}" title="Последняя страница: {{ page_obj.paginator.num_pages }}">»</a>
+                <a href="?{% param_replace page=paginator.num_pages %}" title="Последняя страница: {{ page_obj.paginator.num_pages }}">»</a>
             {% endif %}
         {% endif %}
     </div>

@@ -1,7 +1,7 @@
 {%extends 'default.html' %}
 
 {% block content %}
-<hr>
+<br>
 <div class="center">
   <div class="menu-status">
     <a class="active" href="{% url 'requests_new' %}">Новые</a>
@@ -9,7 +9,12 @@
     <a href="{% url 'requests_completed' %}">Завершенные</a>
   </div>
 </div>
-<hr>
+<div class="center">
+    <form class="actions-2" method="GET">
+        {{ filterset.form }}
+        <button type="submit">OK</button>
+    </form>
+</div>
 {%  if object_list %}
     <table class="table_gpon">
         <tr>
@@ -31,7 +36,7 @@
             <th style="width: 90px">
                 Тариф (Мбит/с)
             </th>
-            <th style="width: 100px">
+            <th>
                 Модель ONT
             </th>
             <th style="width: 120px">
@@ -43,11 +48,14 @@
             <th style="width: 350px">
                Примечание
             </th>
-            <th style="width: 20px">
-            </th>
+            <th></th>
         </tr>
     {% for house in object_list %}
+        {% if house.status is None%}
+        <tr style="color: #ccc">
+        {% else %}
         <tr>
+        {% endif %}
             <td style="text-align: left">
                 {{ house.address }}
             </td>
@@ -87,9 +95,30 @@
                 {{ house.note }}
             </td>
             <td>
-                <a href="{% url 'request_update' house.pk %}" title="Изменить">
-                    <img src="/static/images/icon_edit.png" width="23" height="23">
-                </a>
+                <ul>
+                    <li>
+                        <a href="{% url 'request_update' house.pk %}" title="Изменить">
+                            <img src="/static/images/icon_edit.png" width="23" height="23">
+                        </a>
+                    </li>
+                    <li>
+                        {% if house.status is None %}
+                            <form action="{% url 'request_resume' house.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" title="Показать">
+                                    <img src="/static/images/icon_show.png" width="24" height="24">
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'request_hide' house.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" title="Скрыть">
+                                    <img src="/static/images/icon_hide.png" width="24" height="24">
+                                </button>
+                            </form>
+                        {% endif %}
+                    </li>
+                </ul>
             </td>
         </tr>
     {% endfor %}

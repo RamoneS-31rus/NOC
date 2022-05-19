@@ -367,6 +367,16 @@ button {
 	vertical-align: middle; /* центровка по вертикали */
 }
 
+.actions-2 {
+	display:inline-block;
+	margin: 10px 0 10px auto;
+	outline: 1px solid #9A9A9A;
+	padding: 5px;
+}
+.actions-2 input {
+	vertical-align: middle;
+}
+
 .actions-3 {
   padding: 0;
   margin: auto;

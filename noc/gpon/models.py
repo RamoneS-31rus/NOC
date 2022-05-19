@@ -70,7 +70,7 @@ class Request(models.Model):
     installer = models.ManyToManyField(User, blank=True, related_name='installer', verbose_name='Монтажники')
     manager = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='manager', verbose_name='Менеджер')
     note = models.TextField(blank=True, verbose_name='Примечание')
-    status = models.BooleanField(default=False)
+    status = models.BooleanField(null=True, default=False)
 
     class Meta:
         ordering = ['id']

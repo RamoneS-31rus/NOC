@@ -1,0 +1,213 @@
+{%extends 'default.html' %}
+
+{% block content %}
+<br>
+<div class="center">
+  <div class="menu-status">
+    {% if object.status is False and not object.date_con or object.status is None %}
+        <a class="active" href="{% url 'requests_new' %}">Новые</a>
+        <a href="{% url 'requests_in_progress' %}">Выполняются</a>
+        <a href="{% url 'requests_completed' %}">Завершенные</a>
+    {% elif object.status is False and object.date_con %}
+        <a href="{% url 'requests_new' %}">Новые</a>
+        <a class="active" href="{% url 'requests_in_progress' %}">Выполняются</a>
+        <a href="{% url 'requests_completed' %}">Завершенные</a>
+    {% elif object.status is True %}
+        <a href="{% url 'requests_new' %}">Новые</a>
+        <a href="{% url 'requests_in_progress' %}">Выполняются</a>
+        <a class="active" href="{% url 'requests_completed' %}">Завершенные</a>
+    {% endif %}
+  </div>
+</div>
+{% for message in messages %}
+    <div class="center" style="color: red">
+        {{ message }}
+    </div>
+{% endfor %}
+<br>
+<table class="table_gpon">
+        <tr>
+            <th style="width: 220px">
+                Адрес
+            </th>
+            {% if object.status is False and not object.date_con or object.status is None %}
+            <th>
+                Статус ВОЛС
+            </th>
+            {% endif %}
+            <th style="width: 220px">
+                ФИО
+            </th>
+            <th style="width: 130px">
+                Телефон
+            </th>
+            <th style="width: 60px">
+                Дата заявки
+            </th>
+            {% if object.status is False and object.date_con or object.status is True %}
+            <th style="width: 90px">
+                Дата подключения
+            </th>
+            {% endif %}
+            <th style="width: 90px">
+                Тариф (Мбит/с)
+            </th>
+            <th>
+                Модель ONT
+            </th>
+            <th style="width: 120px">
+                Модель Wi-Fi роутера
+            </th>
+            {% if object.status is False and object.date_con or object.status is True %}
+            <th style="width: 100px">
+                Оптический патч-корд
+            </th>
+            {% endif %}
+            {% if object.status is True %}
+            <th style="width: 90px">
+                Стоимость подключения
+            </th>
+            {% endif %}
+            {% if object.status is False and object.date_con or object.status is True %}
+            <th style="width: 170px">
+                Монтажники
+            </th>
+            {% endif %}
+            <th style="width: 170px">
+                Менеджер
+            </th>
+            <th style="width: 200px">
+               Примечание
+            </th>
+            <th></th>
+        </tr>
+        {% if object.status is None%}
+        <tr style="color: #ccc">
+        {% else %}
+        <tr>
+        {% endif %}
+            <td style="text-align: left">
+                {{ object.address }}
+            </td>
+            {% if object.status is False and not object.date_con or object.status is None %}
+            <td>
+                {{ object.address.status }}
+            </td>
+            {% endif %}
+            <td style="text-align: left">
+                {{ object.name }}
+            </td>
+            <td>
+                {{ object.phone }}
+            </td>
+            <td>
+                {{ object.date_req|date:'d.m.Y' }}
+            </td>
+            {% if object.status is False and object.date_con or object.status is True %}
+            <td>
+                {{ object.date_con|date:'d.m.Y H:i' }}
+            </td>
+            {% endif %}
+            <td>
+                {{ object.tariff.speed }}
+            </td>
+            <td>
+                {% if object.ont is None %}
+                    -----
+                {% else %}
+                    {{ object.ont }}
+                {% endif %}
+            </td>
+            <td>
+                {% if object.router is None %}
+                    -----
+                {% else %}
+                    {{ object.router }}
+                {% endif %}
+            </td>
+            {% if object.status is False and object.date_con or object.status is True %}
+            <td>
+                {% if object.cord is None %}
+                    {% if object.whose_cord is True %}
+                        Абонентский
+                    {% else %}
+                        -----
+                    {% endif %}
+                {% else %}
+                    {{ object.cord }}
+                {% endif %}
+            </td>
+            {% endif %}
+            {% if object.status is True %}
+            <td>
+                {% if object.discount != 0 %}
+                    <span style="cursor: help" title="С учётом скидки {{ object.discount }} р.">
+                        {{ object.cost_con }}
+                        <img src="/static/images/icon_info.png" width="20" height="20">
+                    </span>
+                {% else %}
+                    {{ object.cost_con }}
+                {% endif %}
+            </td>
+            {% endif %}
+            {% if object.status is False and object.date_con or object.status is True %}
+            <td style="text-align: left">
+                {% for i in object.installer.all %}
+                    {{ i.last_name }} {{ i.first_name }}<br>
+                {% endfor %}
+            </td>
+            {% endif %}
+            <td style="text-align: left">
+                {{ object.manager.last_name }} {{ object.manager.first_name }}
+            </td>
+            <td style="text-align: left">
+                {{ object.note }} {{object.pk}}
+            </td>
+            {% if object.status == True %}
+                <td style="text-align: center">
+                    <form action="{% url 'request_resume' object.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" style="background-color:transparent; border-color:transparent;" title="Возобновить">
+                            <img src="/static/images/icon_resume.png" width="23" height="23">
+                        </button>
+                    </form>
+            {% else %}
+            <td>
+                <ul>
+                    <li>
+                        <a href="{% url 'request_update' object.pk %}" title="Изменить">
+                            <img src="/static/images/icon_edit.png" width="23" height="23">
+                        </a>
+                    </li>
+                    <li>
+                        {% if object.status is False and not object.date_con or object.status is None %}
+                            {% if object.status is None %}
+                                <form action="{% url 'request_resume' object.pk %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" title="Показать">
+                                        <img src="/static/images/icon_show.png" width="24" height="24">
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'request_hide' object.pk %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" title="Скрыть">
+                                        <img src="/static/images/icon_hide.png" width="24" height="24">
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <form action="{% url 'request_finish' object.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" title="Завершить">
+                                    <img src="/static/images/icon_complete.png" width="24" height="24">
+                                </button>
+                            </form>
+                        {% endif %}
+                    </li>
+                </ul>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+{% endblock content %}

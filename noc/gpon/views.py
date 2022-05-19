@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect, render
+from django.db.models import Q
 
 from .models import House, Request, Tariff
 from storage.models import Product
@@ -30,11 +31,11 @@ class FilteredListView(ListView):
             queryset = self.model.objects.all()
             url = self.request.get_full_path()
             """
-            Переопределяем queryset в зависимости от url запроса.
+            Переопределяем queryset в зависимости от url запроса. queryset для 'new' формируется в filter.py
             """
-            if 'new' in url:
-                queryset = queryset.filter(status='False', date_con__isnull=True).order_by('-date_req')
-            elif 'in-progress' in url:
+            # if 'new' in url:
+            #     queryset = queryset
+            if 'in-progress' in url:
                 queryset = queryset.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
             elif 'completed' in url:
                 queryset = queryset.filter(status='True').order_by('-date_con')
@@ -42,6 +43,21 @@ class FilteredListView(ListView):
             queryset = super().get_queryset()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
         return self.filterset.qs.distinct()
+        # queryset = self.model.objects.all()
+        # url = self.request.get_full_path()
+        # filterset_class = self.filterset_class
+        # if 'new' in url:  # queryset для 'new' формируется в RequestHiddenFilter
+        #     filterset_class = RequestHiddenFilter
+        # elif 'in-progress' in url:
+        #     filterset_class = self.filterset_class
+        #     queryset = queryset.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
+        # elif 'completed' in url:
+        #     filterset_class = self.filterset_class
+        #     queryset = queryset.filter(status='True').order_by('-date_con')
+        # else:
+        #     queryset = super().get_queryset()
+        # self.filterset = filterset_class(self.request.GET, queryset=queryset)
+        # return self.filterset.qs.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -66,8 +82,8 @@ class HouseUpdate(LoginRequiredMixin, UpdateView):
 class RequestList(LoginRequiredMixin, FilteredListView):
     model = Request
     # context_object_name = 'requests'
-    filterset_class = RequestFilter
-    paginate_by = 50
+    filterset_class = None
+    paginate_by = 10
 
     # def get_queryset(self):
     #     qs = self.model.objects.all()
@@ -79,6 +95,11 @@ class RequestList(LoginRequiredMixin, FilteredListView):
     #     elif 'completed' in url:
     #         qs = qs.filter(status='True').order_by('-date_con')
     #     return qs
+
+
+class RequestDetailView(DetailView):
+    model = Request
+    template_name = 'gpon/request_detail.html'
 
 
 class RequestCreate(LoginRequiredMixin, CreateView):
@@ -175,10 +196,12 @@ class RequestStatus(UpdateView):
                 obj.status = True
                 obj.save()
                 obj.update_price()
+        elif choice == 'hide':
+            obj.status = None
+            obj.save()
         elif choice == 'resume':
             obj.status = False
             obj.save()
-            return redirect('requests_in_progress')
         else:
             return redirect(request.META.get('HTTP_REFERER'))
         return redirect(request.META.get('HTTP_REFERER'))

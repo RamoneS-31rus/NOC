@@ -10,13 +10,12 @@
     <a class="active" href="{% url 'requests_completed' %}">Завершенные</a>
   </div>
 </div>
-<br>
- <form method="GET" class="center">
-    {{ filterset.form }}
-    <button class="button_cancel_form" type="submit">Найти</button>
-</form>
-<br>
-
+<div class="center">
+    <form class="actions-2" method="GET">
+        {{ filterset.form }}
+        <button type="submit">OK</button>
+    </form>
+</div>
 {%  if object_list %}
     <table class="table_gpon">
         <tr>
@@ -111,7 +110,7 @@
                 {% if house.discount != 0 %}
                     <span style="cursor: help" title="С учётом скидки {{ house.discount }} р.">
                         {{ house.cost_con }}
-                        <img src="/static/images/icon_eye.png" width="15" height="15">
+                        <img src="/static/images/icon_info.png" width="20" height="20">
                     </span>
                 {% else %}
                     {{ house.cost_con }}

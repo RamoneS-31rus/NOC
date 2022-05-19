@@ -41,7 +41,11 @@
             </th>
         </tr>
     {% for house in object_list %}
+        {% if house.request.status is None%}
+        <tr style="color: #ccc">
+        {% else %}
         <tr>
+        {% endif %}
             <td style="text-align: left">
                 {{ house.address }}
             </td>
@@ -53,12 +57,12 @@
             </td>
             <td>
                 {% if house.request %}
-                    {% if house.request.status is False and not house.request.date_con %}
-                        Новая
+                    {% if house.request.status is False and not house.request.date_con or house.request.status is None %}
+                        <a href="{% url 'request_detail' house.request.pk %}">Новая</a>
                     {% elif house.request.status is False and house.request.date_con %}
-                        Выполняется
+                        <a href="{% url 'request_detail' house.request.pk %}">Выполняется</a>
                     {% elif house.request.status is True %}
-                        Завершена
+                        <a href="{% url 'request_detail' house.request.pk %}">Завершена</a>
                     {% endif %}
                 {% else %}
                     <a href="{% url 'request_create' house.pk %}">Добавить заявку</a>

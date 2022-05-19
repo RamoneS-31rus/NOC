@@ -33,7 +33,7 @@
             <td style="cursor: help" title="{{ order.date|date:'H:i' }}">{{ order.date|date:'d.m.Y' }}</td>
             {% comment %}{% if is_Administrators %}{% endcomment %}
                 <td>
-                    <ul class="actions-2" style="text-align: center">
+                    <ul>
                         <li>
                             <a href="{% url 'vlan_update' object.number order.pk %}" title="Изменить">
                                 <img style="color: red" src="/static/images/icon_edit.png" width="23" height="23">

@@ -1,7 +1,7 @@
 {%extends 'default.html' %}
 
 {% block content %}
-<hr>
+<br>
 <div class="center">
   <div class="menu-status">
     <a href="{% url 'requests_new' %}">Новые</a>
@@ -9,7 +9,7 @@
     <a href="{% url 'requests_completed' %}">Завершенные</a>
   </div>
 </div>
-<hr>
+<br>
 {% for message in messages %}
     <div class="center" style="color: red">
         {{ message }}

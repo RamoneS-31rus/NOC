@@ -1,8 +1,9 @@
+from django import forms
 from django.db.models import Q
-from django_filters import FilterSet, CharFilter, ChoiceFilter, DateFromToRangeFilter, ModelChoiceFilter
+from django_filters import FilterSet, CharFilter, ChoiceFilter, DateFromToRangeFilter, BooleanFilter, ModelChoiceFilter
 from django_filters.widgets import RangeWidget
 from django.contrib.auth.models import User
-from django import forms
+from django.forms import CheckboxInput
 
 from .models import House, Request
 
@@ -52,3 +53,14 @@ class RequestFilter(FilterSet):
     class Meta:
         model = Request
         fields = ['date_con']
+
+
+class RequestHiddenFilter(FilterSet):
+    show_hidden = BooleanFilter(label='Показать скрытые заявки', method='hide_null', widget=CheckboxInput(attrs={}))
+
+    def hide_null(self, queryset, name, value):
+        if value:
+            return queryset.filter(Q(status='False', date_con__isnull=True) | Q(status__isnull=True)).order_by('-date_req')
+        else:
+            return queryset.filter(status='False', date_con__isnull=True).order_by('-date_req')
+

@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext
 from django.contrib.admin import widgets
+from django.db.models import Q
 
 from .models import House, Request
 from storage.models import Product
@@ -78,7 +79,7 @@ class RequestFormUpdate(forms.ModelForm):
         # self.fields['manager'].label_from_instance = lambda obj: "%s %s" % (obj.last_name, obj.first_name)
         self.fields['router'].queryset = Product.objects.filter(type__type_name="Роутеры")
         self.fields['ont'].queryset = Product.objects.filter(type__type_name="Оптические терминалы")
-        self.fields['cord'].queryset = Product.objects.filter(type__type_name="Оптические патч-корды")
+        self.fields['cord'].queryset = Product.objects.filter(Q(type__type_name="Оптические патч-корды") | Q(type__type_name="Оптический кабель"))
 
     class Meta:
         model = Request

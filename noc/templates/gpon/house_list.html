@@ -47,7 +47,11 @@
         <tr>
         {% endif %}
             <td style="text-align: left">
-                {{ house.address }}
+                {% if house.request %}
+                    <a href="{% url 'request_detail' house.request.pk %}">{{ house.address }}</a>
+                {% else %}
+                    {{ house.address }}
+                {% endif %}
             </td>
             <td>
                 {{ house.district }}
@@ -58,11 +62,11 @@
             <td>
                 {% if house.request %}
                     {% if house.request.status is False and not house.request.date_con or house.request.status is None %}
-                        <a href="{% url 'request_detail' house.request.pk %}">Новая</a>
+                        Новая
                     {% elif house.request.status is False and house.request.date_con %}
-                        <a href="{% url 'request_detail' house.request.pk %}">Выполняется</a>
+                        Выполняется
                     {% elif house.request.status is True %}
-                        <a href="{% url 'request_detail' house.request.pk %}">Завершена</a>
+                        Завершена
                     {% endif %}
                 {% else %}
                     <a href="{% url 'request_create' house.pk %}">Добавить заявку</a>

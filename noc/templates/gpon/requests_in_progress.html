@@ -69,7 +69,13 @@
                 {{ house.phone }}
             </td>
             <td>
-                {{ house.date_req|date:'d.m.Y' }}
+                {% if house.user %}
+                <span style="cursor: help" title="Заявку принял {{ house.user.last_name }} {{ house.user.first_name }}">
+                    {{ house.date_req|date:'d.m.Y' }}
+                </span>
+                {% else %}
+                    {{ house.date_req|date:'d.m.Y' }}
+                {% endif %}
             </td>
             <td>
                 {{ house.date_con|date:'d.m.Y H:i' }}
@@ -101,7 +107,9 @@
                         -----
                     {% endif %}
                 {% else %}
-                    {{ house.cord }}
+                    <span style="cursor: help" title="Код: {{ house.cord.code }}">
+                        {{ house.cord }}
+                    </span>
                 {% endif %}
             </td>
             <td style="text-align: left">

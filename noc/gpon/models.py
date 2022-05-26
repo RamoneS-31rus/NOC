@@ -69,6 +69,7 @@ class Request(models.Model):
     cost_con = models.PositiveIntegerField(default=0, verbose_name='Стоимость подключения')
     installer = models.ManyToManyField(User, blank=True, related_name='installer', verbose_name='Монтажники')
     manager = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='manager', verbose_name='Менеджер')
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='user', verbose_name='Заявку принял')
     note = models.TextField(blank=True, verbose_name='Примечание')
     status = models.BooleanField(null=True, default=False)
 
@@ -78,33 +79,37 @@ class Request(models.Model):
         verbose_name_plural = 'Заявки'
 
     def update_price(self):  # Расчёт стоимости подключения в зависимости от тарифа и оборудования
-        # self.cost_con = 0
         price_con_ont_1 = 6000
         price_con_ont_wifi = 7500
 
-        # if self.router is None:
-        #     price_router = 0
-        # else:
-        #     price_router = int(Product.objects.get(name=self.router).price)
-        #
-        # if self.tariff is None:
-        #     price_tariff = 0
-        # else:
-        #     price_tariff = int(Tariff.objects.get(name=self.tariff).price)
-
         if str(self.ont) == 'HS8545M5':
-            # self.cost_con = price_con_ont_wifi + price_router + price_tariff - int(str(self.discount))
             Request.objects.filter(pk=self.pk).update(cost_con=(price_con_ont_wifi + F('router_cost') +
                                                                 F('tariff_cost') - F('discount')))
         elif self.ont is not None and str(self.ont) != 'HS8545M5':
-            # self.cost_con = price_con_ont_1 + price_router + price_tariff - int(str(self.discount))
             Request.objects.filter(pk=self.pk).update(cost_con=(price_con_ont_1 + F('router_cost') +
                                                       F('tariff_cost') - F('discount')))
         elif self.ont is None:
             pass
-        # self.save()
-        # from django.db.models import F
-        # Profile.objects.select_for_update().filter(pk=self.pk).update(balance=F('balance') + 1)  # ПРИМЕР
+
+    def expense_product(self):
+        if self.ont is not None:
+            Product.objects.filter(name=self.ont).update(quality=F('quality') - 1)
+
+        if self.router is not None:
+            Product.objects.filter(name=self.router).update(quality=F('quality') - 1)
+
+        if self.cord is not None:
+            Product.objects.filter(name=self.cord).update(quality=F('quality') - 1)
+
+    def income_product(self):
+        if self.ont is not None:
+            Product.objects.filter(name=self.ont).update(quality=F('quality') + 1)
+
+        if self.router is not None:
+            Product.objects.filter(name=self.router).update(quality=F('quality') + 1)
+
+        if self.cord is not None:
+            Product.objects.filter(name=self.cord).update(quality=F('quality') + 1)
 
     def save(self, *args, **kwargs):  # Изменение формата телефоннтого номера
         if self.phone != '':

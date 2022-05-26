@@ -106,7 +106,7 @@ class RequestCreate(LoginRequiredMixin, CreateView):
     model = Request
     template_name = 'gpon/request_form_create.html'
     form_class = RequestFormCreate
-
+    """Контекст для отображения адреса в форме создания заявки."""
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['address'] = House.objects.get(pk=self.kwargs.get('pk'))
@@ -119,15 +119,16 @@ class RequestCreate(LoginRequiredMixin, CreateView):
     #     else:
     #         return self.form_invalid(form)
     """
-    Заполняем поле manager на авторизованного пользователя, если пользователь в группе Managers.
-    Заполняем поля стоимости тарифа и стоимости роутера в зависимости от выбранного.
+    Заполняем поле user ('Принял заявку') на авторизованного пользователя.
+    Заполняем поля стоимости тарифа и стоимости роутера в зависимости от выбранного тарифа.
     """
     def form_valid(self, form):
         obj = form.save(commit=False)
-        if self.request.user.groups.filter(name='Managers').exists():
-            obj.manager = self.request.user
-        else:
-            obj.manager = None
+        # if self.request.user.groups.filter(name='Managers').exists():
+        #     obj.manager = self.request.user
+        # else:
+        #     obj.manager = None
+        obj.user = self.request.user
 
         obj.address = House.objects.get(pk=self.kwargs.get('pk'))
 
@@ -150,12 +151,12 @@ class RequestUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
     template_name = 'gpon/request_form_update.html'
     form_class = RequestFormUpdate
     """Заполняем поле manager на авторизованного пользователя, если оно пустое и пользователь в группе Managers"""
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        if kwargs.get('instance').manager is None and self.request.user.groups.filter(name='Managers').exists():
-            kwargs.get('instance').manager = self.request.user
-        return kwargs
-    """Заполняем поля стоимости тарифа и стоимости роутера в зависимости от выбранного"""
+    # def get_form_kwargs(self):
+    #     kwargs = super().get_form_kwargs()
+    #     if kwargs.get('instance').manager is None and self.request.user.groups.filter(name='Managers').exists():
+    #         kwargs.get('instance').manager = self.request.user
+    #     return kwargs
+    """Заполняем поля стоимости тарифа и стоимости роутера в зависимости от выбранного."""
     def form_valid(self, form):
         obj = form.save(commit=False)
         if 'tariff' in form.changed_data:  # Проверяем менялось ли поле tariff
@@ -169,6 +170,10 @@ class RequestUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
                 obj.router_cost = Product.objects.get(name=obj.router).price
             else:
                 obj.router_cost = 0
+        """Заполняем поле "Менеджер" на авторизованного менеджера, если поле "Дата подключения" изменялось."""
+        if 'date_con' in form.changed_data and obj.date_con is not None and self.request.user.groups.filter(name='Managers').exists():
+            obj.manager = self.request.user
+
         obj.save()
         return super().form_valid(form)
 
@@ -196,12 +201,14 @@ class RequestStatus(UpdateView):
                 obj.status = True
                 obj.save()
                 obj.update_price()
+                obj.expense_product()
         elif choice == 'hide':
             obj.status = None
             obj.save()
         elif choice == 'resume':
             obj.status = False
             obj.save()
+            obj.income_product()
         else:
             return redirect(request.META.get('HTTP_REFERER'))
         return redirect(request.META.get('HTTP_REFERER'))

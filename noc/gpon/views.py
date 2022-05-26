@@ -31,11 +31,13 @@ class FilteredListView(ListView):
             queryset = self.model.objects.all()
             url = self.request.get_full_path()
             """
-            Переопределяем queryset в зависимости от url запроса. queryset для 'new' формируется в filter.py
+            Переопределяем queryset в зависимости от url запроса.
             """
-            # if 'new' in url:
-            #     queryset = queryset
-            if 'in-progress' in url:
+            if 'hidden' in url:
+                queryset = queryset.filter(status__isnull=True).order_by('-date_req')
+            elif 'new' in url:
+                queryset = queryset.filter(status='False', date_con__isnull=True).order_by('-date_req')
+            elif 'in-progress' in url:
                 queryset = queryset.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
             elif 'completed' in url:
                 queryset = queryset.filter(status='True').order_by('-date_con')
@@ -82,7 +84,7 @@ class HouseUpdate(LoginRequiredMixin, UpdateView):
 class RequestList(LoginRequiredMixin, FilteredListView):
     model = Request
     # context_object_name = 'requests'
-    filterset_class = None
+    filterset_class = RequestFilter
     paginate_by = 10
 
     # def get_queryset(self):
@@ -172,6 +174,8 @@ class RequestUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
                 obj.router_cost = 0
         """Заполняем поле "Менеджер" на авторизованного менеджера, если поле "Дата подключения" изменялось."""
         if 'date_con' in form.changed_data and obj.date_con is not None and self.request.user.groups.filter(name='Managers').exists():
+            obj.manager = self.request.user
+        elif 'note' in form.changed_data and obj.date_con is None and self.request.user.groups.filter(name='Managers').exists():
             obj.manager = self.request.user
 
         obj.save()

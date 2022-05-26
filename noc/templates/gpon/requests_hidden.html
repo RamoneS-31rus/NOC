@@ -4,24 +4,21 @@
 <br>
 <div class="center">
   <div class="menu-status">
-    <a href="{% url 'requests_hidden' %}">Скрытые</a>
+    <a class="active" href="{% url 'requests_hidden' %}">Скрытые</a>
     <a href="{% url 'requests_new' %}">Новые</a>
-    <a class="active" href="{% url 'requests_in_progress' %}">Выполняются</a>
+    <a href="{% url 'requests_in_progress' %}">Выполняются</a>
     <a href="{% url 'requests_completed' %}">Завершенные</a>
   </div>
 </div>
 <br>
-{% for message in messages %}
-    <div class="center" style="color: red">
-        {{ message }}
-    </div>
-    <br>
-{% endfor %}
 {%  if object_list %}
     <table class="table_gpon">
         <tr>
             <th style="width: 220px">
                 Адрес
+            </th>
+            <th>
+                Статус ВОЛС
             </th>
             <th style="width: 220px">
                 ФИО
@@ -33,9 +30,6 @@
                 Дата заявки
             </th>
             <th style="width: 90px">
-                Дата подключения
-            </th>
-            <th style="width: 90px">
                 Тариф (Мбит/с)
             </th>
             <th>
@@ -44,16 +38,10 @@
             <th style="width: 120px">
                 Модель Wi-Fi роутера
             </th>
-            <th style="width: 100px">
-                Оптический патч-корд
-            </th>
-            <th style="width: 170px">
-                Монтажники
-            </th>
             <th style="width: 170px">
                 Менеджер
             </th>
-            <th style="width: 200px">
+            <th style="width: 350px">
                Примечание
             </th>
             <th></th>
@@ -62,6 +50,9 @@
         <tr>
             <td style="text-align: left">
                 {{ house.address }}
+            </td>
+            <td>
+                {{ house.address.status }}
             </td>
             <td style="text-align: left">
                 {{ house.name }}
@@ -79,10 +70,7 @@
                 {% endif %}
             </td>
             <td>
-                {{ house.date_con|date:'d.m.Y H:i' }}
-            </td>
-            <td><span style="cursor: help" title="Стоимость {{ house.tariff_cost }} р.">
-                {{ house.tariff.speed }}</span>
+                {{ house.tariff.speed }}
             </td>
             <td>
                 {% if house.ont is None %}
@@ -95,39 +83,14 @@
                 {% if house.router is None %}
                     -----
                 {% else %}
-                    <span style="cursor: help" title="Стоимость {{ house.router_cost }} р.">
-                        {{ house.router }}
-                    </span>
+                    {{ house.router }}
                 {% endif %}
-            </td>
-            <td>
-                {% if house.cord is None %}
-                    {% if house.whose_cord is True %}
-                        Абонентский
-                    {% else %}
-                        -----
-                    {% endif %}
-                {% else %}
-                    <span style="cursor: help" title="Код: {{ house.cord.code }}">
-                        {{ house.cord }}
-                    </span>
-                {% endif %}
-            </td>
-            <td style="text-align: left">
-                {% for i in house.installer.all %}
-                    {{ i.last_name }} {{ i.first_name }}<br>
-                {% endfor %}
             </td>
             <td style="text-align: left">
                 {{ house.manager.last_name }} {{ house.manager.first_name }}
             </td>
             <td style="text-align: left">
-                {% if house.discount != 0 %}
-                    Скидка {{ house.discount }} р.<br>
-                    {{ house.note }}
-                {% else %}
-                    {{ house.note }}
-                {% endif %}
+                {{ house.note }}
             </td>
             <td>
                 <ul>
@@ -137,12 +100,21 @@
                         </a>
                     </li>
                     <li>
-                        <form action="{% url 'request_finish' house.pk %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" title="Завершить">
-                                <img src="/static/images/icon_complete.png" width="24" height="24">
-                            </button>
-                        </form>
+                        {% if house.status is None %}
+                            <form action="{% url 'request_resume' house.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" title="Показать">
+                                    <img src="/static/images/icon_show.png" width="24" height="24">
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'request_hide' house.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" title="Скрыть">
+                                    <img src="/static/images/icon_hide.png" width="24" height="24">
+                                </button>
+                            </form>
+                        {% endif %}
                     </li>
                 </ul>
             </td>

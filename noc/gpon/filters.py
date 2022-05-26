@@ -55,12 +55,12 @@ class RequestFilter(FilterSet):
         fields = ['date_con']
 
 
-class RequestHiddenFilter(FilterSet):
-    show_hidden = BooleanFilter(label='Показать скрытые заявки', method='hide_null', widget=CheckboxInput(attrs={}))
-
-    def hide_null(self, queryset, name, value):
-        if value:
-            return queryset.filter(Q(status='False', date_con__isnull=True) | Q(status__isnull=True)).order_by('-date_req')
-        else:
-            return queryset.filter(status='False', date_con__isnull=True).order_by('-date_req')
+# class RequestHiddenFilter(FilterSet):
+#     show_hidden = BooleanFilter(label='Показать скрытые заявки', method='hide_null', widget=CheckboxInput(attrs={}))
+#
+#     def hide_null(self, queryset, name, value):
+#         if value:
+#             return queryset.filter(Q(status='False', date_con__isnull=True) | Q(status__isnull=True)).order_by('-date_req')
+#         else:
+#             return queryset.filter(status='False', date_con__isnull=True).order_by('-date_req')
 

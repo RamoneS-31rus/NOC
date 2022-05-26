@@ -4,17 +4,20 @@
 <br>
 <div class="center">
   <div class="menu-status">
+    <a href="{% url 'requests_hidden' %}">Скрытые</a>
     <a class="active" href="{% url 'requests_new' %}">Новые</a>
     <a href="{% url 'requests_in_progress' %}">Выполняются</a>
     <a href="{% url 'requests_completed' %}">Завершенные</a>
   </div>
 </div>
+{% comment %}
 <div class="center">
     <form class="actions-2" method="GET">
         {{ filterset.form }}
         <button type="submit">OK</button>
     </form>
-</div>
+</div>{% endcomment %}
+<br>
 {%  if object_list %}
     <table class="table_gpon">
         <tr>
@@ -51,11 +54,7 @@
             <th></th>
         </tr>
     {% for house in object_list %}
-        {% if house.status is None%}
-        <tr style="color: #ccc">
-        {% else %}
         <tr>
-        {% endif %}
             <td style="text-align: left">
                 {{ house.address }}
             </td>

@@ -12,6 +12,7 @@ class AdminRequest(admin.ModelAdmin):
         form.base_fields['manager'].queryset = User.objects.filter(groups__name='Managers').order_by('last_name')
         form.base_fields['installer'].label_from_instance = lambda inst: "{} {}".format(inst.last_name, inst.first_name)
         form.base_fields['manager'].label_from_instance = lambda inst: "{} {}".format(inst.last_name, inst.first_name)
+        form.base_fields['user'].label_from_instance = lambda inst: "{} {}".format(inst.last_name, inst.first_name)
         return form
 
 

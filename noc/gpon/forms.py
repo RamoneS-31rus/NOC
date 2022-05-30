@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 
 from django import forms
 from django.contrib.auth.models import User
@@ -61,11 +61,16 @@ class RequestFormUpdate(forms.ModelForm):
     """переопределяем формат ввода и вывода даты"""
     date_con = forms.DateTimeField(
         required=False,
-        input_formats=['%d.%m.%Y %H:%M'],
-        widget=forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 22.01.2021 14:00',
+        # input_formats=['%d.%m.%Y %H:%M'],
+        # widget=forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 22.01.2021 14:00',
+        #                                   'size': 25,
+        #                                   },
+        #                            format='%d.%m.%Y %H:%M')
+        # initial=str(datetime.now().date()) + 'T10:00',
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local',
                                           'size': 25,
-                                          },
-                                   format='%d.%m.%Y %H:%M')
+                                          },)
+                                   # format='%d.%m.%Y %H:%M')
     )
     # date_con = forms.SplitDateTimeField(widget=widgets.AdminSplitDateTime)
     # date_field = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
@@ -80,6 +85,9 @@ class RequestFormUpdate(forms.ModelForm):
         self.fields['router'].queryset = Product.objects.filter(type__type_name="Роутеры")
         self.fields['ont'].queryset = Product.objects.filter(type__type_name="Оптические терминалы")
         self.fields['cord'].queryset = Product.objects.filter(Q(type__type_name="Оптические патч-корды") | Q(type__type_name="Оптический кабель"))
+        """Если date_con есть, то переопределяем формат полученной даты на '2022-12-30T10:00' для datetime-local"""
+        if self.initial['date_con']:
+            self.initial['date_con'] = (self.initial['date_con'] + timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M")
 
     class Meta:
         model = Request

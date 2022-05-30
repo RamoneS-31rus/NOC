@@ -206,13 +206,19 @@ class RequestStatus(UpdateView):
                 obj.save()
                 obj.update_price()
                 obj.expense_product()
-        elif choice == 'hide':
-            obj.status = None
-            obj.save()
         elif choice == 'resume':
             obj.status = False
             obj.save()
             obj.income_product()
+        elif choice == 'hide':
+            if not obj.note:
+                messages.error(request, 'Заполните поле "Примечание"')
+            else:
+                obj.status = None
+                obj.save()
+        elif choice == 'show':
+            obj.status = False
+            obj.save()
         else:
             return redirect(request.META.get('HTTP_REFERER'))
         return redirect(request.META.get('HTTP_REFERER'))

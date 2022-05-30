@@ -101,7 +101,7 @@
                     </li>
                     <li>
                         {% if house.status is None %}
-                            <form action="{% url 'request_resume' house.pk %}" method="POST">
+                            <form action="{% url 'request_show' house.pk %}" method="POST">
                                 {% csrf_token %}
                                 <button type="submit" title="Показать">
                                     <img src="/static/images/icon_show.png" width="24" height="24">

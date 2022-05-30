@@ -15,8 +15,9 @@ urlpatterns = [
     path('requests/completed/', RequestList.as_view(template_name='gpon/requests_completed.html'), name='requests_completed'),
     path('request/<int:pk>/create/', RequestCreate.as_view(), name='request_create'),
     path('request/<int:pk>/edit/', RequestUpdate.as_view(), name='request_update'),
-    path('request/<int:pk>/finish/', RequestStatus.as_view(choice='finish'), name='request_finish'),
     path('request/<int:pk>/hide/', RequestStatus.as_view(choice='hide'), name='request_hide'),
+    path('request/<int:pk>/show/', RequestStatus.as_view(choice='show'), name='request_show'),
+    path('request/<int:pk>/finish/', RequestStatus.as_view(choice='finish'), name='request_finish'),
     path('request/<int:pk>/resume/', RequestStatus.as_view(choice='resume'), name='request_resume'),
     # path('requests/statistic/', RequestList.as_view(template_name='gpon/statistic.html'), name='requests_statistic'),
     path('statistic/', statistic, name='statistic')

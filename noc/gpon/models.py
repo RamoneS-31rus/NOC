@@ -58,6 +58,7 @@ class Request(models.Model):
     phone = models.CharField(max_length=50, verbose_name='Телефон')
     date_req = models.DateField(auto_now_add=True, verbose_name='Дата заявки')
     date_con = models.DateTimeField(blank=True, null=True, verbose_name='Дата подключения')
+    date_update = models.DateField(auto_now=True, verbose_name='Дата изменения')
     tariff = models.ForeignKey(Tariff, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Тариф')
     tariff_cost = models.IntegerField(default=0, verbose_name='Стоимость тарифа')
     ont = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, related_name='ont', verbose_name='Модель ONT')

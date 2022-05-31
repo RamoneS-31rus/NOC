@@ -60,7 +60,7 @@
             <td>
                 {{ house.phone }}
             </td>
-            <td>
+            <td class="check-update" id="{{ house.date_update|date:'Y-m-d' }}-{{ house.pk }}">
                 {% if house.user %}
                 <span style="cursor: help" title="Заявку принял {{ house.user.last_name }} {{ house.user.first_name }}">
                     {{ house.date_req|date:'d.m.Y' }}
@@ -150,5 +150,20 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+    const list = document.querySelectorAll('.check-update');
+    const now = new Date();
+
+    for (i in list) {
+        const date = new String(list[i].id).slice(0, 10);
+        const el = document.getElementById(list[i].id);
+        const old = new Date(date);
+
+        if (Math.floor((now.getTime() - old.getTime())/86400000) >= 7) {
+            el.parentElement.classList.add('new-color');
+        }
+    }
+</script>
 
 {% endblock content %}

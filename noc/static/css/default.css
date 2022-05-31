@@ -518,3 +518,7 @@ a.button15:active {
 #scrollup:hover {
 	opacity: 1;
 }
+
+.new-color {
+	background-color: Yellow;
+}

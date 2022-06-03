@@ -55,6 +55,14 @@ class RequestFilter(FilterSet):
         fields = ['date_con']
 
 
+# class StatisticFilter(FilterSet):
+#     date_update = DateFromToRangeFilter(widget=RangeWidget(attrs={'type': 'date'}))
+#
+#     class Meta:
+#         model = Request
+#         fields = ['date_update']
+
+
 # class RequestHiddenFilter(FilterSet):
 #     show_hidden = BooleanFilter(label='Показать скрытые заявки', method='hide_null', widget=CheckboxInput(attrs={}))
 #

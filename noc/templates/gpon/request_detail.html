@@ -4,15 +4,23 @@
 <br>
 <div class="center">
   <div class="menu-status">
-    {% if object.status is False and not object.date_con or object.status is None %}
+    {% if object.status is None %}
+        <a class="active" href="{% url 'requests_inactive' %}">Неактивные</a>
+        <a href="{% url 'requests_new' %}">Новые</a>
+        <a href="{% url 'requests_in_progress' %}">Выполняются</a>
+        <a href="{% url 'requests_completed' %}">Завершенные</a>
+    {% elif object.status is False and not object.date_con %}
+        <a href="{% url 'requests_inactive' %}">Неактивные</a>
         <a class="active" href="{% url 'requests_new' %}">Новые</a>
         <a href="{% url 'requests_in_progress' %}">Выполняются</a>
         <a href="{% url 'requests_completed' %}">Завершенные</a>
     {% elif object.status is False and object.date_con %}
+        <a href="{% url 'requests_inactive' %}">Неактивные</a>
         <a href="{% url 'requests_new' %}">Новые</a>
         <a class="active" href="{% url 'requests_in_progress' %}">Выполняются</a>
         <a href="{% url 'requests_completed' %}">Завершенные</a>
     {% elif object.status is True %}
+        <a href="{% url 'requests_inactive' %}">Неактивные</a>
         <a href="{% url 'requests_new' %}">Новые</a>
         <a href="{% url 'requests_in_progress' %}">Выполняются</a>
         <a class="active" href="{% url 'requests_completed' %}">Завершенные</a>
@@ -81,11 +89,7 @@
             </th>
             <th></th>
         </tr>
-        {% if object.status is None%}
-        <tr style="color: #ccc">
-        {% else %}
         <tr>
-        {% endif %}
             <td style="text-align: left">
                 {{ object.address }}
             </td>
@@ -182,17 +186,17 @@
                     <li>
                         {% if object.status is False and not object.date_con or object.status is None %}
                             {% if object.status is None %}
-                                <form action="{% url 'request_resume' object.pk %}" method="POST">
+                                <form action="{% url 'request_active' object.pk %}" method="POST">
                                     {% csrf_token %}
-                                    <button type="submit" title="Показать">
-                                        <img src="/static/images/icon_show.png" width="24" height="24">
+                                    <button type="submit" title="В 'Новые'">
+                                        <img src="/static/images/icon_active.png" width="24" height="24">
                                     </button>
                                 </form>
                             {% else %}
-                                <form action="{% url 'request_hide' object.pk %}" method="POST">
+                                <form action="{% url 'request_inactive' object.pk %}" method="POST">
                                     {% csrf_token %}
-                                    <button type="submit" title="Скрыть">
-                                        <img src="/static/images/icon_hide.png" width="24" height="24">
+                                    <button type="submit" title="В 'Неактивные'">
+                                        <img src="/static/images/icon_inactive.png" width="24" height="24">
                                     </button>
                                 </form>
                             {% endif %}

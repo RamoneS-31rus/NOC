@@ -5,17 +5,22 @@
 <br>
 <div class="center">
   <div class="menu-status">
-    <a href="{% url 'requests_hidden' %}">Скрытые</a>
+    <a href="{% url 'requests_inactive' %}">Неактивные</a>
     <a href="{% url 'requests_new' %}">Новые</a>
     <a href="{% url 'requests_in_progress' %}">Выполняются</a>
     <a class="active" href="{% url 'requests_completed' %}">Завершенные</a>
   </div>
 </div>
 <div class="center">
-    <form class="actions-2" method="GET">
-        {{ filterset.form }}
-        <button type="submit">OK</button>
-    </form>
+    <div style="display: inline-block">
+        <form class="actions-2" method="GET">
+            {{ filterset.form }}
+            <button type="submit">OK</button>
+        </form>
+    </div>
+    <div style="margin: 0 0 0 10px; display: inline-block">
+        Всего: {{ page_obj.paginator.count }}
+    </div>
 </div>
 {%  if object_list %}
     <table class="table_gpon">
@@ -142,7 +147,7 @@
                 {% endif %}
             </td>
             <td style="text-align: center">
-                <form action="{% url 'request_resume' house.pk %}" method="POST">
+                <form  class="resume" id="{{ house.date_update|date:'Y-m-d' }}" action="{% url 'request_resume' house.pk %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" style="background-color:transparent; border-color:transparent;" title="Возобновить">
                         <img src="/static/images/icon_resume.png" width="23" height="23">
@@ -154,12 +159,25 @@
     </table>
     {% if is_paginated %}
         <div class="center" style="margin: 10px 0 0 0">{{ page_obj.start_index }}-{{ page_obj.end_index }} из {{ page_obj.paginator.count }}</div>
-    {% else %}
-        <div class="center" style="margin: 10px 0 0 0">Всего: {{ page_obj.end_index }}</div>
     {% endif %}
 {%  else %}
     <h2 class="center">Заявок нет</h2>
 {% endif %}
+
+<script>
+    const list = document.querySelectorAll('.resume');
+    const now = new Date();
+
+    for (i in list) {
+        const date = new String(list[i].id).slice(0, 10);
+        const el = document.getElementById(list[i].id);
+        const old = new Date(date);
+
+        if (Math.floor((now.getTime() - old.getTime())/86400000) >= 7) {
+            el.style.display = "none";
+        }
+    }
+</script>
 
 {% include "pagination.html" %}
 

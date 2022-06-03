@@ -26,13 +26,12 @@ class HouseForm(forms.ModelForm):
 
 
 class RequestFormCreate(forms.ModelForm):
-    """переопределяем формат ввода даты"""
     date_con = forms.DateTimeField(
         required=False,
-        input_formats=['%d.%m.%Y %H:%M'],
-        widget=forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 22.01.2021 14:00',
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local',
                                           'size': 25,
-                                          }),
+                                          },
+                                   )
     )
 
     def __init__(self, *args, **kwargs):
@@ -109,6 +108,22 @@ class RequestFormUpdate(forms.ModelForm):
                                           }),
         }
 
+
+class RequestInactiveFormUpdate(forms.ModelForm):
+
+    class Meta:
+        model = Request
+        fields = ['name', 'phone', 'note']
+
+        widgets = {
+            'name': forms.TextInput(attrs={'size': 25}),
+            'phone': forms.TextInput(attrs={'size': 12}),
+            'note': forms.Textarea(attrs={'cols': 45,
+                                          'rows': 2,
+                                          }),
+        }
+
+
 # class EventSplitDateTime(forms.SplitDateTimeWidget):
 #     def __init__(self, attrs=None):
 #         widgets = [forms.TextInput(attrs={'class': 'vDateField'}),
@@ -123,3 +138,12 @@ class RequestFormUpdate(forms.ModelForm):
 # class EventForm(forms.Form):
 #     start = forms.DateTimeField(label=ugettext("Start"), widget=EventSplitDateTime())
 #     end = forms.DateTimeField(label=ugettext("End"), widget=EventSplitDateTime())
+
+# """переопределяем формат ввода даты"""
+#     date_con = forms.DateTimeField(
+#         required=False,
+#         input_formats=['%d.%m.%Y %H:%M'],
+#         widget=forms.DateTimeInput(attrs={'placeholder': 'формат ввода: 22.01.2021 14:00',
+#                                           'size': 25,
+#                                           }),
+#     )

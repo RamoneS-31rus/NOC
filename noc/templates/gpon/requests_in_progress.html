@@ -4,19 +4,22 @@
 <br>
 <div class="center">
   <div class="menu-status">
-    <a href="{% url 'requests_hidden' %}">Скрытые</a>
+    <a href="{% url 'requests_inactive' %}">Неактивные</a>
     <a href="{% url 'requests_new' %}">Новые</a>
     <a class="active" href="{% url 'requests_in_progress' %}">Выполняются</a>
     <a href="{% url 'requests_completed' %}">Завершенные</a>
   </div>
 </div>
-<br>
+
 {% for message in messages %}
     <div class="center" style="color: red">
         {{ message }}
     </div>
-    <br>
 {% endfor %}
+
+<div class="center" style="margin: 10px 0 0 0">Всего: {{ page_obj.paginator.count }}</div>
+<br>
+
 {%  if object_list %}
     <table class="table_gpon">
         <tr>
@@ -151,8 +154,6 @@
     </table>
     {% if is_paginated %}
         <div class="center" style="margin: 10px 0 0 0">{{ page_obj.start_index }}-{{ page_obj.end_index }} из {{ page_obj.paginator.count }}</div>
-    {% else %}
-        <div class="center" style="margin: 10px 0 0 0">Всего: {{ page_obj.end_index }}</div>
     {% endif %}
 {%  else %}
     <h2 class="center">Заявок нет</h2>

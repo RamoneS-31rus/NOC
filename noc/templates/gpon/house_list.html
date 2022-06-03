@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<hr>
+<br>
 <ul class="actions-1">
     <li>
         <form method="GET">
@@ -11,14 +11,18 @@
         </form>
     </li>
     <li>
+        <div class="center" style="margin: 0 0 0 0">Всего: {{ page_obj.end_index }}</div>
+    </li>
+    <li>
         <a href="{% url 'address_create' %}" title="Добавить дом">
             <img src="/static/images/icon_add.png" width="25" height="25">
         </a>
     </li>
 </ul>
-<hr>
+
 <button onclick="topFunction()" id="scrollup">Наверх</button>
 
+<br>
 {%  if object_list %}
     <table class="table_gpon">
         <tr>
@@ -61,7 +65,9 @@
             </td>
             <td>
                 {% if house.request %}
-                    {% if house.request.status is False and not house.request.date_con or house.request.status is None %}
+                    {% if house.request.status is None %}
+                        Неактивная
+                    {% elif house.request.status is False and not house.request.date_con %}
                         Новая
                     {% elif house.request.status is False and house.request.date_con %}
                         Выполняется
@@ -85,8 +91,6 @@
     </table>
     {% if is_paginated %}
         <div class="center" style="margin: 10px 0 0 0">{{ page_obj.start_index }}-{{ page_obj.end_index }} из {{ page_obj.paginator.count }}</div>
-    {% else %}
-        <div class="center" style="margin: 10px 0 0 0">Всего: {{ page_obj.end_index }}</div>
     {% endif %}
 {%  else %}
     <h1 style="text-align: center">По Вашему запросу ничего не найдено</h1>

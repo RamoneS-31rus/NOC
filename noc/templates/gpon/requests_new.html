@@ -5,7 +5,7 @@
 <br>
 <div class="center">
   <div class="menu-status">
-    <a href="{% url 'requests_hidden' %}">Скрытые</a>
+    <a href="{% url 'requests_inactive' %}">Неактивные</a>
     <a class="active" href="{% url 'requests_new' %}">Новые</a>
     <a href="{% url 'requests_in_progress' %}">Выполняются</a>
     <a href="{% url 'requests_completed' %}">Завершенные</a>
@@ -18,13 +18,15 @@
         <button type="submit">OK</button>
     </form>
 </div>{% endcomment %}
-<br>
+
 {% for message in messages %}
     <div class="center" style="color: red">
         {{ message }}
     </div>
-    <br>
 {% endfor %}
+
+<div class="center" style="margin: 10px 0 0 0">Всего: {{ page_obj.paginator.count }}</div>
+<br>
 
 {%  if object_list %}
     <table class="table_gpon">
@@ -63,7 +65,7 @@
         </tr>
     {% for house in object_list %}
         <tr>
-            <td style="text-align: left">
+            <td style="text-align: left" class="check-update" id="{{ house.date_update|date:'Y-m-d' }}-{{ house.pk }}">
                 {{ house.address }}
             </td>
             <td>
@@ -75,7 +77,7 @@
             <td>
                 {{ house.phone }}
             </td>
-            <td class="check-update" id="{{ house.date_update|date:'Y-m-d' }}-{{ house.pk }}">
+            <td>
                 {% if house.user %}
                 <span style="cursor: help" title="Заявку принял {{ house.user.last_name }} {{ house.user.first_name }}">
                     {{ house.date_req|date:'d.m.Y' }}
@@ -115,21 +117,12 @@
                         </a>
                     </li>
                     <li>
-                        {% if house.status is None %}
-                            <form action="{% url 'request_show' house.pk %}" method="POST">
-                                {% csrf_token %}
-                                <button type="submit" title="Показать">
-                                    <img src="/static/images/icon_show.png" width="24" height="24">
-                                </button>
-                            </form>
-                        {% else %}
-                            <form action="{% url 'request_hide' house.pk %}" method="POST">
-                                {% csrf_token %}
-                                <button type="submit" title="Скрыть">
-                                    <img src="/static/images/icon_hide.png" width="24" height="24">
-                                </button>
-                            </form>
-                        {% endif %}
+                        <form action="{% url 'request_inactive' house.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" title="В 'Неактивные'">
+                                <img src="/static/images/icon_inactive.png" width="24" height="24">
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </td>
@@ -138,8 +131,6 @@
     </table>
     {% if is_paginated %}
         <div class="center" style="margin: 10px 0 0 0">{{ page_obj.start_index }}-{{ page_obj.end_index }} из {{ page_obj.paginator.count }}</div>
-    {% else %}
-        <div class="center" style="margin: 10px 0 0 0">Всего: {{ page_obj.end_index }}</div>
     {% endif %}
 {%  else %}
     <h2 class="center">Заявок нет</h2>
@@ -175,8 +166,9 @@
         const el = document.getElementById(list[i].id);
         const old = new Date(date);
 
-        if (Math.floor((now.getTime() - old.getTime())/86400000) >= 7) {
+        if (Math.floor((now.getTime() - old.getTime())/86400000) >= 2) {
             el.parentElement.classList.add('new-color');
+            list[i].innerHTML = list[i].innerHTML + `<img src="/static/images/icon_info_red.png" width="20" height="20" style="float: right; cursor: help" title="Обновите статус заявки">`
         }
     }
 </script>
@@ -185,3 +177,4 @@
 
 el.style.background='yellow';
 const p = el.parentElement;
+ list[i].innerHTML = list[i].innerHTML + `<img src="/static/images/icon_info_red.png" width="20" height="20" style="float: right; cursor: help" title="Обновите статус заявки">

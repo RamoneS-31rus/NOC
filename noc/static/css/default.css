@@ -361,7 +361,7 @@ button {
 }
 .actions-1 li {
 	display:inline-block;
-	margin: 0 80px; /* расстояние между пунктами по ширине */
+	margin: 0 46px; /* расстояние между пунктами по ширине */
 }
 .actions-1 li img, .actions-1 li a{
 	vertical-align: middle; /* центровка по вертикали */
@@ -522,3 +522,24 @@ a.button15:active {
 .new-color {
 	background-color: Yellow;
 }
+
+.table_statistics {
+	width: 700px;
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	margin: 20px auto 0px;
+}
+.table_statistics th {
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 1px 3px; /* Поля вокруг текста */
+	background: #497c9d;
+	color: #fff;
+}
+.table_statistics td {
+	text-align: center;
+}
+.table_statistics table {
+	width: 100%;
+	border-collapse: collapse;
+}
+

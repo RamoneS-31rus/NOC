@@ -5,10 +5,11 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect, render
 from django.db.models import Q
+from django.db.models import Count
 
 from .models import House, Request, Tariff
 from storage.models import Product
-from .forms import HouseForm, RequestFormCreate, RequestFormUpdate
+from .forms import HouseForm, RequestFormCreate
 from .filters import HouseFilter, RequestFilter
 
 
@@ -33,7 +34,7 @@ class FilteredListView(ListView):
             """
             Переопределяем queryset в зависимости от url запроса.
             """
-            if 'hidden' in url:
+            if 'inactive' in url:
                 queryset = queryset.filter(status__isnull=True).order_by('-date_req')
             elif 'new' in url:
                 queryset = queryset.filter(status='False', date_con__isnull=True).order_by('-date_req')
@@ -41,6 +42,8 @@ class FilteredListView(ListView):
                 queryset = queryset.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
             elif 'completed' in url:
                 queryset = queryset.filter(status='True').order_by('-date_con')
+            else:
+                queryset = super().get_queryset()
         else:
             queryset = super().get_queryset()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
@@ -99,7 +102,7 @@ class RequestList(LoginRequiredMixin, FilteredListView):
     #     return qs
 
 
-class RequestDetailView(DetailView):
+class RequestDetailView(LoginRequiredMixin, DetailView):
     model = Request
     template_name = 'gpon/request_detail.html'
 
@@ -150,8 +153,7 @@ class RequestCreate(LoginRequiredMixin, CreateView):
 
 class RequestUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
     model = Request
-    template_name = 'gpon/request_form_update.html'
-    form_class = RequestFormUpdate
+    form_class = None
     """Заполняем поле manager на авторизованного пользователя, если оно пустое и пользователь в группе Managers"""
     # def get_form_kwargs(self):
     #     kwargs = super().get_form_kwargs()
@@ -210,13 +212,13 @@ class RequestStatus(UpdateView):
             obj.status = False
             obj.save()
             obj.income_product()
-        elif choice == 'hide':
+        elif choice == 'inactive':
             if not obj.note:
                 messages.error(request, 'Заполните поле "Примечание"')
             else:
                 obj.status = None
                 obj.save()
-        elif choice == 'show':
+        elif choice == 'active':
             obj.status = False
             obj.save()
         else:
@@ -224,14 +226,44 @@ class RequestStatus(UpdateView):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
-def statistic(request):
+# class Statistic(LoginRequiredMixin, ListView):
+#     model = Request
+#     template_name = 'gpon/requests_statistics.html'
+#     filterset_class = StatisticFilter
+#
+#     # def get_queryset(self):
+#     #     qs = self.model.objects.all()
+#     #     url = self.request.get_full_path()
+#     #     if 'new' in url:
+#     #         qs = qs.filter(status='False', date_con__isnull=True).order_by('date_req')
+#     #     elif 'in-progress' in url:
+#     #         qs = qs.filter(status='False').exclude(date_con__isnull=True).order_by('date_con')
+#     #     elif 'completed' in url:
+#     #         qs = qs.filter(status='True').order_by('-date_con')
+#     #     return qs
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         queryset = self.model.objects.all()
+#         context['test'] = queryset.filter(status='True').aggregate(Count('address'))
+#         context['req_inac'] = StatisticFilter(self.request.GET, queryset=queryset.filter(status=None))
+#         context['req_new'] = StatisticFilter(self.request.GET, queryset=queryset.filter(status='False', date_con__isnull=True))
+#         context['req_pro'] = StatisticFilter(self.request.GET, queryset=queryset.filter(status='False').exclude(date_con__isnull=True))
+#         context['req_com'] = StatisticFilter(self.request.GET, queryset=queryset.filter(status='True'))
+#         context['req_all'] = StatisticFilter(self.request.GET, queryset=queryset)
+#         return context
+
+
+def statistics(request):
     if request.user.is_authenticated:
         """Статус заявок"""
+        req_inac = len(Request.objects.filter(status=None))
         req_new = len(Request.objects.filter(status='False', date_con__isnull=True))
         req_pro = len(Request.objects.filter(status='False').exclude(date_con__isnull=True))
         req_com = len(Request.objects.filter(status='True'))
         req_all = len(Request.objects.all())
-        requests = {'req_new': req_new,
+        requests = {'req_inac': req_inac,
+                    'req_new': req_new,
                     'req_pro': req_pro,
                     'req_com': req_com,
                     'req_all': req_all}
@@ -264,9 +296,10 @@ def statistic(request):
             sold_ont[str(ont)] = value
         """Использованные патч-корды"""
         cord_list = Product.objects.filter(type__type_name="Оптические патч-корды")
-        used_cord = {}
+        used_cord = {'all': 0}
         for cord in cord_list:
             value = len(Request.objects.filter(status='True').filter(cord__name=cord))
+            used_cord.update({'all': int(used_cord.get('all') + value)})
             used_cord[str(cord)] = value
         """Стоимость всех подключений, тарифов и роутеров"""
         con_list = Request.objects.filter(status='True')
@@ -292,6 +325,6 @@ def statistic(request):
                 "used_cord": used_cord,
                 "cost": cost,
                 }
-        return render(request, 'gpon/statistic.html', context=data)
+        return render(request, 'gpon/statistics.html', context=data)
     else:
         return render(request, 'sign/login.html')

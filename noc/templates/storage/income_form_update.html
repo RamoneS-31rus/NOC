@@ -1,0 +1,54 @@
+{%extends 'default.html' %}
+
+{% block content %}
+
+<div class="center">
+    <form style="text-align: left; display:inline-block;" method="POST">
+        <hr>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <hr>
+        <div class="center">
+            <button class="button_add_form" type="submit">Сохранить</button>
+            <a class="button_cancel_form" href="{% url 'income_list' %}" role="button">Отменить</a>
+        </div>
+    </form>
+</div>
+
+<script>
+function isCategory(e) {
+    document.getElementById('id_type').value = '';
+    document.getElementById('id_name').value = '';
+    const selectedCategory = document.getElementById('id_category').getElementsByTagName("option")[e].attributes.name.value;
+    const typeList = document.getElementById('id_type');
+
+    for (i of typeList) {
+        const obj = i.attributes.name;
+        if (obj !== undefined) {
+            if (obj.value == selectedCategory) {
+                i.className = 'show_obj';
+            } else {
+                i.className = 'hide_obj';
+            }
+        }
+    }
+}
+
+function isType(e) {
+    document.getElementById('id_name').value = '';
+    const selectedType = 'type-' + e;
+    const nameList = document.getElementById('id_name');
+
+    for (i of nameList) {
+        const obj = i.attributes.name;
+        if (obj !== undefined) {
+            if (obj.value == selectedType) {
+                i.className = 'show_obj';
+            } else {
+                i.className = 'hide_obj';
+            }
+        }
+    }
+}
+</script>
+{% endblock content %}

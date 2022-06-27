@@ -25,6 +25,16 @@
     </div>
   </div>
   <div class="dropdown">
+    <button class="dropbtn">GPON
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="{% url 'house_list' %}">Покрытие</a>
+      <a href="{% url 'requests_new' %}">Заявки</a>
+      <a href="{% url 'statistics' %}">Статистика</a>
+    </div>
+  </div>
+  <div class="dropdown">
     <button class="dropbtn">Склад
       <i class="fa fa-caret-down"></i>
     </button>
@@ -43,18 +53,8 @@
       <a href="#">Операторы</a>
     </div>
   </div>{% endcomment %}
-  <div class="dropdown">
-    <button class="dropbtn">GPON
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="{% url 'house_list' %}">Покрытие</a>
-      <a href="{% url 'requests_new' %}">Заявки</a>
-      <a href="{% url 'statistic' %}">Статистика</a>
-    </div>
-  </div>
   <div class="dropdown-pro">
-    <button class="dropbtn-pro">{{ user.username }}
+    <button class="dropbtn-pro">{{ user.last_name }} {{ user.first_name }}
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content-pro">

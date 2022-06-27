@@ -254,7 +254,7 @@ button {
 	border-collapse: collapse; /* Убирает двойные линии между ячейками */
 	border-spacing: 1px; /* Расстояние между ячейками */
 	table-layout: fixed;
-	margin: auto;  /* при значении auto объект центруется по горизонтали */
+	margin:  10px auto;  /* при значении auto объект центруется по горизонтали */
 }
 .table_gpon th {
 	border: 1px solid black; /* Граница вокруг ячеек */
@@ -267,7 +267,7 @@ button {
 	padding: 3px;
 	text-align: center;
 }
-.table_gpon tr:hover {
+.table_gpon tr:not(.nohover):hover {
 	background: #ddd;
 }
 .table_gpon td ul {
@@ -520,7 +520,7 @@ a.button15:active {
 }
 
 .new-color {
-	background-color: Yellow;
+	background-color: #FFFF99;
 }
 
 .table_statistics {
@@ -543,3 +543,56 @@ a.button15:active {
 	border-collapse: collapse;
 }
 
+.table_storage {
+	border-collapse: collapse; /* Убирает двойные линии между ячейками */
+	border-spacing: 1px; /* Расстояние между ячейками */
+	table-layout: fixed;
+	margin: auto;  /* при значении auto объект центруется по горизонтали */
+}
+.table_storage th {
+	border: 1px solid black; /* Граница вокруг ячеек */
+	padding: 1px 3px; /* Поля вокруг текста */
+	word-wrap:break-word; /* Перенос текста на новую строку, если не помещается */
+	background: #497c9d;
+	color: #fff;
+}
+.table_storage td {
+	padding: 3px;
+	text-align: center;
+}
+.table_storage tbody:hover {
+	background: #ddd;
+}
+.table_storage td ul {
+	list-style: none; /* Отключить маркеры */
+	padding: 0;
+	margin: 0;
+}
+.table_storage td li {
+	display:inline-block;
+}
+.table_storage td li button {
+	background-color:transparent;
+	border-color:transparent;
+	height: 25px;
+	width: 25px;
+	padding: 0;
+}
+.table_storage td button img {
+	vertical-align: middle;
+}
+.table_storage td a {
+	text-decoration: none; /* Отменяем подчеркивание у ссылки */
+	color: #497c9d; /* Цвет ссылок */
+}
+.table_storage td a img {
+	vertical-align: middle;
+}
+
+.hide {
+	visibility: hidden;
+}
+
+.hide_obj {
+	display: none;
+}

@@ -1,10 +1,13 @@
+from django.contrib import messages
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import F
 from django.urls import reverse
 
+from slugify import slugify
+
 from addressbook.models import Address
-from storage.models import Product
+from storage.models import Product, Object, Expense
 
 
 class District(models.Model):
@@ -22,7 +25,8 @@ class House(models.Model):
     cable = 'Нет кабеля'
     welding = 'Необходима сварка'
     ready = 'Готов к подключению'
-    type = [(cable, 'Нет кабеля'), (welding, 'Необходима сварка'), (ready, 'Готов к подключению')]
+    completed = 'Подключен'
+    type = [(cable, 'Нет кабеля'), (welding, 'Необходима сварка'), (ready, 'Готов к подключению'), (completed, 'Подключен')]
     district = models.ForeignKey(District, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Район')
     address = models.OneToOneField(Address, on_delete=models.CASCADE, unique=True, verbose_name='Адрес')
     status = models.CharField(max_length=20, choices=type, default=cable, verbose_name='Статус')
@@ -92,17 +96,34 @@ class Request(models.Model):
         elif self.ont is None:
             pass
 
-    def expense_product(self):
-        if self.ont is not None:
-            Product.objects.filter(name=self.ont).update(quality=F('quality') - 1)
+    def check_amount(self):
+        values = {self.ont: 0,
+                  self.router: 0,
+                  self.cord: 0}
+        for i in values:
+            if i is not None:
+                if Product.objects.get(name=i).quality > 0:
+                    values.update({i: 1})
+                else:
+                    return 'error', i
+        return values
 
-        if self.router is not None:
-            Product.objects.filter(name=self.router).update(quality=F('quality') - 1)
-
-        if self.cord is not None:
-            Product.objects.filter(name=self.cord).update(quality=F('quality') - 1)
+    def expense_product(self, request, check_amount):
+        Object.objects.create(address=self.address, purpose='ИЖС', date_create=self.date_con,
+                              user_create_id=request.user.id, slug=slugify(str(self.address)).lower())
+        for i in check_amount:
+            if i is not None:
+                Expense.objects.create(address_id=Object.objects.order_by('id').last().id,
+                                       category_id=Product.objects.get(name=i).category_id,
+                                       type_id=Product.objects.get(name=i).type_id,
+                                       name_id=Product.objects.get(name=i).id,
+                                       quality=1)
+                Product.objects.filter(name=i).update(quality=F('quality') - 1)
 
     def income_product(self):
+        if Object.objects.filter(address=self.address).exists():
+            Object.objects.get(address=self.address).delete()
+
         if self.ont is not None:
             Product.objects.filter(name=self.ont).update(quality=F('quality') + 1)
 

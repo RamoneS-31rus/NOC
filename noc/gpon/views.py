@@ -204,13 +204,19 @@ class RequestStatus(UpdateView):
             elif obj.manager is None:
                 messages.error(request, 'Поле "Менеджер" не заполнено')
             else:
-                obj.status = True
-                obj.save()
-                obj.update_price()
-                obj.expense_product()
+                check_amount = obj.check_amount()
+                if type(check_amount) == tuple and check_amount[0] == 'error':
+                    messages.error(request, f'Недопустимая операция, в наличии не достаточно {check_amount[1]} для списания')
+                else:
+                    obj.status = True
+                    obj.save()
+                    House.objects.filter(pk=obj.address_id).update(status=House.completed)
+                    obj.update_price()
+                    obj.expense_product(request, check_amount)
         elif choice == 'resume':
             obj.status = False
             obj.save()
+            House.objects.filter(pk=obj.address_id).update(status=House.ready)
             obj.income_product()
         elif choice == 'inactive':
             if not obj.note:
@@ -270,15 +276,18 @@ def statistics(request):
         """Статус домов"""
         cable = len(House.objects.filter(status='Нет кабеля'))
         welding = len(House.objects.filter(status='Необходима сварка'))
+        ready = len(House.objects.filter(status='Готов к подключению'))
+        completed = len(House.objects.filter(status='Подключен'))
         total = len(House.objects.all())
-        ready = 0  # Счетаем только дома по которым заявки не завершены
-        ready_list = House.objects.filter(status='Готов к подключению')
-        for house in ready_list:
-            if not Request.objects.filter(address_id=house.id).exists() or not house.request.status:
-                ready += 1
+        # ready = 0  # Счетаем только дома по которым заявки не завершены
+        # ready_list = House.objects.filter(status='Готов к подключению')
+        # for house in ready_list:
+        #     if not Request.objects.filter(address_id=house.id).exists() or not house.request.status:
+        #         ready += 1
         houses = {'cable': cable,
                   'welding': welding,
                   'ready': ready,
+                  'completed': completed,
                   'total': total}
         """Проданные роутеры"""
         router_list = Product.objects.filter(type__type_name="Роутеры")

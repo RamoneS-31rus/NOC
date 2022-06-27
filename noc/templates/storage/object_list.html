@@ -3,46 +3,182 @@
 {% block content %}
 
 <br>
-<div>
-    <a href="{% url 'object_add' %}">Добавить</a>
+<div style="position: absolute; top: 64px; left: 440px">
+    <a href="{% url 'object_add' %}" title="Добавить объект">
+        <img src="/static/images/icon_add.png" width="25" height="25">
+    </a>
 </div>
 <br>
 
 {%  if object_list %}
-<table>
-    <tr>
-        <th>
-            Дата
-        </th>
-        <th>
-            Адрес
-        </th>
-        <th>
-            Назначение
-        </th>
-    </tr>
-{% for object in object_list %}
-    <tr>
-        <td>
-            {{ object.date_create | date:'d.m.Y' }}
-        </td>
-        <td>
-            <a href="{% url 'object_detail' object.slug %}">{{ object.address }}</a>
-        </td>
-        <td>
-            {{ object.purpose }}
-        </td>
-        <td>
-            <a href="{% url 'object_update' object.slug %}">Редактировать</a>
-        </td>
-        <td>
-            <a href="{% url 'object_delete' object.slug %}">Удалить</a>
-        </td>
-    </tr>
-{% endfor %}
-</table>
+    <table class="table_storage">
+        <thead>
+            <tr>
+                <th style="width: 220px">Адрес</th>
+                <th>Код</th>
+                <th style="width: 220px">Название</th>
+                <th>Количество</th>
+                <th style="width: 220px">Назначение</th>
+                <th style="width: 170px">Добавил</th>
+                <th></th>
+            </tr>
+        </thead>
+    {% regroup object_list by date_create as objects_by_day %}
+    {% for day in objects_by_day %}
+        <tbody>
+            <tr>
+                <td style="background:#FFFF99" colspan=7>{{ day.grouper | date:'d.m.Y' }}</td>
+            </tr>
+        </tbody>
+        {% for obj in day.list %}
+        <tbody class="tbody-hover">
+            {% if obj.expense.all %}
+                {% for i in obj.expense.all %}
+                <tr>
+                    {% ifchanged obj.pk %}
+                        <td style="" rowspan="{{ forloop.revcounter }}">
+                            <ul>
+                                <li style="float: left">
+                                    <span>{{ obj.address }}</span>
+                                </li>
+                                <li class="hide" style="float: right">
+                                    <a href="{% url 'expense_add' obj.slug %}" title="Добавить позицию">
+                                        <img src="/static/images/krug_plyus.png" width="25" height="25">
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                    {% endifchanged %}
+                        <td>{{ i.name.code }}</td>
+                        <td>{{ i.name }}</td>
+                        <td>
+                            <ul>
+                                <li style="margin-left: 30px">
+                                    <span>{{ i.quality }}</span>
+                                </li>
+                                <li class="hide">
+                                    <form action="{% url 'expense_delete' obj.slug i.pk %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" title="Удалить позицию">
+                                            <img src="/static/images/krug_minus.png" width="23" height="23">
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </td>
+                    {% ifchanged obj.pk %}
+                        <td rowspan="{{ forloop.revcounter }}">{{ obj.purpose }}</td>
+                        <td style="text-align: left" rowspan="{{ forloop.revcounter }}">{{ obj.user_create.last_name }} {{ obj.user_create.first_name }}</td>
+                        <td rowspan="{{ forloop.revcounter }}">
+                            {% if obj.purpose != 'ИЖС' %}
+                                <ul>
+                                    <li>
+                                        <a href="{% url 'object_update' obj.slug %}" title="Изменить">
+                                            <img src="/static/images/icon_edit.png" width="23" height="23">
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form action="{% url 'object_delete' obj.slug %}" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" title="Удалить объект">
+                                                <img src="/static/images/icon_delete.png" width="23" height="23">
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            {% endif %}
+                        </td>
+                    {% endifchanged %}
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td style="" rowspan="{{ forloop.revcounter }}">
+                        <ul>
+                            <li style="float: left">
+                                <span>{{ obj.address }}</span>
+                            </li>
+                            <li class="hide" style="float: right">
+                                <a href="{% url 'expense_add' obj.slug %}" title="Добавить позицию">
+                                    <img src="/static/images/krug_plyus.png" width="25" height="25">
+                                </a>
+                            </li>
+                        </ul>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ obj.purpose }}</td>
+                    <td style="text-align: left">{{ obj.user_create.last_name }} {{ obj.user_create.first_name }}</td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="{% url 'object_update' obj.slug %}" title="Изменить">
+                                    <img src="/static/images/icon_edit.png" width="23" height="23">
+                                </a>
+                            </li>
+                            <li>
+                                <form action="{% url 'object_delete' obj.slug %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" title="Удалить объект">
+                                        <img src="/static/images/icon_delete.png" width="23" height="23">
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endif %}
+         </tbody>
+        {% endfor %}
+    {% endfor %}
+    </table>
 {%  else %}
-<h1>пусто</h1>
+    <h1>пусто</h1>
 {% endif %}
+
+<script>
+const list = document.querySelectorAll('.tbody-hover');
+
+for (let i = 0; i < list.length; i++) {
+    MakeTbodyHover(list[i]);
+}
+
+function MakeTbodyHover(td) {
+    td.addEventListener("mouseover",function() {
+        if (td.children.length > 1) {
+            for (let i = 0; i < td.children.length; i++) {
+                if (i == 0) {
+                    td.children[0].firstElementChild.firstElementChild.lastElementChild.classList = "show";
+                    td.children[0].children[3].firstElementChild.lastElementChild.classList = "show";
+                } else {
+                    td.children[0].firstElementChild.firstElementChild.lastElementChild.classList = "show";
+                    td.children[i].children[2].firstElementChild.lastElementChild.classList = "show";
+                }
+            }
+        } else {
+            td.firstElementChild.firstElementChild.firstElementChild.lastElementChild.classList = "show";
+            td.firstElementChild.children[3].firstElementChild.lastElementChild.classList = "show";
+        }
+    })
+
+    td.addEventListener("mouseout",function() {
+        if (td.children.length > 1) {
+            for (let i = 0; i < td.children.length; i++) {
+                if (i == 0) {
+                    td.children[0].firstElementChild.firstElementChild.lastElementChild.classList = "hide";
+                    td.children[0].children[3].firstElementChild.lastElementChild.classList = "hide";
+                } else {
+                    td.children[0].firstElementChild.firstElementChild.lastElementChild.classList = "hide";
+                    td.children[i].children[2].firstElementChild.lastElementChild.classList = "hide";
+                }
+            }
+        } else {
+            td.firstElementChild.firstElementChild.firstElementChild.lastElementChild.classList = "hide";
+            td.firstElementChild.children[3].firstElementChild.lastElementChild.classList = "hide";
+        }
+    })
+}
+</script>
 
 {% endblock content %}

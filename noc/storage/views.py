@@ -1,46 +1,58 @@
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormMixin
 from .models import Product, Income, Object, Expense
-from .forms import ProductForm, IncomeForm, ObjectForm, ExpenseForm
+from .forms import ProductForm, IncomeForm, ObjectFormCreate, ObjectFormUpdate, ExpenseForm
 
 
-class ProductList(ListView):
+class RedirectToPreviousMixin:  # Миксин для редиректа на предыдущию страницу
+    default_redirect = '/'
+
+    def get(self, request, *args, **kwargs):
+        request.session['previous_page'] = request.META.get('HTTP_REFERER', self.default_redirect)
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.request.session['previous_page']
+
+
+class ProductList(LoginRequiredMixin, ListView):
     model = Product
     context_object_name = 'products'
     template_name = 'storage/product_list.html'
 
 
-class ProductDetail(DetailView):
+class ProductDetail(LoginRequiredMixin, DetailView):
     model = Product
     context_object_name = 'product'
     template_name = 'storage/product_detail.html'
 
 
-class ProductCreate(CreateView):
+class ProductCreate(LoginRequiredMixin, CreateView):
     model = Product
     template_name = 'storage/product_form.html'
     form_class = ProductForm
     success_url = '/storage/catalog/'
 
 
-class ProductUpdate(UpdateView):
+class ProductUpdate(LoginRequiredMixin, UpdateView):
     model = Product
     template_name = 'storage/product_form.html'
     form_class = ProductForm
     success_url = '/storage/catalog/'
 
 
-class IncomeList(ListView):
+class IncomeList(LoginRequiredMixin, ListView):
     model = Income
-    context_object_name = 'income_list'
+    # context_object_name = 'income_list'
     template_name = 'storage/income_list.html'
 
 
-class IncomeCreate(CreateView):
+class IncomeCreate(LoginRequiredMixin, CreateView):
     model = Income
-    template_name = 'storage/income_form.html'
+    template_name = 'storage/income_form_create.html'
     form_class = IncomeForm
     success_url = '/storage/income'
 
@@ -52,105 +64,90 @@ class IncomeCreate(CreateView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        product = form.save(commit=False)
-        product.income_user = self.request.user
-        product.save()
+        obj = form.save(commit=False)
+        obj.user_create = self.request.user
+        obj.save()
         return redirect('income_list')
 
 
-class IncomeUpdate(UpdateView):
+class IncomeUpdate(LoginRequiredMixin, RedirectToPreviousMixin, UpdateView):
     model = Income
-    template_name = 'storage/income_form.html'
+    template_name = 'storage/income_form_update.html'
     form_class = IncomeForm
-    success_url = '/storage/income/'
 
 
-class IncomeDelete(DeleteView):
+class IncomeDelete(LoginRequiredMixin, RedirectToPreviousMixin, DeleteView):
     model = Income
-    template_name = 'storage/income_delete.html'
-    success_url = '/storage/income/'
 
 
-class ObjectList(ListView):
+class ObjectList(LoginRequiredMixin, ListView):
     model = Object
     template_name = 'storage/object_list.html'
     context_object_name = 'object_list'
 
 
-class ObjectDetail(FormMixin, DetailView):
+class ObjectCreate(LoginRequiredMixin, CreateView):
     model = Object
-    template_name = 'storage/object_detail.html'
-    context_object_name = 'object'
-    form_class = ExpenseForm
+    template_name = 'storage/object_form_create.html'
+    form_class = ObjectFormCreate
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['expense_list'] = Expense.objects.filter(expense_address=Object.objects.get(
-            slug=self.kwargs.get('slug')))
-        return context
-
-    def get_success_url(self):
-        return reverse('object_detail', kwargs={'slug': self.get_object().slug})
-
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form, **kwargs):
-        expense = form.save(commit=False)
-        expense.expense_user = self.request.user
-        expense.expense_address = self.get_object()
-        expense.save()
-        return super().form_valid(form)
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        category_id = self.request.POST['category']
+        type_id = self.request.POST['type']
+        name_id = self.request.POST['name']
+        quality = self.request.POST['quality']
+        obj.user_create = self.request.user
+        obj.save()
+        Expense.objects.create(address_id=Object.objects.order_by('id').last().id, category_id=category_id,
+                               type_id=type_id, name_id=name_id, quality=quality)
+        product = Product.objects.get(id=name_id)
+        Product.objects.filter(id=name_id).update(quality=product.quality - int(quality))
+        # slug = Object.objects.order_by('id').last().slug
+        # return redirect('expense_add', slug)
+        return redirect('object_list')
 
 
-class ObjectCreate(CreateView):
+class ObjectUpdate(LoginRequiredMixin, UpdateView):
     model = Object
-    template_name = 'storage/object_form.html'
-    form_class = ObjectForm
-
-
-class ObjectUpdate(UpdateView):
-    model = Object
-    template_name = 'storage/object_form.html'
-    form_class = ObjectForm
+    template_name = 'storage/object_form_update.html'
+    form_class = ObjectFormUpdate
     success_url = '/storage/objects/'
 
 
-class ObjectDelete(DeleteView):
+class ObjectDelete(LoginRequiredMixin, DeleteView):
     model = Object
     template_name = 'storage/object_delete.html'
     success_url = '/storage/objects/'
 
 
-class RedirectToPreviousMixin:  # миксин для редиректа на предыдущию страницу
-
-    def get(self, request, *args, **kwargs):
-        request.session['previous_page'] = request.META.get('HTTP_REFERER', '/')
-        return super().get(request, *args, **kwargs)
-
-    def get_success_url(self):
-        return self.request.session['previous_page']
-
-
-class ExpenseCreate(CreateView):
+class ExpenseCreate(LoginRequiredMixin, CreateView):
     model = Expense
     template_name = 'storage/expense_form.html'
     form_class = ExpenseForm
 
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.address_id = Object.objects.get(slug=self.kwargs.get('slug')).pk
+        obj.save()
+        product = Product.objects.get(name=obj.name)
+        Product.objects.filter(name=obj.name).update(quality=product.quality - obj.quality)
+        return redirect('object_list')
 
-class ExpenseUpdate(RedirectToPreviousMixin, UpdateView):
+
+class ExpenseDelete(LoginRequiredMixin, DeleteView):
     model = Expense
-    template_name = 'storage/expense_form.html'
-    form_class = ExpenseForm
 
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        address_id = Object.objects.get(slug=self.kwargs.get('slug')).pk
+        if Expense.objects.filter(address_id=address_id).count() == 1:
+            Object.objects.get(slug=self.kwargs.get('slug')).delete()
+        obj.delete()
+        product = Product.objects.get(name=obj.name)
+        Product.objects.filter(name=obj.name).update(quality=product.quality + obj.quality)
+        return redirect('object_list')
 
-class ExpenseDelete(DeleteView):
-    model = Expense
-
-    def get_success_url(self):  # редирект на предыдущию страницу, через связный объект
-        slug = Object.objects.get(pk=self.get_object().expense_address.pk).slug
-        return reverse('object_detail', kwargs={'slug': slug})
+    # def get_success_url(self):  # редирект на предыдущию страницу, через связный объект
+    #     slug = Object.objects.get(pk=self.get_object().address.pk).slug
+    #     return reverse('object_list', kwargs={'slug': slug})

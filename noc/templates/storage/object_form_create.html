@@ -7,6 +7,18 @@
         <hr>
         {% csrf_token %}
         <p>
+            <label for="date_id">{{ form.date_create.label }}:</label>
+            <input style="float: right; width: 172px" type="date" name="date_create" value="" required id="date_id">
+        </p>
+        <p>
+            <label for="address_id">{{ form.address.label }}:</label>
+            <input style="float: right; width: 169px" type="text" name="address" maxlength="30" id="address_id" required>
+        </p>
+        <p>
+            <label for="purpose_id">{{ form.purpose.label }}:</label>
+            <input style="float: right; width: 169px; word-wrap:break-word;" type="text" name="purpose" maxlength="50" required id="purpose_id">
+        </p>
+        <p>
             <label for="category_id">{{ form.category.label }}:</label>
             <select style="float: right; width: 177px" name="category" required id="category_id" onchange="if (this.selectedIndex) isCategory(value);">
                 <option class="center" disabled selected value> --- Выберите --- </option>
@@ -42,8 +54,10 @@
         </div>
     </form>
 </div>
-<div id="selection"></div>
+
 <script>
+document.getElementById('date_id').value = new Date().toISOString().slice(0, 10)
+
 function isCategory(e) {
     document.getElementById('type_id').value = '';
     document.getElementById('name_id').value = '';

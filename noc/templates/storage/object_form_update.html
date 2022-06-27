@@ -3,14 +3,14 @@
 {% block content %}
 
 <div class="center">
-    <form method="POST" style="text-align: left; display:inline-block;">
+    <form style="text-align: left; display:inline-block;" method="POST">
         <hr>
         {% csrf_token %}
         {{ form.as_p }}
         <hr>
-        <div style="text-align: center">
+        <div class="center">
             <button class="button_add_form" type="submit">Сохранить</button>
-            <a class="button_cancel_form" href="javascript:window.history.back()" role="button">Отменить</a>
+            <a class="button_cancel_form" href="{% url 'object_list' %}" role="button">Отменить</a>
         </div>
     </form>
 </div>

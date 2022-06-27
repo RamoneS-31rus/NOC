@@ -2,40 +2,35 @@
 
 {% block content %}
 
-<br>
-<ul class="actions-1">
-    <li>
-        <form method="GET">
-            {{ filterset.form }}
-            <button class="button_cancel_form" type="submit">Найти</button>
-        </form>
-    </li>
-    <li>
-        <div class="center" style="margin: 0 0 0 0">Всего: {{ page_obj.end_index }}</div>
-    </li>
-    <li>
-        <a href="{% url 'address_create' %}" title="Добавить дом">
-            <img src="/static/images/icon_add.png" width="25" height="25">
-        </a>
-    </li>
-</ul>
-
-<button onclick="topFunction()" id="scrollup">Наверх</button>
-
-<br>
 {%  if object_list %}
     <table class="table_gpon">
+        <tr class="nohover">
+            <td style="padding: 5px 3px; border: none;" colspan="4">
+                <form method="GET">
+                    {{ filterset.form.address.label }}: {{ filterset.form.address }}
+                    {{ filterset.form.district.label }}: {{ filterset.form.district }}
+                    {{ filterset.form.status.label }}: {{ filterset.form.status }}
+                    <button class="button_cancel_form" type="submit">Найти</button>
+                </form>
+            </td>
+            <td style="border: none">Всего: {{ page_obj.paginator.count }}</td>
+            <td style="border: none">
+                <a href="{% url 'address_create' %}" title="Добавить дом">
+                    <img src="/static/images/icon_add.png" width="25" height="25">
+                </a>
+            </td>
+        </tr>
         <tr>
-            <th style="width: 240px">
+            <th style="width: 270px">
                 Адрес
             </th>
-            <th style="width: 220px">
+            <th style="width: 230px">
                 Район
             </th>
-            <th style="width: 150px">
+            <th style="width: 160px">
                 Статус ВОЛС
             </th>
-            <th style="width: 125px">
+            <th style="width: 135px">
                 Статус заявки
             </th>
             <th style="width: 200px">
